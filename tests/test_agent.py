@@ -183,3 +183,9 @@ def test_revision_log_records_what_was_rejected(dbp):
                     ("text", lambda r: f"Revenue grew {r[0]['rows'][-1]['nvda_yoy_pct']}%.")])
     res = agent.run("growth?", llm, db_path=dbp)
     assert res.revision_log == [{"draft": 1, "unverified": ["999.9%"], "bad_quotes": [], "excerpt": "Revenue grew 999.9%."}]
+
+
+def test_unit_conversion_tolerance_scales():
+    assert verify.matches(4.9, "gw", 1, [4937.0])        # ±0.05 GW = ±50 MW
+    assert not verify.matches(4.8, "gw", 1, [4937.0])
+    assert verify.matches(41096, "million", 0, [41.096])

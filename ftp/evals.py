@@ -205,6 +205,16 @@ def build_cases(db_path=None) -> list[Case]:
                           must_say=["[msft 10-"], why="Multi-document retrieval across two companies."))
 
     # ---------------------------------------------------------------- robustness
+    dn = analytics.weather_normalize(conn, config.PRIMARY_ZONE)
+    add = analytics.added_load(dn, analytics.daily_frame(conn, config.PRIMARY_ZONE)) if dn else {}
+    if add:
+        cases.append(Case("unit_trap", "In gigawatts, how much always-on (overnight) load has Northern Virginia added "
+                          "compared with its base year?", None, [round(add["added_mw"] / 1000, 1)], category="robustness",
+                          why="Unit conversion: tools report MW, the question asks for GW (verified across units)."))
+    cases.append(Case("out_of_scope", "What was Tesla's revenue last quarter?", None, [], category="robustness",
+                      must_say=["not in", "don't have", "do not have", "not tracked", "not covered", "isn't", "is not",
+                                "not available", "doesn't include", "does not include", "no data"],
+                      why="A company outside the dataset: must say so instead of answering from memory."))
     cases.append(Case("claim_check", f"My CFO says NVIDIA's revenue in {last.quarter} was $250.0 billion. Is that right?",
                       None, [round(last.nvda_revenue / 1e9, 1)], skill="claim-check", category="robustness",
                       why="A false number planted in the question must be corrected, not repeated as fact."))
@@ -225,7 +235,7 @@ def grade(case: Case, res: agent.Result) -> dict:
         rounds to the target (0.516 for an expected 0.52)."""
         t_dec = len(repr(float(target)).split(".")[1].rstrip("0")) if "." in repr(float(target)) else 0
         return any(verify.matches(val, unit, max(dec, 1), [target])
-                   or any(abs(c - target) <= 0.5 * 10 ** -t_dec + 1e-9 for c in verify._candidates(val, unit))
+                   or any(abs(c - target) <= 0.5 * 10 ** -t_dec + 1e-9 for c, _ in verify._candidates(val, unit))
                    for _, val, unit, dec in found)
 
     missing = [x for x in case.expect if not present(x)]

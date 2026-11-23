@@ -57,20 +57,21 @@ def extract(text: str) -> list[tuple[str, float, str, int]]:
     return out
 
 
-def _candidates(value: float, unit: str) -> list[float]:
-    """Values the number could equal in evidence units (tools report USD billions, MW, GWh, %)."""
+def _candidates(value: float, unit: str) -> list[tuple[float, float]]:
+    """(value in evidence units, conversion factor). Tools report USD billions, MW, GWh, %."""
     if unit in ("million", "m"):
-        return [value / 1000, value]                       # $X million -> billions
+        return [(value / 1000, 1 / 1000), (value, 1.0)]     # $X million -> billions
     if unit == "gw":
-        return [value * 1000, value]                       # GW -> MW
+        return [(value * 1000, 1000.0), (value, 1.0)]       # GW -> MW
     if unit == "twh":
-        return [value * 1000, value]                       # TWh -> GWh
-    return [value, -value]                                 # "down 13%" may be stored as -13.2
+        return [(value * 1000, 1000.0), (value, 1.0)]       # TWh -> GWh
+    return [(value, 1.0), (-value, 1.0)]                    # "down 13%" may be stored as -13.2
 
 
 def matches(value: float, unit: str, decimals: int, evidence: list[float]) -> bool:
-    for v in _candidates(value, unit):
-        tol = max(0.5 * 10 ** (-decimals), abs(v) * 0.005)  # half a unit in the last shown digit, or 0.5%
+    for v, f in _candidates(value, unit):
+        # half a unit in the last shown digit (scaled into evidence units: "4.9 GW" = ±50 MW), or 0.5%
+        tol = max(0.5 * 10 ** (-decimals) * f, abs(v) * 0.005)
         if any(abs(v - e) <= tol + 1e-9 for e in evidence):
             return True
     return False
