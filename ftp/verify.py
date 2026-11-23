@@ -23,6 +23,7 @@ NUM_RE = re.compile(
 )
 QUARTER_RE = re.compile(r"\b(?:Q[1-4]\s*\d{4}|\d{4}\s*Q[1-4]|Q[1-4])\b", re.IGNORECASE)
 DATE_RE = re.compile(r"\b\d{4}-\d{2}(?:-\d{2})?\b")
+CITE_RE = re.compile(r"\[[A-Z]{1,5} 10-[QK][^\]]*\]|¶\s*\d+")   # [NVDA 10-Q filed …, MD&A ¶14] / ¶14: a source, not a claim
 
 
 @dataclass
@@ -40,7 +41,7 @@ class Report:
 
 def extract(text: str) -> list[tuple[str, float, str, int]]:
     """(raw, value, unit, decimals) for each numeric claim, skipping years/quarters/dates/small counts."""
-    clean = DATE_RE.sub(" ", QUARTER_RE.sub(" ", text))
+    clean = DATE_RE.sub(" ", QUARTER_RE.sub(" ", CITE_RE.sub(" ", text)))
     out = []
     for m in NUM_RE.finditer(clean):
         num = m.group("num").replace(",", "")
@@ -96,7 +97,7 @@ def provenance(text: str, sources: list[tuple[float, str]], given: list[float] =
     return out
 
 
-QUOTE_RE = re.compile(r"[\"“]([^\"”]{12,400})[\"”]")
+QUOTE_RE = re.compile(r"\"([^\"]*)\"|“([^”]*)”")   # pair quotes left to right, THEN filter by length
 
 
 def _norm(t: str) -> str:
@@ -106,4 +107,5 @@ def _norm(t: str) -> str:
 def check_quotes(text: str, passages: list[str]) -> list[str]:
     """Every quotation (12+ chars in double quotes) must appear word-for-word in a retrieved passage."""
     corpus = _norm(" ".join(passages))
-    return [q for q in QUOTE_RE.findall(text) if _norm(q).strip(" .,") not in corpus]
+    quotes = [a or b for a, b in QUOTE_RE.findall(CITE_RE.sub(" ", text))]
+    return [q for q in quotes if 12 <= len(q) <= 600 and _norm(q).strip(" .,") not in corpus]

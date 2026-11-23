@@ -157,3 +157,21 @@ def test_memo_writes_report_with_receipts(dbp, tmp_path, monkeypatch):
     out = memo.main(llm=llm, db_path=dbp)
     assert out["verification"]["ok"] and out["numbers"][0]["source"] == "quarterly_financials"
     assert (tmp_path / "reports" / "latest.json").exists() and len(list((tmp_path / "reports").glob("*.md"))) == 1
+
+
+def test_citations_are_not_numeric_claims_and_quotes_pair_correctly():
+    text = ('Paragraph "MD&A ¶35" holds it. Microsoft said "We will continue to invest in capital expenditures" '
+            '[MSFT 10-Q filed 2026-10-28, MD&A ¶35] and Meta said "capital expenditures of approximately $135 billion" '
+            '[META 10-Q filed 2026-10-22, MD&A ¶46].')
+    assert [v for _, v, _, _ in verify.extract(text)] == [135.0]
+    passages = ["We will continue to invest in capital expenditures to support growth.",
+                "We anticipate capital expenditures of approximately $135 billion to $145 billion in 2026."]
+    assert verify.check_quotes(text, passages) == []
+
+
+def test_grader_accepts_more_precise_answers(dbp):
+    case = evals.Case("x", "q", None, [0.52])
+    res = agent.Result("q", None, answer="The correlation is 0.516.", verification={"ok": True})
+    assert evals.grade(case, res)["missing"] == []
+    res2 = agent.Result("q", None, answer="The correlation is 0.49.", verification={"ok": True})
+    assert evals.grade(case, res2)["missing"] == [0.52]

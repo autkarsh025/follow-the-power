@@ -10,6 +10,10 @@ on:
         description: "Run the Claude agent evaluation (uses the Anthropic API)"
         type: boolean
         default: false
+      models:
+        description: "Models to evaluate (comma-separated; several = leaderboard)"
+        type: string
+        default: "claude-sonnet-5-5"
       run_memo:
         description: "Have the agent write this week's research memo (uses the Anthropic API)"
         type: boolean
@@ -66,7 +70,8 @@ jobs:
         if: ${{ github.event.inputs.run_evals == 'true' }}
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python -m ftp.evals --judge
+          MODELS: ${{ github.event.inputs.models }}
+        run: python -m ftp.evals --judge --models "${MODELS:-claude-sonnet-5-5}"
 
       - name: Research memo (Claude)
         if: ${{ github.event.inputs.run_memo == 'true' }}

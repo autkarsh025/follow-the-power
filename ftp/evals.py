@@ -221,7 +221,12 @@ def grade(case: Case, res: agent.Result) -> dict:
     found = verify.extract(res.answer)
 
     def present(target: float) -> bool:
-        return any(verify.matches(val, unit, max(dec, 1), [target]) for _, val, unit, dec in found)
+        """The expected value appears: within the answer's own rounding, OR the answer is MORE precise and
+        rounds to the target (0.516 for an expected 0.52)."""
+        t_dec = len(repr(float(target)).split(".")[1].rstrip("0")) if "." in repr(float(target)) else 0
+        return any(verify.matches(val, unit, max(dec, 1), [target])
+                   or any(abs(c - target) <= 0.5 * 10 ** -t_dec + 1e-9 for c in verify._candidates(val, unit))
+                   for _, val, unit, dec in found)
 
     missing = [x for x in case.expect if not present(x)]
     leaked = [x for x in case.forbid if present(x)]
