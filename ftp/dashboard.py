@@ -65,7 +65,7 @@ def zone_payload(conn, zone: str) -> dict | None:
         d = daily.set_index(pd.to_datetime(daily["date"]))
         weekly = d[["overnight_mw"]].resample("W").median().dropna()
     out = {
-        "zone": zone, "label": analytics.label_of(zone), "parent": next(z[0] for z in config.GRID_ZONES if z[1] == zone),
+        "zone": zone, "label": analytics.label_of(zone), **config.ZONE_NOTES.get(zone, {"role": "hub", "note": ""}), "parent": next(z[0] for z in config.GRID_ZONES if z[1] == zone),
         "monthly": cols(monthly),
         "weekly": {"date": weekly.index.strftime("%Y-%m-%d").tolist(),
                    **{c: weekly[c].round(0).tolist() for c in weekly.columns}},
@@ -112,10 +112,15 @@ def findings(d: dict) -> list[dict]:
                     "text": f"Northern Virginia's always-on (overnight) load is up {a['added_mw']:,} MW since 2019 "
                             f"({a['added_pct']:+.0f}%), roughly {a['gpu_equivalent']:,} AI GPUs running 24/7, or "
                             f"{a['homes_equivalent']:,} homes." + (f" Weather-adjusted, it grew {g:+.1f}% in the last 12 months." if g is not None else "")})
-    tot = sum((z.get("added") or {}).get("added_mw", 0) for z in d["zones"].values() if (z.get("added") or {}).get("added_mw", 0) > 0)
+    hubs = [z for z in d["zones"].values() if z.get("role") == "hub" and (z.get("added") or {}).get("added_mw", 0) > 0]
+    tot = sum(z["added"]["added_mw"] for z in hubs)
     if tot:
-        out.append({"icon": "🗺️", "title": "Across five hubs",
-                    "text": f"Together the five tracked grid zones added about {tot:,} MW of weather-adjusted baseload since 2019."})
+        contrast = [z for z in d["zones"].values() if z.get("role") == "contrast" and z.get("added")]
+        extra = (f" (West Texas, the contrast zone driven by oil, gas and crypto mining, added {contrast[0]['added']['added_mw']:,} MW "
+                 f"on its own.)" if contrast else "")
+        out.append({"icon": "🗺️", "title": f"Across {len(hubs)} data-center hubs",
+                    "text": f"Together they added about {tot:,} MW of weather-adjusted always-on load versus their base year, "
+                            f"roughly {int(round(tot * 1000 / (analytics.KW_PER_GPU_IT * analytics.PUE), -4)):,} GPUs' worth.{extra}"})
     ex = d.get("exposure") or []
     good = [e for e in ex if e["meaningful"]]
     if good:

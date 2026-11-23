@@ -135,3 +135,16 @@ def test_variance_flags_catch_a_sudden_acceleration():
     flags = analytics.variance_flags(fin)
     hit = flags[(flags["ticker"] == "NVDA") & (flags["quarter"] == target)]
     assert len(hit) == 1 and hit["direction"].iloc[0] == "acceleration" and hit["z"].iloc[0] >= 2
+
+
+def test_step_detector_ignores_calendar_seasonality():
+    """A strong non-weather seasonal swing (e.g. daylight) must not swamp a real step."""
+    days = pd.date_range("2019-01-01", "2025-12-31", freq="D")
+    rng = np.random.default_rng(3)
+    season = 900 * np.sin(2 * np.pi * days.dayofyear / 365.25)
+    level = 10_000 + 1.5 * np.arange(len(days)) + np.where(days >= "2023-06-01", 400, 0)
+    df = pd.DataFrame({"date": days.strftime("%Y-%m-%d"), "deweathered_mw": level + season + rng.normal(0, 60, len(days))})
+    st = analytics.step_changes(df)
+    near = st[(pd.to_datetime(st["date"]) - pd.Timestamp("2023-06-01")).abs() <= pd.Timedelta(days=10)]
+    assert len(near) == 1 and 250 < near["step_mw"].iloc[0] < 550
+    assert len(st) <= 2

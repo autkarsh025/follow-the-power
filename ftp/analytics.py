@@ -155,24 +155,42 @@ def temperature_response(conn: sqlite3.Connection, zone: str, daily: pd.DataFram
     return out
 
 
+def deseasonalize(s: pd.Series) -> pd.Series:
+    """Remove what weather doesn't explain but the calendar does (daylight, holidays, school terms):
+    detrend with a centered 1-year rolling MEAN (a mean over a full year cancels a seasonal cycle exactly;
+    a median doesn't, because seasonal values pile up near the peaks), average the remainder by day of year across years,
+    smooth that profile over ±15 days, and subtract it. Trend and level shifts survive; seasons don't."""
+    s = s.asfreq("D")
+    trend = s.rolling(365, center=True, min_periods=300).mean()
+    resid = s - trend
+    doy = np.minimum(resid.index.dayofyear.to_numpy(), 365)
+    prof = resid.groupby(doy).mean().reindex(range(1, 366)).interpolate(limit_direction="both")
+    prof = pd.concat([prof.iloc[-15:], prof, prof.iloc[:15]]).rolling(31, center=True).mean().iloc[15:-15]
+    prof.index = range(1, 366)
+    return s - pd.Series(prof.reindex(doy).to_numpy(), index=s.index)
+
+
 def step_changes(daily: pd.DataFrame, col: str = "deweathered_mw", window: int = 28, min_sep: int = 60,
                  k: float = 4.0, min_frac: float = 0.015) -> pd.DataFrame:
     """Sudden, sustained level shifts in daily baseload.
 
-    For every day t: jump = median(next `window` days) - median(previous `window` days).
-    A step is a local maximum of |jump| (no larger one within `min_sep` days) that is bigger than
-    k x a robust noise scale (MAD of the jump series) AND bigger than `min_frac` of the typical load.
-    Medians make it robust to single odd days; requiring a sustained shift ignores heat waves."""
+    The series is first deseasonalized (see `deseasonalize`). Then for every day t:
+    jump = median(next `window` days) - median(previous `window` days). A step is a local maximum of |jump|
+    (no larger one within `min_sep` days) that is bigger than k x a robust noise scale (MAD of the jump
+    series) AND bigger than `min_frac` of the typical load. Medians make it robust to single odd days;
+    requiring a sustained shift ignores heat waves."""
+    empty = pd.DataFrame(columns=["date", "step_mw", "before_mw", "after_mw", "pct"])
     if daily is None or daily.empty or col not in daily:
-        return pd.DataFrame(columns=["date", "step_mw", "before_mw", "after_mw", "pct"])
-    s = daily.set_index(pd.to_datetime(daily["date"]))[col].asfreq("D")
+        return empty
+    raw = daily.set_index(pd.to_datetime(daily["date"]))[col].asfreq("D")
+    s = deseasonalize(raw) if raw.notna().sum() > 730 else raw
     before = s.rolling(window, min_periods=int(window * 0.8)).median().shift(1)
     after = s[::-1].rolling(window, min_periods=int(window * 0.8)).median()[::-1]
     jump = (after - before).dropna()
     if jump.empty:
-        return pd.DataFrame(columns=["date", "step_mw", "before_mw", "after_mw", "pct"])
+        return empty
     mad = (jump - jump.median()).abs().median() * 1.4826
-    thr = max(k * mad, min_frac * float(s.median()))
+    thr = max(k * mad, min_frac * float(raw.median()))
     cand = jump[jump.abs() > thr]
     peaks = []
     for t, v in cand.abs().sort_values(ascending=False).items():
@@ -180,7 +198,7 @@ def step_changes(daily: pd.DataFrame, col: str = "deweathered_mw", window: int =
             peaks.append(t)
     rows = [{"date": t.strftime("%Y-%m-%d"), "step_mw": round(float(jump[t]), 0), "before_mw": round(float(before[t]), 0),
              "after_mw": round(float(after[t]), 0), "pct": round(100 * float(jump[t] / before[t]), 2)} for t in sorted(peaks)]
-    out = pd.DataFrame(rows, columns=["date", "step_mw", "before_mw", "after_mw", "pct"])
+    out = pd.DataFrame(rows, columns=empty.columns)
     out.attrs["threshold_mw"] = round(float(thr), 0)
     return out
 
@@ -228,6 +246,18 @@ def yearly_profiles(h: pd.DataFrame) -> dict:
     return out
 
 
+def _base(m: pd.Series) -> tuple[pd.Series | None, str]:
+    """The comparison base: calendar 2019 if (nearly) complete, else the first 12 months of data
+    (EIA's ERCOT sub-zones start mid-2019; a partial year would bias the base toward one season)."""
+    y19 = m[m.index.str.startswith("2019")]
+    if len(y19) >= 10:
+        return y19, "2019"
+    if len(m) >= 24:
+        b = m.iloc[:12]
+        return b, f"{b.index[0]} to {b.index[-1]}"
+    return None, ""
+
+
 def added_load(norm: dict, daily: pd.DataFrame) -> dict:
     """Always-on load added since 2019: last 12 months vs 2019 average of (normalized if available) baseload."""
     if norm:
@@ -238,12 +268,13 @@ def added_load(norm: dict, daily: pd.DataFrame) -> dict:
         basis = "raw"
     else:
         return {}
-    base = m[m.index.str.startswith("2019")]
-    if len(base) < 10 or len(m) < 24:
+    base, base_window = _base(m)
+    if base is None or len(m) < 24:
         return {}
     recent = m.tail(12)
     mw = float(recent.mean() - base.mean())
     return {"basis": basis, "base_mw": round(float(base.mean())), "recent_mw": round(float(recent.mean())),
+            "base_window": base_window,
             "added_mw": round(mw), "added_pct": round(100 * mw / float(base.mean()), 1),
             "recent_window": f"{recent.index[0]} to {recent.index[-1]}",
             "gpu_equivalent": int(round(mw * 1000 / (KW_PER_GPU_IT * PUE), -3)),
@@ -313,10 +344,10 @@ def normalized_index(norm: dict, daily: pd.DataFrame) -> dict:
         m = daily.assign(month=daily["date"].str[:7]).groupby("month")["overnight_mw"].mean()
     else:
         return {}
-    base = m[m.index.str.startswith("2019")].mean()
-    if not base or np.isnan(base):
+    b, window = _base(m)
+    if b is None or not b.mean() or np.isnan(b.mean()):
         return {}
-    return {"month": m.index.tolist(), "index": (100 * m / base).round(1).tolist()}
+    return {"month": m.index.tolist(), "index": (100 * m / b.mean()).round(1).tolist(), "base_window": window}
 
 
 # ---------------------------------------------------------------------------- supply chain

@@ -150,7 +150,7 @@ footer{color:var(--t3);font-size:12.5px;margin-top:28px;line-height:1.7}.empty{c
   <p class="sect" style="margin-top:14px">Five grid zones where data centers cluster, from EIA hourly demand data. Weather is removed with a degree-day regression (details on the Data-center detector tab).</p>
   <div class="kpis" id="zonecards"></div>
   <div class="grid">
-    <div class="card wide" data-csv="zindex"><h2>Five hubs, one race (weather-adjusted)</h2><p class="d">Monthly overnight baseload with weather removed, indexed to each zone's 2019 average (= 100).</p>
+    <div class="card wide" data-csv="zindex"><h2>Five hubs, one race (weather-adjusted)</h2><p class="d">Monthly overnight baseload with weather removed, indexed to each zone's base year (= 100; 2019, or the first 12 months where 2019 is incomplete). West Texas is shown as a non-AI contrast.</p>
       <p class="look">which hubs are adding always-on load fastest. Lines that keep climbing through mild and harsh years alike = structural growth.</p><div class="chart tall" id="zindex"></div></div>
   </div>
   <div class="ctl"><label>Zone</label><select class="zsel" data-scope="grid"></select></div>
@@ -384,11 +384,11 @@ R.overview = () => {
   const s = D.series, ev = D.evals, dom = D.zones[D.meta.primary_zone];
   const [nq, nv] = lastNN(s.quarter, s.nvda_revenue_b), [, ny] = lastNN(s.quarter, s.nvda_yoy);
   const [cq, cv] = lastNN(s.quarter, s.capex_b), [, cy] = lastNN(s.quarter, s.capex_yoy);
-  const totMW = Object.values(D.zones).reduce((a, z) => a + Math.max(0, (z.added || {}).added_mw || 0), 0);
+  const hubZ = Object.values(D.zones).filter(z => z.role === 'hub'), totMW = hubZ.reduce((a, z) => a + Math.max(0, (z.added || {}).added_mw || 0), 0);
   const tiles = [[`Hyperscaler capex · ${cq}`, `$${fmt(cv, 1)}B`, `${sgn(cy, 0)}% year over year`],
     [`NVIDIA revenue · ${nq}`, `$${fmt(nv, 1)}B`, `${sgn(ny, 0)}% year over year`],
     ['N. Virginia baseload, weather-adj.', dom && dom.summary.normalized_12m_growth != null ? `${sgn(dom.summary.normalized_12m_growth)}%` : '—', 'last 12 months vs. prior 12'],
-    ['Always-on load added since 2019', `${fmt(totMW)} MW`, `5 hubs ≈ ${fmt(Math.round(totMW * 1000 / (D.meta.gpu_kw * D.meta.pue) / 1000) * 1000)} GPUs`],
+    ['Always-on load added (data-center hubs)', `${fmt(totMW)} MW`, `${hubZ.length} hubs ≈ ${fmt(Math.round(totMW * 1000 / (D.meta.gpu_kw * D.meta.pue) / 1000) * 1000)} GPUs`],
     ['Analyst agent', ev ? `${ev.passed}/${ev.total}` : '—', ev ? 'evaluation cases passed' : 'evaluation runs on demand']];
   $('kpis').innerHTML = tiles.map(([l, v, x]) => `<div class="kpi"><div class="l">${esc(l)}</div><div class="v">${v}</div><div class="s">${esc(x)}</div></div>`).join('');
   $('flow').innerHTML = LAYERS.map((l, i) => { const d = (D.layers || {})[l]; const y = d ? d.yoy[d.yoy.length - 1] : null;
@@ -498,9 +498,10 @@ R.grid = () => {
   initZoneSelects();
   $('zonecards').innerHTML = ZONES.map(z => { const s = D.zones[z].summary || {}, a = D.zones[z].added || {};
     return `<div class="kpi" style="border-top:3px solid ${zoneColor(z)}"><div class="l">${esc(D.zones[z].label)}</div><div class="v">${s.normalized_12m_growth == null ? '—' : sgn(s.normalized_12m_growth) + '%'}</div>
-      <div class="s">weather-adj. 12-month growth · ${a.added_mw == null ? '' : sgn(a.added_mw, 0) + ' MW since 2019'}</div></div>`; }).join('');
+      <div class="s">weather-adj. 12-month growth · ${a.added_mw == null ? '' : sgn(a.added_mw, 0) + ' MW vs. ' + esc(a.base_window)}</div>
+      <div class="s muted" style="margin-top:4px">${D.zones[z].role === 'contrast' ? '⚖️ contrast zone · ' : ''}${esc(D.zones[z].note || '')}</div></div>`; }).join('');
   plot('zindex', ZONES.filter(z => D.zones[z].index && D.zones[z].index.month).map(z => ({x: D.zones[z].index.month, y: D.zones[z].index.index, name: D.zones[z].label, type: 'scatter', mode: 'lines',
-    line: {color: zoneColor(z), width: z === D.meta.primary_zone ? 3 : 1.8}, hovertemplate: '%{y:.0f}'})), {yaxis: {title: 'index (2019 = 100)'}});
+    line: {color: zoneColor(z), width: z === D.meta.primary_zone ? 3 : 1.8, dash: D.zones[z].role === 'contrast' ? 'dot' : 'solid'}, hovertemplate: '%{y:.0f}'})), {yaxis: {title: 'index (base year = 100)'}});
   const st = D.states, stC = Object.keys(st);
   plot('states', stC.map((k, i) => ({x: st[k].quarter, y: st[k].index, name: k, type: 'scatter', mode: 'lines', line: {color: C.cat[i % 8], width: k === 'VA' ? 3.2 : 1.6}, hovertemplate: k + ' %{y:.0f}'})),
     {yaxis: {title: 'index (2019 = 100)'}});
@@ -551,7 +552,7 @@ function renderCalc() {
   if (!a) { $('calc').innerHTML = '<div class="empty">Needs at least two years of data.</div>'; return; }
   $('calc').innerHTML = `<div class="ctl"><label>kW per GPU (incl. server, network)</label><input type="range" id="kw" min="0.7" max="2.5" step="0.05" value="${D.meta.gpu_kw}"><span id="kwv"></span>
     <label>PUE (cooling overhead)</label><input type="range" id="pue" min="1.05" max="1.7" step="0.01" value="${D.meta.pue}"><span id="puev"></span></div><div class="kpis" id="calck"></div>
-    <p class="d">${esc(Z.label)}: ${a.basis} baseload averaged ${fmt(a.base_mw)} MW in 2019 and ${fmt(a.recent_mw)} MW over ${esc(a.recent_window)}. Defaults: an H100-class 8-GPU server draws about 10–11 kW (≈${D.meta.gpu_kw} kW per GPU); an average US home uses about ${D.meta.home_kw} kW on average. Not all new load is data centers (EVs, heat pumps, industry), so read these as upper-bound illustrations.</p>`;
+    <p class="d">${esc(Z.label)}: ${a.basis} baseload averaged ${fmt(a.base_mw)} MW in ${esc(a.base_window)} and ${fmt(a.recent_mw)} MW over ${esc(a.recent_window)}. Defaults: an H100-class 8-GPU server draws about 10–11 kW (≈${D.meta.gpu_kw} kW per GPU); an average US home uses about ${D.meta.home_kw} kW on average. Not all new load is data centers (EVs, heat pumps, industry), so read these as upper-bound illustrations.</p>`;
   const upd = () => { const kw = +$('kw').value, pue = +$('pue').value; $('kwv').textContent = kw.toFixed(2); $('puev').textContent = pue.toFixed(2);
     $('calck').innerHTML = [['Always-on load added', `${sgn(a.added_mw, 0)} MW`, `${sgn(a.added_pct)}% vs. 2019`], ['≈ AI GPUs running 24/7', fmt(Math.round(a.added_mw * 1000 / (kw * pue) / 100) * 100), `${kw.toFixed(2)} kW × PUE ${pue.toFixed(2)}`],
       ['≈ US homes', fmt(Math.round(a.added_mw * 1000 / D.meta.home_kw / 1000) * 1000), `${D.meta.home_kw} kW average per home`]].map(([l, v, x]) => `<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div><div class="s">${x}</div></div>`).join(''); };

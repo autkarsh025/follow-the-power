@@ -92,6 +92,15 @@ GRID_ZONES: list[tuple[str, str, str, str]] = [
     ("ERCO", "FWES", "West Texas (ERCOT Far West)", "America/Chicago"),
 ]
 PRIMARY_ZONE = "DOM"
+# Plain-English context per zone. West Texas is a deliberate CONTRAST: fast load growth driven mostly by
+# oil & gas electrification and crypto mining, not AI, so it's excluded from "data-center hub" totals.
+ZONE_NOTES: dict[str, dict] = {
+    "DOM": {"role": "hub", "note": "Loudoun & Prince William counties: the largest data-center market in the world."},
+    "AEP": {"role": "hub", "note": "Columbus/central Ohio: a fast-growing campus market (AWS, Google, Meta, Microsoft)."},
+    "CE": {"role": "hub", "note": "Chicago suburbs: an established colocation market; slower recent growth."},
+    "NCEN": {"role": "hub", "note": "Dallas-Fort Worth: Texas's main data-center market, inside ERCOT's own grid."},
+    "FWES": {"role": "contrast", "note": "Permian Basin: load growth mostly from oil & gas and crypto mining. A contrast, not an AI hub."},
+}
 # A representative weather point per zone (lat, lon) for temperature normalization.
 ZONE_WEATHER_POINT: dict[str, tuple[float, float]] = {
     "DOM": (39.04, -77.49),    # Ashburn, VA ("Data Center Alley")

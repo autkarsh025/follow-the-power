@@ -24,6 +24,7 @@ Refreshed daily by GitHub Actions. All files are CSV (UTF-8, comma-separated). T
 | `fin_latest.csv` | company × metric × calendar quarter (latest version) | ticker, name, layer, metric, quarter, value_b (USD billions), yoy (%) |
 | `zone_monthly.csv` | grid zone × month | zone, month (local), overnight_mw (median 1–5 AM), peak_mw (median daily max), flatness, baseload_yoy (%) |
 | `zone_weather_normalized.csv` | grid zone × month | zone, month, actual_mw, normalized_mw (weather removed), weather_part_mw, normalized_yoy, actual_yoy, tmean_c, hdd, cdd |
+| `zone_daily.csv` | grid zone × local day | zone, date, overnight_mw (median 1–5 AM), normalized_mw, deweathered_mw (weather & weekday removed), tmean_c |
 | `state_sales.csv` | state × month | state, sector (COM = commercial), month, sales_gwh |
 | `quality_checks.csv` | check × subject (latest run) | check_id, subject, severity, passed, value, detail |
 
@@ -45,7 +46,7 @@ def build(conn: sqlite3.Connection | None = None) -> dict:
         cg.insert(2, "layer", cg["ticker"].map(lambda t: config.COMPANIES.get(t, {}).get("layer")))
         cg.to_csv(OUT / "fin_latest.csv", index=False)
         files.update({"fin_quarterly.csv": len(fin), "fin_latest.csv": len(cg)})
-    zm, zn = [], []
+    zm, zn, zd = [], [], []
     for _, zone, _, _ in config.GRID_ZONES:
         m = power.zone_monthly(conn, zone)
         if not m.empty:
@@ -53,6 +54,7 @@ def build(conn: sqlite3.Connection | None = None) -> dict:
         n = analytics.weather_normalize(conn, zone)
         if n:
             zn.append(n["monthly"].assign(zone=zone))
+            zd.append(n["daily"].assign(zone=zone).round(1))
     if zm:
         df = pd.concat(zm)
         df[["zone"] + [c for c in df.columns if c != "zone"]].to_csv(OUT / "zone_monthly.csv", index=False)
@@ -61,6 +63,10 @@ def build(conn: sqlite3.Connection | None = None) -> dict:
         df = pd.concat(zn)
         df[["zone"] + [c for c in df.columns if c != "zone"]].to_csv(OUT / "zone_weather_normalized.csv", index=False)
         files["zone_weather_normalized.csv"] = len(df)
+    if zd:
+        df = pd.concat(zd)
+        df[["zone"] + [c for c in df.columns if c != "zone"]].to_csv(OUT / "zone_daily.csv", index=False)
+        files["zone_daily.csv"] = len(df)
     s = pd.read_sql_query("SELECT * FROM state_monthly_sales ORDER BY state, month", conn)
     s.to_csv(OUT / "state_sales.csv", index=False)
     files["state_sales.csv"] = len(s)
