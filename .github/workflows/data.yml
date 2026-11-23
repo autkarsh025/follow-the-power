@@ -14,6 +14,10 @@ on:
         description: "Models to evaluate (comma-separated; several = leaderboard)"
         type: string
         default: "claude-sonnet-5-5"
+      repeats:
+        description: "Run each eval case k times (consistency / pass^k)"
+        type: string
+        default: "1"
       run_memo:
         description: "Have the agent write this week's research memo (uses the Anthropic API)"
         type: boolean
@@ -71,7 +75,8 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           MODELS: ${{ github.event.inputs.models }}
-        run: python -m ftp.evals --judge --models "${MODELS:-claude-sonnet-5-5}"
+          REPEATS: ${{ github.event.inputs.repeats }}
+        run: python -m ftp.evals --judge --models "${MODELS:-claude-sonnet-5-5}" --repeats "${REPEATS:-1}"
 
       - name: Research memo (Claude)
         if: ${{ github.event.inputs.run_memo == 'true' }}

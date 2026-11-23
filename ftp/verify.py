@@ -18,7 +18,7 @@ from dataclasses import dataclass, field
 
 NUM_RE = re.compile(
     r"(?<![\w.])(?P<neg>[-−])?\$?(?P<num>\d{1,3}(?:,\d{3})+|\d+)(?P<dec>\.\d+)?\s*"
-    r"(?P<unit>%|pp|percentage points?|billion|bn|B\b|million|M\b|MW|GW|GWh|TWh|°C|x\b)?",
+    r"(?P<unit>%|pp|percentage points?|trillion|tn|T\b|billion|bn|B\b|million|M\b|MW|GW|GWh|TWh|°C|x\b)?",
     re.IGNORECASE,
 )
 QUARTER_RE = re.compile(r"\b(?:Q[1-4]\s*\d{4}|\d{4}\s*Q[1-4]|Q[1-4])\b", re.IGNORECASE)
@@ -54,7 +54,7 @@ def extract(text: str) -> list[tuple[str, float, str, int]]:
         decimals = len(dec) - 1 if dec else 0
         if not unit and not dec and 1900 <= value <= 2100:
             continue                                       # a year
-        if not unit and not dec and 0 <= abs(value) <= 12:
+        if not unit and not dec and 0 <= abs(value) <= 12 and unit not in ("trillion", "tn", "t"):
             continue                                       # a count / list number
         if not unit and not dec and abs(value) in CONVERSION_CONSTANTS:
             continue                                       # a unit-conversion factor
@@ -70,6 +70,8 @@ def _candidates(value: float, unit: str) -> list[tuple[float, float]]:
     """(value in evidence units, conversion factor). Tools report USD billions, MW, GWh, %."""
     if unit in ("million", "m"):
         return [(value / 1000, 1 / 1000), (value, 1.0)]     # $X million -> billions
+    if unit in ("trillion", "tn", "t"):
+        return [(value * 1000, 1000.0), (value, 1.0)]       # $X trillion -> billions
     if unit == "gw":
         return [(value * 1000, 1000.0), (value, 1.0)]       # GW -> MW
     if unit == "twh":

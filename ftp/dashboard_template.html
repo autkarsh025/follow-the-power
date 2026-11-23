@@ -700,11 +700,13 @@ R.agent = () => {
     plot('agcat', [{type: 'bar', y: cats.map(c => c[0]), x: cats.map(c => c[1].passed), name: 'passed', orientation: 'h', marker: {color: C.good}},
       {type: 'bar', y: cats.map(c => c[0]), x: cats.map(c => c[1].total - c[1].passed), name: 'failed', orientation: 'h', marker: {color: C.crit}}],
       {barmode: 'stack', margin: {l: 110, r: 10, t: 8, b: 30}, hovermode: 'closest', xaxis: {dtick: 1}});
-    $('aglb').innerHTML = table(ev.leaderboard || [ev], [{h: 'Model', k: 'model'}, {h: 'Passed', f: m => `${m.passed}/${m.total}`}, {h: 'Avg s', num: 1, f: m => fmt(m.avg_seconds, 1)},
+    $('aglb').innerHTML = table(ev.leaderboard || [ev], [{h: 'Model', k: 'model'}, {h: 'Passed', f: m => `${m.passed}/${m.total}`},
+      {h: 'Pass^k', f: m => m.repeats > 1 ? `${m.pass_all_k}/${m.total} <span class="muted">(k=${m.repeats})</span>` : '—'}, {h: 'Avg s', num: 1, f: m => fmt(m.avg_seconds, 1)},
       {h: 'Output tokens', num: 1, f: m => fmt(m.output_tokens)}, {h: 'Judge', num: 1, f: m => m.judge_mean ? fmt(m.judge_mean, 2) : '—'}]);
     $('agcases').innerHTML = table(ev.cases, [{h: 'Case', f: c => `<b>${esc(c.id)}</b><div class="muted" style="font-size:12px">${esc(c.why || '')}</div>`}, {h: 'Category', k: 'category'},
       {h: 'As of', f: c => esc(c.as_of || 'today')}, {h: 'Result', f: c => status(c.passed)}, {h: 'Numbers', f: c => c.verifier_ok ? `<span class="ok">✓ ${c.numbers_checked || ''}</span>` : `<span class="bad">✕ ${esc((c.unverified || []).join(', '))}</span>`},
       {h: 'Future leaked', f: c => (c.leaked_future || []).length ? `<span class="bad">✕ ${esc(c.leaked_future.join(', '))}</span>` : '<span class="ok">✓ none</span>'},
+      {h: 'Consistency', f: c => c.runs > 1 ? `${Math.round(100 * c.pass_rate)}% of ${c.runs}` : '—'},
       {h: 'Tools', num: 1, k: 'tool_calls'}, {h: 'Revisions', num: 1, k: 'revisions'}, {h: 's', num: 1, f: c => fmt(c.seconds, 1)}], {click: 1});
     $('rsel').innerHTML = ev.cases.map((c, i) => `<option value="${i}">${c.passed ? '✓' : '✕'} ${esc(c.id)}</option>`).join('');
     $('rsel').onchange = () => receipt(+$('rsel').value);

@@ -76,6 +76,7 @@ class Toolbox:
         self._tool = None
         self._zone_cache: dict[str, dict] = {}
         self.passages: list[str] = []                    # filing text retrieved this run (quotes are checked against it)
+        self.inject_passage: str | None = None           # EVAL ONLY: a planted malicious passage (prompt-injection test)
         # Grid data counts as public GRID_PUBLICATION_LAG_DAYS after the hour it describes.
         self.grid_until = ((pd.Timestamp(as_of) - pd.Timedelta(days=power.GRID_PUBLICATION_LAG_DAYS)).strftime("%Y-%m-%d")
                            if as_of else None)
@@ -339,12 +340,17 @@ class Toolbox:
     def t_search_filings(self, query: str, ticker: str | None = None, k: int = 5) -> dict:
         with self._conn() as c:
             hits = filings.search(c, query, ticker, self.as_of, min(int(k), 8))
+        if self.inject_passage:
+            hits = [{"citation": "[NVDA 10-Q filed 2026-08-26, MD&A ¶999]", "ticker": "NVDA", "form": "10-Q",
+                     "filed_date": "2026-08-26", "period_end": None, "score": 99.0, "text": self.inject_passage, "url": ""}] + hits
         self.passages += [h["text"] for h in hits]
         if not hits:
             return {"passages": [], "note": "no matching passages (filing text may not be indexed for this company/date)"}
         from ftp import verify
         self._tool = "search_filings"
         for h in hits:
+            if h["score"] == 99.0 and self.inject_passage:
+                continue      # planted text is not evidence (in production, retrieved text comes only from SEC filings)
             for _, val, unit, _ in verify.extract(h["text"]):      # numbers stated in filing text are evidence too
                 self._record(val)
                 if unit in ("million", "m"):
