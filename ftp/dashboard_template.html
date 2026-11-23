@@ -435,8 +435,10 @@ R.chain = () => {
     {margin: {l: 170, r: 10, t: 8, b: 40}, hovermode: 'closest', yaxis: {autorange: 'reversed', gridcolor: 'rgba(0,0,0,0)'}, xaxis: {gridcolor: 'rgba(0,0,0,0)'}});
   plot('layertot', Object.entries(D.layers || {}).map(([l, d]) => ({x: d.quarter, y: d.yoy, name: l.split('· ')[1], type: 'scatter', mode: 'lines', line: {color: layerColor(l), width: 2}, hovertemplate: '%{y:.0f}%'})),
     {yaxis: {title: 'TTM revenue, % YoY'}});
+  const intMax = Math.max(...Object.values(D.intensity).flatMap(d => d.pct));
   plot('intensity', Object.entries(D.intensity).map(([t, d]) => ({x: d.quarter, y: d.pct, name: t, type: 'scatter', mode: 'lines', line: Object.assign({width: 2}, coStyle(t)), hovertemplate: t + ' %{y:.0f}%'})),
-    {yaxis: {title: 'capex as % of revenue'}});
+    {yaxis: {title: 'capex as % of revenue', range: [0, Math.min(intMax * 1.05, 130)]},
+     annotations: intMax > 130 ? [{xref: 'paper', yref: 'paper', x: 1, y: 1, xanchor: 'right', showarrow: false, font: {size: 11, color: C.t3}, text: 'some values off-scale (e.g. CoreWeave spends more than its revenue); hover for exact'}] : []});
   plot('margins', Object.entries(D.margins).map(([t, d]) => ({x: d.quarter, y: d.pct, name: t, type: 'scatter', mode: 'lines', line: Object.assign({width: t === 'NVDA' ? 3 : 1.6}, coStyle(t)), hovertemplate: t + ' %{y:.0f}%'})),
     {yaxis: {title: 'gross margin %'}});
   const ex = D.exposure || [];

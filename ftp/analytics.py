@@ -83,9 +83,12 @@ def weather_normalize(conn: sqlite3.Connection, zone: str, daily: pd.DataFrame |
       level[month]  one free level per calendar month (YYYY-MM): absorbs ALL growth, so the weather
                     coefficients come only from day-to-day swings inside a month
       f             quadratic in heating & cooling degree days
-    Normalized load = actual - f(actual weather) + f(normal weather for that time of year), where
-    "normal" = the average weather effect for that calendar month over all years.
-    Year-over-year growth of the normalized series is growth that weather can't explain.
+    Normalized load = "load at average-year weather" = actual - f(actual weather) - weekend effect
+    + (the average weather effect over all days of all years) + (average weekend effect).
+    Adding back ONE constant (not a per-month "normal") removes the seasonal swing too, so the series is
+    smooth enough to read trends, fit growth regimes and project. Year-over-year growth of it is growth
+    that weather can't explain. weather_part_mw = actual weather effect minus the normal effect for that
+    calendar month: how unusual the month's weather was (+ = load pushed up by weather).
     """
     d = daily_frame(conn, zone, until=until) if daily is None else daily
     w = _weather(conn, zone, until)
@@ -108,8 +111,10 @@ def weather_normalize(conn: sqlite3.Connection, zone: str, daily: pd.DataFrame |
     w["effect"] = _design(w) @ wb
     normal = w.groupby("cal_month")["effect"].mean()
     df["normal_effect"] = df["month"].str[5:7].map(normal)
-    df["normalized_mw"] = df["overnight_mw"] - df["weather_effect"] - beta[-1] * df["weekend"] + df["normal_effect"] \
+    avg_effect = float(w["effect"].mean())
+    df["normalized_mw"] = df["overnight_mw"] - df["weather_effect"] - beta[-1] * df["weekend"] + avg_effect \
         + beta[-1] * (2 / 7)
+    df["weather_anomaly"] = df["weather_effect"] - df["normal_effect"]
     # Weather AND weekday removed, nothing added back: trend + steps + noise. Used for step detection,
     # because the monthly "normal weather" add-back would itself create small jumps at month boundaries.
     df["deweathered_mw"] = df["overnight_mw"] - df["weather_effect"] - beta[-1] * df["weekend"]
@@ -125,7 +130,7 @@ def weather_normalize(conn: sqlite3.Connection, zone: str, daily: pd.DataFrame |
     m = m.set_index(idx).asfreq("M")
     m["normalized_yoy"] = 100 * (m["normalized_mw"] / m["normalized_mw"].shift(12) - 1)
     m["actual_yoy"] = 100 * (m["actual_mw"] / m["actual_mw"].shift(12) - 1)
-    m["weather_part_mw"] = m["actual_mw"] - m["normalized_mw"]
+    m["weather_part_mw"] = df.groupby("month")["weather_anomaly"].mean().reindex(m.index.astype(str)).to_numpy()
     m = m.dropna(subset=["actual_mw"])
     m.index = m.index.astype(str)
     m = m.drop(columns="month").rename_axis("month").reset_index().round(2)
