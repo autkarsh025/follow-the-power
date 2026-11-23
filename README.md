@@ -33,7 +33,7 @@ ends up as **electricity demand** on the grid. This project:
 | **Contrast** | West Texas grew +118%, but that's oil, gas and crypto mining, so it's kept as a contrast zone and out of the data-center totals. The step detector's one hit there is the April 2020 oil crash. |
 | **Supply chain** | Chips & memory is the fastest-growing layer (TTM revenue +70%). Micron, GE Vernova and Dell track hyperscaler capex most tightly. |
 | **Honesty** | Grid data beats a naive nowcast for only **6 of 24** companies. The grid *confirms* the build-out; it rarely front-runs earnings. |
-| **Agent** | **19/19 eval cases on both Claude Sonnet 5.5 and Haiku 5.5** (time travel, planted false claims, cited filing search, multi-step math); 206 numbers verified; LLM-judge 4.2/5. Haiku passed everything with ~40% fewer input tokens. The first live run scored 17/19: both failures were grader/verifier bugs (citation ¶-numbers read as claims, quote pairing), which were fixed with tests. |
+| **Agent** | **21/21 eval cases on both Claude Sonnet 5.5 and Haiku 5.5** (time travel, planted false claims, unit traps, out-of-scope questions, cited filing search, multi-step math); 235 numbers verified; LLM judge 4.27/5 (Sonnet) and 4.16/5 (Haiku). Across six live runs, most failures were grader/verifier bugs, each fixed with a test ([eval log](EVAL_LOG.md)). |
 | **Data quality** | Automated checks caught SEC's API lagging on several utilities' and REITs' latest 10-Qs, and an XBRL tag holding zeros (fixed by tag fall-through). |
 
 ## Architecture
