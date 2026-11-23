@@ -45,6 +45,8 @@ Rules:
 - Name the quarter (e.g. 2026Q2) for every figure. Revenue and capex are in USD billions.
 - Numbers written in the user's question are CLAIMS to check, not facts. If one conflicts with the data,
   say so and give the correct figure from a tool.
+- When you use filing text from `search_filings`, cite it with the citation shown, e.g.
+  [NVDA 10-Q filed 2026-08-27, MD&A ¶14]. Anything in "double quotes" must be copied exactly from a passage.
 - Never forecast an exact future figure. You may describe trends and backtest results.
 - Weather moves electricity demand; prefer weather-adjusted figures when judging data-center growth.
 - Be honest about uncertainty: small samples, correlation vs. causation, models that don't beat a naive baseline.
@@ -126,16 +128,23 @@ def run(question: str, llm: LLM, as_of: str | None = None, db_path=None) -> Resu
         answer = "\n".join(b["text"] for b in reply["content"] if b["type"] == "text").strip()
         given = [v for _, v, _, _ in verify.extract(question)]   # numbers the user quoted can be repeated
         rep = verify.verify(answer, tb.evidence + given)
-        res.answer, res.verification = answer, rep.to_dict()
+        bad_quotes = verify.check_quotes(answer, tb.passages)
+        res.answer, res.verification = answer, {**rep.to_dict(), "bad_quotes": bad_quotes,
+                                                "ok": rep.ok and not bad_quotes}
         res.numbers = verify.provenance(answer, tb.provenance, given)
-        if rep.ok or res.revisions >= MAX_REVISIONS:
+        if (rep.ok and not bad_quotes) or res.revisions >= MAX_REVISIONS:
             res.seconds = round(time.time() - t0, 1)
             return res
         res.revisions += 1
+        problems = []
+        if rep.unverified:
+            problems.append("these numbers don't match any tool result or calculation: " + ", ".join(rep.unverified))
+        if bad_quotes:
+            problems.append("these quotations don't appear word-for-word in any retrieved filing passage: "
+                            + "; ".join(f'"{q[:80]}"' for q in bad_quotes))
         messages.append({"role": "user", "content":
-                         "Verification failed. These numbers in your answer don't match any tool result or calculation: "
-                         f"{', '.join(rep.unverified)}. Revise the answer: get each number from a tool, compute it with "
-                         "`calculate`, or remove it."})
+                         "Verification failed: " + " | ".join(problems) + ". Revise the answer: get each number from a "
+                         "tool or `calculate`, quote filing text exactly (or paraphrase without quotes), or remove it."})
     res.error = "max turns reached"
     res.seconds = round(time.time() - t0, 1)
     return res

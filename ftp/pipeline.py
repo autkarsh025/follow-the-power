@@ -17,7 +17,7 @@ from datetime import date, datetime, timedelta, timezone
 
 import pandas as pd
 
-from ftp import config, db, eia, quality, sec, weather
+from ftp import config, db, eia, filings, quality, sec, weather
 
 log = logging.getLogger("ftp")
 FIN_KEYS = ["ticker", "metric", "fiscal_year", "fiscal_q", "filed_date"]
@@ -91,7 +91,8 @@ def run(start: str = config.HOURLY_START, skip_hourly: bool = False, full: bool 
     end = (datetime.now(timezone.utc).date() - timedelta(days=1)).isoformat()
     w_end = (datetime.now(timezone.utc).date() - timedelta(days=6)).isoformat()   # reanalysis lags ~5 days
     steps = [("sec", lambda: load_sec(conn)), ("state_sales", lambda: load_sales(conn)),
-             ("weather", lambda: load_weather(conn, start, w_end, full))]
+             ("weather", lambda: load_weather(conn, start, w_end, full)),
+             ("filings", lambda: filings.load(conn))]
     if not skip_hourly:
         steps.append(("zone_hourly", lambda: load_zones(conn, start, end, full)))
     results, failures = {}, []

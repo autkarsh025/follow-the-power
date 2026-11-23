@@ -68,3 +68,17 @@ CREATE TABLE IF NOT EXISTS quality_checks (
     detail    TEXT,
     PRIMARY KEY (run_at, check_id, subject)
 );
+
+-- MD&A passages from 10-Q / 10-K filings, for cited text search (RAG). Point-in-time via filed_date.
+CREATE TABLE IF NOT EXISTS filing_chunks (
+    ticker       TEXT NOT NULL,
+    accession    TEXT NOT NULL,
+    form         TEXT NOT NULL,
+    filed_date   TEXT NOT NULL,
+    report_date  TEXT,
+    section      TEXT NOT NULL,
+    chunk_id     INTEGER NOT NULL,
+    text         TEXT NOT NULL,
+    url          TEXT,
+    PRIMARY KEY (accession, chunk_id)
+);

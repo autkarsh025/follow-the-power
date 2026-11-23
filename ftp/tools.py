@@ -19,7 +19,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from ftp import analytics, config, leadlag, power, sec
+from ftp import analytics, config, filings, leadlag, power, sec
 
 SKILLS_DIR = config.ROOT / "skills"
 SERIES_NAMES = ("nvda_yoy", "capex_yoy", "overnight_yoy")
@@ -75,6 +75,7 @@ class Toolbox:
         self.skills = load_skills()
         self._tool = None
         self._zone_cache: dict[str, dict] = {}
+        self.passages: list[str] = []                    # filing text retrieved this run (quotes are checked against it)
         # Grid data counts as public GRID_PUBLICATION_LAG_DAYS after the hour it describes.
         self.grid_until = ((pd.Timestamp(as_of) - pd.Timedelta(days=power.GRID_PUBLICATION_LAG_DAYS)).strftime("%Y-%m-%d")
                            if as_of else None)
@@ -155,6 +156,13 @@ class Toolbox:
              "description": "Quarters whose reported value was later revised in an SEC filing: original vs revised "
                             "value (billions USD), filing dates, % change. Optional ticker filter.",
              "input_schema": {"type": "object", "properties": {"ticker": {"type": "string"}}}},
+            {"name": "search_filings",
+             "description": "Search management's discussion (MD&A) in recent 10-Q/10-K filings. Returns the most relevant "
+                            "passages with a citation like [NVDA 10-Q filed 2026-08-27, MD&A ¶14]. Use for WHY questions "
+                            "(drivers, segments such as NVIDIA's Data Center revenue, guidance language, risks). Cite every "
+                            "passage you use; quote only exact text. Companies: " + ", ".join(filings.FILING_TICKERS) + ".",
+             "input_schema": {"type": "object", "properties": {"query": {"type": "string"}, "ticker": {"type": "string"},
+                                                               "k": {"type": "integer"}}, "required": ["query"]}},
             {"name": "calculate",
              "description": "Arithmetic on numbers you already have (e.g. '105.9 - 85.2'). Use it for ANY number you derive; "
                             "the answer may only contain numbers from tool results or calculations.",
@@ -327,6 +335,22 @@ class Toolbox:
         if ticker and not r.empty:
             r = r[r["ticker"] == ticker.upper()]
         return self._record({"restatements": [] if r.empty else r.head(15).to_dict(orient="records")})
+
+    def t_search_filings(self, query: str, ticker: str | None = None, k: int = 5) -> dict:
+        with self._conn() as c:
+            hits = filings.search(c, query, ticker, self.as_of, min(int(k), 8))
+        self.passages += [h["text"] for h in hits]
+        if not hits:
+            return {"passages": [], "note": "no matching passages (filing text may not be indexed for this company/date)"}
+        from ftp import verify
+        self._tool = "search_filings"
+        for h in hits:
+            for _, val, unit, _ in verify.extract(h["text"]):      # numbers stated in filing text are evidence too
+                self._record(val)
+                if unit in ("million", "m"):
+                    self._record(val / 1000)                        # "$41,096 million" -> 41.096 (billions)
+            h["text"] = h["text"][:1400]
+        return self._record({"passages": [{k_: v for k_, v in h.items() if k_ not in ("url", "score")} for h in hits]})
 
     def t_calculate(self, expression: str) -> dict:
         return self._record({"expression": expression, "result": round(safe_eval(expression), 4)})

@@ -29,7 +29,7 @@ from datetime import datetime, timezone
 
 import pandas as pd
 
-from ftp import agent, analytics, config, leadlag, power, verify
+from ftp import agent, analytics, config, filings, leadlag, power, verify
 
 OUT_DIR = config.ROOT / "evals"
 
@@ -44,6 +44,7 @@ class Case:
     skill: str | None = None
     category: str = "fact"
     must_say: list[str] = field(default_factory=list)
+    require_tool: str | None = None
     why: str = ""          # plain-English description of what the case tests (shown on the dashboard)
 
     def __post_init__(self):
@@ -186,6 +187,23 @@ def build_cases(db_path=None) -> list[Case]:
                           [round(100 * r.value_b_gp / r.value_b_rev, 1)], category="multi-step", skill="earnings-brief",
                           why="Derived metric: gross profit / revenue, computed with the calculator."))
 
+    # ---------------------------------------------------------------- filing text (RAG)
+    have = {r[0] for r in conn.execute("SELECT DISTINCT ticker FROM filing_chunks")}
+    if "NVDA" in have:
+        cases.append(Case("rag_nvda_drivers", "According to NVIDIA's most recent quarterly filing, what drove its Data Center "
+                          "revenue? Cite the filing.", None, [], category="filing-search", require_tool="search_filings",
+                          must_say=["[nvda 10-"], why="Retrieval + citation: answer from management's own words, with a "
+                                                      "source, and any quotation checked word-for-word."))
+    if "D" in have:
+        cases.append(Case("rag_dominion_datacenters", "What does Dominion Energy's latest filing say about data center "
+                          "demand in its service territory? Cite it.", None, [], category="filing-search",
+                          require_tool="search_filings", must_say=["[d 10-"],
+                          why="Connecting the utility's disclosures to the grid data."))
+    if {"MSFT", "META"} <= have:
+        cases.append(Case("rag_capex_plans", "What do Microsoft's and Meta's latest filings say about their capital spending "
+                          "on AI infrastructure? Cite both.", None, [], category="filing-search", require_tool="search_filings",
+                          must_say=["[msft 10-"], why="Multi-document retrieval across two companies."))
+
     # ---------------------------------------------------------------- robustness
     cases.append(Case("claim_check", f"My CFO says NVIDIA's revenue in {last.quarter} was $250.0 billion. Is that right?",
                       None, [round(last.nvda_revenue / 1e9, 1)], skill="claim-check", category="robustness",
@@ -211,9 +229,11 @@ def grade(case: Case, res: agent.Result) -> dict:
     said = not case.must_say or any(p in low for p in case.must_say)
     skill_used = case.skill is None or any(t["name"] == "load_skill" and t["input"].get("name") == case.skill
                                            for t in res.tool_calls)
-    passed = not missing and not leaked and said and res.verification.get("ok", False) and not res.error
+    used_tool = case.require_tool is None or any(t["name"] == case.require_tool for t in res.tool_calls)
+    passed = not missing and not leaked and said and used_tool and res.verification.get("ok", False) and not res.error
     return {"id": case.id, "category": case.category, "why": case.why, "as_of": case.as_of, "passed": passed,
-            "missing": missing, "leaked_future": leaked, "said_required": said,
+            "missing": missing, "leaked_future": leaked, "said_required": said, "used_required_tool": used_tool,
+            "bad_quotes": res.verification.get("bad_quotes", []),
             "verifier_ok": res.verification.get("ok"), "unverified": res.verification.get("unverified"),
             "numbers_checked": res.verification.get("numbers_checked", 0),
             "revisions": res.revisions, "skill_used": skill_used, "tool_calls": len(res.tool_calls),

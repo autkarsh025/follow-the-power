@@ -94,3 +94,16 @@ def provenance(text: str, sources: list[tuple[float, str]], given: list[float] =
             src = "question"
         out.append({"text": raw, "verified": src is not None, "source": src})
     return out
+
+
+QUOTE_RE = re.compile(r"[\"“]([^\"”]{12,400})[\"”]")
+
+
+def _norm(t: str) -> str:
+    return re.sub(r"\s+", " ", re.sub(r"[’‘]", "'", t)).strip().lower()
+
+
+def check_quotes(text: str, passages: list[str]) -> list[str]:
+    """Every quotation (12+ chars in double quotes) must appear word-for-word in a retrieved passage."""
+    corpus = _norm(" ".join(passages))
+    return [q for q in QUOTE_RE.findall(text) if _norm(q).strip(" .,") not in corpus]
