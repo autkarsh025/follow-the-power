@@ -33,6 +33,11 @@ def load_sec(conn) -> int:
             sec.save_raw(ticker, facts)
             for metric in config.COMPANY_METRICS[ticker]:
                 q = sec.quarterly(facts, ticker, metric)
+                # companyfacts holds every version ever filed, so each load REPLACES the company's rows:
+                # a parser fix then also removes rows an older parser got wrong. (Never wipe on an empty parse.)
+                if not q.empty:
+                    with conn:
+                        conn.execute("DELETE FROM fin_quarterly WHERE ticker = ? AND metric = ?", (ticker, metric))
                 total += db.upsert(conn, "fin_quarterly", q, FIN_KEYS)
                 log.info("SEC %s %s: %d quarter-versions", ticker, metric, len(q))
         except Exception as exc:

@@ -106,3 +106,20 @@ def test_quality_checks_and_incremental_resume():
     assert len(quality.latest(conn)) == len(checks)
     assert pipeline.resume_from(conn, "zone_hourly", "period_utc", "DOM", "2019-01-01", 3) == "2025-12-29"
     assert pipeline.resume_from(conn, "zone_hourly", "period_utc", "NOPE", "2019-01-01", 3) == "2019-01-01"
+
+
+def test_company_level_analytics():
+    conn = db.connect()
+    load_synthetic(conn, True)
+    load_weather_zone(conn, "DOM")   # overwrite DOM with weather-driven load (still has growth)
+    fin = leadlag.fin_versions(conn)
+    ex = analytics.exposure(fin)
+    assert list(ex["ticker"]) == ["NVDA"] and -1 <= ex["corr"].iloc[0] <= 1 and 0 <= ex["best_lag_q"].iloc[0] <= 4
+    race = analytics.revenue_race(fin)
+    assert race["NVDA"]["index"][0] == 100.0
+    assert analytics.capex_intensity(fin) == {}          # synthetic data has no hyperscaler revenue
+    feed = analytics.filing_feed(fin)
+    assert feed[0]["filed"] >= feed[-1]["filed"]
+    sb, detail = analytics.backtest_scoreboard(conn, ["NVDA"])
+    assert len(sb) == 1 and sb["best"].iloc[0] in analytics.MODELS and not detail["NVDA"].empty
+    assert all(detail["NVDA"]["decision_date"] > detail["NVDA"]["quarter"].str[:4])

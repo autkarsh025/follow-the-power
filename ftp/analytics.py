@@ -408,3 +408,177 @@ def restatements(fin: pd.DataFrame) -> pd.DataFrame:
                      "latest_b": round(last["value_usd"] / 1e9, 3), "latest_filed": last["filed_date"],
                      "change_pct": round(100 * (last["value_usd"] / first["value_usd"] - 1), 2), "versions": len(g)})
     return pd.DataFrame(rows).sort_values("latest_filed", ascending=False) if rows else pd.DataFrame()
+
+
+# ---------------------------------------------------------------------------- company-level analytics
+def _company_yoy(fin: pd.DataFrame, ticker: str, metric: str = "revenue", as_of: str | None = None) -> pd.Series:
+    cg = chain_growth(fin[(fin["ticker"] == ticker) & (fin["metric"] == metric)], as_of=as_of)
+    return cg.set_index("quarter")["yoy"].astype(float) if not cg.empty else pd.Series(dtype=float)
+
+
+def exposure(fin: pd.DataFrame) -> pd.DataFrame:
+    """How tied is each company's revenue growth to hyperscaler capex growth?
+
+    For lags 0..4 quarters (capex leading revenue), correlate capex YoY(t) with revenue YoY(t+lag); keep the
+    lag with the highest correlation, then estimate beta (pp of revenue growth per 1 pp of capex growth) by OLS
+    at that lag. 'meaningful' = correlation outside the ~2/sqrt(n) noise band."""
+    capex = leadlag.series(fin).set_index("quarter")["capex_yoy"]
+    rows = []
+    for t, info in config.COMPANIES.items():
+        if "revenue" not in config.COMPANY_METRICS.get(t, []):
+            continue
+        y = _company_yoy(fin, t)
+        best = None
+        for lag in range(0, 5):
+            pair = pd.concat([capex, y.shift(-lag)], axis=1).dropna()
+            if len(pair) < 8:
+                continue
+            r = float(pair.iloc[:, 0].corr(pair.iloc[:, 1]))
+            if best is None or r > best[1]:
+                best = (lag, r, pair)
+        if best is None:
+            continue
+        lag, r, pair = best
+        slope, icpt = np.polyfit(pair.iloc[:, 0], pair.iloc[:, 1], 1)
+        n = len(pair)
+        rows.append({"ticker": t, "name": info["name"], "layer": info["layer"], "best_lag_q": lag, "corr": round(r, 2),
+                     "beta": round(float(slope), 2), "r2": round(r * r, 2), "n": n, "noise_band": round(2 / np.sqrt(n), 2),
+                     "meaningful": bool(abs(r) > 2 / np.sqrt(n))})
+    return pd.DataFrame(rows).sort_values("corr", ascending=False).reset_index(drop=True) if rows else pd.DataFrame()
+
+
+def ratio_series(fin: pd.DataFrame, num: str, den: str, tickers: list[str]) -> dict:
+    """Per company and calendar quarter: 100 * metric num / metric den (e.g. capex/revenue, gross_profit/revenue)."""
+    cg = chain_growth(fin)
+    out = {}
+    for t in tickers:
+        a = cg[(cg["ticker"] == t) & (cg["metric"] == num)].set_index("quarter")["value_b"]
+        b = cg[(cg["ticker"] == t) & (cg["metric"] == den)].set_index("quarter")["value_b"]
+        r = (100 * a / b).dropna()
+        r = r[(r.index >= "2019Q1") & (b.reindex(r.index) > 0)]
+        if len(r) >= 4:
+            out[t] = {"quarter": r.index.tolist(), "pct": r.round(1).tolist()}
+    return out
+
+
+def capex_intensity(fin: pd.DataFrame) -> dict:
+    return ratio_series(fin, "capex", "revenue", [t for t, m in config.COMPANY_METRICS.items() if "capex" in m and "revenue" in m])
+
+
+def gross_margins(fin: pd.DataFrame) -> dict:
+    return ratio_series(fin, "gross_profit", "revenue", [t for t, m in config.COMPANY_METRICS.items() if "gross_profit" in m])
+
+
+def revenue_race(fin: pd.DataFrame, base_q: str = "2019Q4") -> dict:
+    """Trailing-twelve-month revenue per company, indexed to its TTM at base_q (= 100; or its first full TTM)."""
+    cg = chain_growth(fin)
+    out = {}
+    for t in config.COMPANIES:
+        g = cg[(cg["ticker"] == t) & (cg["metric"] == "revenue")].set_index("quarter")["value_b"]
+        if g.empty:
+            continue
+        g.index = pd.PeriodIndex(g.index, freq="Q")
+        g = g[~g.index.duplicated()].asfreq("Q")
+        ttm = g.rolling(4).sum().dropna()
+        ttm.index = ttm.index.astype(str)
+        ttm = ttm[ttm.index >= base_q]
+        if len(ttm) < 4:
+            continue
+        out[t] = {"quarter": ttm.index.tolist(), "index": (100 * ttm / ttm.iloc[0]).round(1).tolist(),
+                  "ttm_b": ttm.round(2).tolist(), "base": ttm.index[0]}
+    return out
+
+
+def layer_totals(fin: pd.DataFrame, since: str = "2019Q1") -> dict:
+    """TTM revenue summed per supply-chain layer, using only companies with data back to `since` (consistent set)."""
+    race = revenue_race(fin, base_q="2019Q4")
+    layers: dict[str, list] = {}
+    for t, d in race.items():
+        if d["base"] == "2019Q4":
+            layers.setdefault(config.COMPANIES[t]["layer"], []).append(pd.Series(d["ttm_b"], index=d["quarter"]))
+    out = {}
+    for layer, ss in sorted(layers.items()):
+        tot = pd.concat(ss, axis=1).dropna().sum(axis=1)
+        yoy = (100 * (tot / tot.shift(4) - 1)).round(1)
+        out[layer] = {"quarter": tot.index.tolist(), "ttm_b": tot.round(1).tolist(),
+                      "yoy": [None if np.isnan(v) else v for v in yoy.tolist()], "companies": len(ss)}
+    return out
+
+
+def filing_feed(fin: pd.DataFrame, n: int = 25) -> list[dict]:
+    """Most recent SEC filings in the dataset with their headline values (the 'what just got reported' feed)."""
+    if fin.empty:
+        return []
+    cg = chain_growth(fin)
+    latest = fin.sort_values("filed_date").drop_duplicates(["ticker", "metric"], keep="last")
+    rows = []
+    for r in latest.itertuples():
+        g = cg[(cg["ticker"] == r.ticker) & (cg["metric"] == r.metric) & (cg["quarter"] == r.quarter)]
+        rows.append({"filed": r.filed_date, "ticker": r.ticker, "name": config.COMPANIES.get(r.ticker, {}).get("name"),
+                     "form": r.form, "metric": r.metric, "quarter": r.quarter, "value_b": round(r.value_usd / 1e9, 2),
+                     "yoy": None if g.empty or g["yoy"].iloc[0] is None else g["yoy"].iloc[0]})
+    return sorted(rows, key=lambda x: x["filed"], reverse=True)[:n]
+
+
+def company_backtest(conn: sqlite3.Connection, ticker: str, metric: str = "revenue",
+                     zone: str | None = None) -> pd.DataFrame:
+    """Point-in-time nowcast of a company's YoY growth for calendar quarter T, decided 7 days after T ends.
+
+    Models (each refit only on history known at the decision date):
+      naive       growth_T = growth_{T-1}
+      capex       growth_T ~ hyperscaler capex growth_{T-1}
+      own+capex   growth_T ~ growth_{T-1} + capex growth_{T-1}
+      grid        growth_T ~ growth_{T-1} + Northern Virginia baseload growth_T
+    Scored against growth as FIRST reported."""
+    zone = zone or config.PRIMARY_ZONE
+    fin = leadlag.fin_versions(conn)
+    grid = power.zone_quarterly(conn, zone)
+    sub = fin[((fin["ticker"] == ticker) & (fin["metric"] == metric)) | (fin["metric"] == "capex")]
+    if sub[sub["ticker"] == ticker].empty or grid.empty:
+        return pd.DataFrame()
+    first = sub.sort_values("filed_date").drop_duplicates(["ticker", "metric", "fiscal_year", "fiscal_q"], keep="first")
+    truth = _company_yoy(first, ticker, metric).dropna()
+    rows = []
+    for T in truth.index:
+        if T < "2020Q1":
+            continue
+        D = (pd.Period(T, freq="Q").end_time.normalize() + pd.Timedelta(days=leadlag.DECISION_LAG_DAYS)).strftime("%Y-%m-%d")
+        own = _company_yoy(sub, ticker, metric, as_of=D)
+        cap = leadlag.series(sub, as_of=D).set_index("quarter")["capex_yoy"]
+        g = grid[grid["known_date"] <= D].set_index("quarter")["overnight_yoy"]
+        hist = pd.DataFrame({"y": own, "cap": cap}).join(g.rename("grid"), how="left")
+        hist["y_prev"], hist["cap_prev"] = hist["y"].shift(1), hist["cap"].shift(1)
+        hist = hist[hist.index < T]
+        prev = str(pd.Period(T, freq="Q") - 1)
+        x = {"y_prev": own.get(prev), "cap_prev": cap.get(prev), "grid": g.get(T)}
+        rows.append({"quarter": T, "decision_date": D, "actual_yoy": round(float(truth[T]), 2),
+                     "naive": None if x["y_prev"] is None or pd.isna(x["y_prev"]) else round(float(x["y_prev"]), 2),
+                     "capex": leadlag._ols_predict(hist, ["cap_prev"], "y", x),
+                     "own+capex": leadlag._ols_predict(hist, ["y_prev", "cap_prev"], "y", x),
+                     "grid": leadlag._ols_predict(hist, ["y_prev", "grid"], "y", x)})
+    out = pd.DataFrame(rows)
+    for m in ("capex", "own+capex", "grid"):
+        if m in out:
+            out[m] = pd.to_numeric(out[m]).round(2)
+    return out
+
+
+MODELS = ["naive", "capex", "own+capex", "grid"]
+
+
+def backtest_scoreboard(conn: sqlite3.Connection, tickers: list[str]) -> tuple[pd.DataFrame, dict]:
+    """MAE per company and model on quarters where every model predicted; plus each company's backtest rows."""
+    rows, detail = [], {}
+    for t in tickers:
+        bt = company_backtest(conn, t)
+        if bt.empty:
+            continue
+        common = bt.dropna(subset=MODELS)
+        if len(common) < 4:
+            continue
+        mae = {m: round(float((common[m] - common["actual_yoy"]).abs().mean()), 1) for m in MODELS}
+        best = min(mae, key=mae.get)
+        rows.append({"ticker": t, "name": config.COMPANIES[t]["name"], "quarters": len(common), **mae, "best": best,
+                     "beats_naive": best != "naive"})
+        detail[t] = bt
+    return pd.DataFrame(rows), detail
