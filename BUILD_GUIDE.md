@@ -166,3 +166,26 @@ uncertainty; orchestration in CI; open data publishing.
 - "How do you evaluate LLM outputs that contain financial figures today: human review, rule checks, or both?"
 - "Where does point-in-time data matter in your forecasting or reporting?"
 - "What does data quality monitoring look like for your energy telemetry pipelines?"
+
+## 10. Résumé bullets (pick 3–4; numbers are from the live project)
+
+**follow-the-power** · Python, SQL, Claude API, MCP, GitHub Actions · github.com/autkarsh025/follow-the-power
+
+- Built a daily, incremental data pipeline joining SEC XBRL financials for 26 AI-supply-chain companies (stored
+  point-in-time with filing dates), 337k+ hours of EIA grid demand across 5 data-center hubs, and ERA5 weather;
+  ~230 automated quality checks gate every publish.
+- Developed weather-normalized load analytics (degree-day regression with month fixed effects, R² 0.79–0.98) and
+  BIC-selected growth-regime detection, identifying Northern Virginia's and Ohio's 2024 accelerations in
+  data-center load (≈+1,100–1,270 MW/yr).
+- Built a Claude tool-use analyst agent (16 point-in-time tools, cited BM25 search over 4,600+ 10-Q/10-K passages,
+  MCP server) with a code-based verifier that traces every number to source data and blocks unverified output.
+- Designed a 22-case evaluation suite (time travel, prompt injection, planted false claims, unit traps), with
+  pass^k consistency and a multi-model leaderboard: 21/21 on Claude Sonnet 5.5 and Haiku 5.5. Root-caused failures
+  across 6 live runs, mostly grader bugs, each fixed with a regression test (63 tests).
+
+**Tesla-flavored variant (data engineering, energy):** lead with bullets 1–2 and add: "Detected structural changes
+in hourly load (step detection validated on the April 2020 oil-crash load drop in West Texas) and published an
+open dataset with a validated data contract."
+
+**NVIDIA-flavored variant (Finance AI):** lead with bullets 3–4 and add: "Automated a weekly verified research memo
+and variance-analysis workflow (FP&A-style) with a governance rule that unverified reports are never published."
