@@ -52,6 +52,12 @@ jobs:
       - name: Analysis report
         run: python -m ftp.report
 
+      - name: Open dataset + SEC diagnostics
+        if: always()
+        run: |
+          python -m ftp.export
+          python -m ftp.diagnose
+
       - name: Agent evaluation (Claude)
         if: ${{ github.event.inputs.run_evals == 'true' }}
         env:

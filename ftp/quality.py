@@ -29,9 +29,9 @@ def zone_checks(conn: sqlite3.Connection, zone: str, today: pd.Timestamp) -> lis
     out = [_check("has_data", zone, sev, True, len(df), f"{len(df):,} hours")]
     lag_h = (today - ts.max()).total_seconds() / 3600
     out.append(_check("freshness_hours", zone, "warn", lag_h <= 96, lag_h, f"latest hour {ts.max():%Y-%m-%d %H:00} UTC"))
-    recent = ts[ts > today - pd.Timedelta(days=30)]
+    recent = ts[ts > ts.max() - pd.Timedelta(days=30)]       # 30 days ending at the latest hour (freshness is separate)
     cov = len(recent) / (30 * 24)
-    out.append(_check("coverage_30d", zone, "warn", cov >= 0.95, cov, f"{cov:.1%} of hours present (last 30 days)"))
+    out.append(_check("coverage_30d", zone, "warn", cov >= 0.95, cov, f"{cov:.1%} of hours present (30 days to latest hour)"))
     full = pd.date_range(ts.min(), ts.max(), freq="h")
     out.append(_check("gap_hours_total", zone, "warn", len(full) - len(ts) <= 0.01 * len(full), len(full) - len(ts),
                       f"{len(full) - len(ts):,} missing hours since {ts.min():%Y-%m-%d}"))

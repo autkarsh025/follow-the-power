@@ -13,6 +13,7 @@ can plug in a scripted fake and the real run uses the Anthropic SDK.
 from __future__ import annotations
 
 import json
+import time
 import os
 from dataclasses import dataclass, field
 from typing import Callable
@@ -53,21 +54,32 @@ Skills (call `load_skill` with a name to get detailed instructions before starti
 {skills}"""
 
 
-def anthropic_llm(model: str = MODEL) -> LLM:
+def anthropic_llm(model: str = MODEL, max_tokens: int = MAX_TOKENS) -> LLM:
+    """Claude via the Anthropic SDK. Prompt caching: the system prompt and tool definitions are identical
+    on every turn of every question, so they're marked cacheable; repeat turns read them from cache
+    (cheaper and faster). Usage reports cache reads/writes separately."""
     import anthropic  # imported lazily so tests and data jobs don't need it
 
     client = anthropic.Anthropic()
 
     def call(system: str, tools: list, messages: list) -> dict:
-        r = client.messages.create(model=model, max_tokens=MAX_TOKENS, system=system, tools=tools, messages=messages)
+        kw = {"model": model, "max_tokens": max_tokens, "messages": messages,
+              "system": [{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}]}
+        if tools:
+            kw["tools"] = tools[:-1] + [{**tools[-1], "cache_control": {"type": "ephemeral"}}]
+        r = client.messages.create(**kw)
         content = []
         for b in r.content:
             if b.type == "text":
                 content.append({"type": "text", "text": b.text})
             elif b.type == "tool_use":
                 content.append({"type": "tool_use", "id": b.id, "name": b.name, "input": b.input})
+        u = r.usage
         return {"stop_reason": r.stop_reason, "content": content,
-                "usage": {"input_tokens": r.usage.input_tokens, "output_tokens": r.usage.output_tokens}}
+                "usage": {"input_tokens": u.input_tokens, "output_tokens": u.output_tokens,
+                          "cache_read_tokens": getattr(u, "cache_read_input_tokens", 0) or 0,
+                          "cache_write_tokens": getattr(u, "cache_creation_input_tokens", 0) or 0}}
+    call.model = model
     return call
 
 
@@ -81,13 +93,15 @@ class Result:
     verification: dict = field(default_factory=dict)
     usage: dict = field(default_factory=lambda: {"input_tokens": 0, "output_tokens": 0})
     error: str | None = None
-    numbers: list[dict] = field(default_factory=list)   # each number in the answer + the tool it came from
+    numbers: list[dict] = field(default_factory=list)
+    seconds: float = 0.0   # each number in the answer + the tool it came from
 
     def to_dict(self) -> dict:
         return self.__dict__.copy()
 
 
 def run(question: str, llm: LLM, as_of: str | None = None, db_path=None) -> Result:
+    t0 = time.time()
     tb = Toolbox(db_path, as_of=as_of)
     res = Result(question, as_of)
     system, tools = system_prompt(tb), tb.specs()
@@ -115,6 +129,7 @@ def run(question: str, llm: LLM, as_of: str | None = None, db_path=None) -> Resu
         res.answer, res.verification = answer, rep.to_dict()
         res.numbers = verify.provenance(answer, tb.provenance, given)
         if rep.ok or res.revisions >= MAX_REVISIONS:
+            res.seconds = round(time.time() - t0, 1)
             return res
         res.revisions += 1
         messages.append({"role": "user", "content":
@@ -122,4 +137,5 @@ def run(question: str, llm: LLM, as_of: str | None = None, db_path=None) -> Resu
                          f"{', '.join(rep.unverified)}. Revise the answer: get each number from a tool, compute it with "
                          "`calculate`, or remove it."})
     res.error = "max turns reached"
+    res.seconds = round(time.time() - t0, 1)
     return res

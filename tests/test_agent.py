@@ -62,6 +62,8 @@ def scripted(steps):
     state = {"i": 0}
 
     def llm(system, tools, messages):
+        if len(messages) == 1:          # a new conversation starts the script over
+            state["i"] = 0
         kind, *rest = steps[min(state["i"], len(steps) - 1)]
         state["i"] += 1
         if kind == "tool":
@@ -94,3 +96,54 @@ def test_eval_cases_build_and_grade(dbp):
     assert tt.forbid and tt.as_of
     leaky = agent.Result(tt.question, tt.as_of, answer=f"Growth was {tt.forbid[0]}%.", verification={"ok": True})
     assert evals.grade(tt, leaky)["leaked_future"] == [tt.forbid[0]]
+
+
+def test_receipts_track_which_tool_produced_each_number(dbp):
+    llm = scripted([("tool", "quarterly_financials", {"last_n": 4}),
+                    ("tool", "calculate", {"expression": "2 * 21.5"}),
+                    ("text", lambda r: f"Growth was {r[0]['rows'][-1]['nvda_yoy_pct']}% and the doubled value is 43.0.")])
+    res = agent.run("growth?", llm, db_path=dbp)
+    srcs = {n["text"]: n["source"] for n in res.numbers}
+    assert "calculate" in srcs.values() and "quarterly_financials" in srcs.values()
+    assert all(n["verified"] for n in res.numbers)
+    assert res.tool_calls[0]["numbers_returned"] > 0 and res.seconds >= 0
+
+
+def test_numbers_quoted_in_question_may_be_repeated(dbp):
+    llm = scripted([("tool", "quarterly_financials", {"last_n": 1}),
+                    ("text", lambda r: f"No: not $250.0 billion; it was ${r[0]['rows'][-1]['nvda_revenue_usd_b']} billion.")])
+    res = agent.run("My CFO says revenue was $250.0 billion. Right?", llm, db_path=dbp)
+    assert res.verification["ok"]
+    assert next(n for n in res.numbers if n["text"].startswith("$250"))["source"] == "question"
+
+
+def test_new_tools_respect_point_in_time(dbp):
+    tb_now, tb_past = Toolbox(dbp), Toolbox(dbp, as_of="2022-01-15")
+    snap = tb_now.run("supply_chain_snapshot", {})
+    assert any(c["ticker"] == "NVDA" for c in snap["companies"])
+    past = tb_past.run("company_financials", {"ticker": "NVDA", "metric": "revenue", "last_n": 50})
+    assert max(r["calendar_quarter"] for r in past["rows"]) <= "2021Q4"
+    assert "error" in tb_now.run("company_financials", {"ticker": "ZZZ", "metric": "revenue"})
+    zo = tb_past.run("zone_overview", {})
+    assert zo["zones"][0]["zone"] == "DOM"
+    assert "error" in tb_now.run("weather_adjusted", {"zone": "NOPE"})
+    assert "steps" in tb_now.run("step_changes", {"zone": "DOM"})
+    assert tb_now.run("restatements", {})["restatements"] == []
+
+
+def test_refusal_and_claim_cases_grade(dbp):
+    cases = {c.id: c for c in evals.build_cases(dbp)}
+    nf = cases["no_forecast"]
+    ok = agent.Result(nf.question, None, answer="I can't predict an exact figure.", verification={"ok": True})
+    bad = agent.Result(nf.question, None, answer="It will be large.", verification={"ok": True})
+    assert evals.grade(nf, ok)["passed"] and not evals.grade(nf, bad)["passed"]
+    assert cases["claim_check"].category == "robustness" and cases["multi_step_ratio"].expect
+
+
+def test_eval_main_end_to_end_with_fake_llm(dbp, tmp_path, monkeypatch):
+    monkeypatch.setattr(evals, "OUT_DIR", tmp_path / "ev")
+    llm = scripted([("tool", "quarterly_financials", {"last_n": 2}),
+                    ("text", lambda r: f"Revenue grew {r[0]['rows'][-1]['nvda_yoy_pct']}%. I can't forecast.")])
+    out = evals.main(["--only", "latest_nvda,no_forecast", "--models", "fake-a,fake-b"], llm=llm, db_path=dbp)
+    assert out["total"] == 2 and len(out["leaderboard"]) == 2
+    assert (tmp_path / "ev" / "results.md").exists() and out["by_category"]
