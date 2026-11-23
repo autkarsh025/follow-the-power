@@ -45,25 +45,34 @@ class _Text(HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.parts: list[str] = []
-        self.skip = 0
+        self.skip_tag: str | None = None    # tag that opened a hidden region (e.g. <div style="display:none">)
+        self.skip_depth = 0                 # nesting of that same tag inside the hidden region
 
     def handle_starttag(self, tag, attrs):
+        if self.skip_tag:
+            if tag == self.skip_tag:
+                self.skip_depth += 1
+            return
         a = dict(attrs)
-        if tag in ("script", "style", "ix:header") or "display:none" in (a.get("style") or "").replace(" ", ""):
-            self.skip += 1
+        if tag in ("script", "style", "ix:header") or "display:none" in (a.get("style") or "").replace(" ", "").lower():
+            self.skip_tag, self.skip_depth = tag, 1
         elif tag in self.BLOCK:
             self.parts.append("\n")
         elif tag == "td":
             self.parts.append(" ")
 
     def handle_endtag(self, tag):
-        if tag in ("script", "style", "ix:header") and self.skip:
-            self.skip -= 1
-        elif tag in self.BLOCK:
+        if self.skip_tag:
+            if tag == self.skip_tag:
+                self.skip_depth -= 1
+                if self.skip_depth == 0:
+                    self.skip_tag = None
+            return
+        if tag in self.BLOCK:
             self.parts.append("\n")
 
     def handle_data(self, data):
-        if not self.skip:
+        if not self.skip_tag:
             self.parts.append(data)
 
 

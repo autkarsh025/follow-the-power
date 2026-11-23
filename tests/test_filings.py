@@ -5,7 +5,7 @@ from fixtures import load_synthetic
 from ftp import agent, db, filings, verify
 from ftp.tools import Toolbox
 
-HTML = """<html><body><ix:header><p>hidden xbrl header 999</p></ix:header>
+HTML = """<html><body><div style="display: none"><ix:header><div><p>hidden xbrl header 999</p></div></ix:header></div>
 <p>Table of Contents</p><p>Item 2. Management's Discussion and Analysis ..... 25</p><p>Item 3. Quantitative ..... 40</p>
 <div><p>PART I</p></div>
 <p>Item 2. Management&#8217;s Discussion and Analysis of Financial Condition and Results of Operations</p>

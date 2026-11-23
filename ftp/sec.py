@@ -46,8 +46,8 @@ def facts_frame(facts: dict, concept: str) -> pd.DataFrame:
     """All USD facts for one us-gaap concept, as a DataFrame with durations."""
     units = facts.get("facts", {}).get("us-gaap", {}).get(concept, {}).get("units", {}).get("USD", [])
     df = pd.DataFrame(units)
-    if df.empty:
-        return df
+    if df.empty or "start" not in df:          # instant (balance-sheet style) facts have no start date
+        return pd.DataFrame()
     df = df[df["form"].isin(["10-Q", "10-K", "10-Q/A", "10-K/A"]) & df["start"].notna()].copy()
     df["start_d"] = pd.to_datetime(df["start"])
     df["end_d"] = pd.to_datetime(df["end"])
@@ -61,7 +61,10 @@ def _fiscal_year_starts(df: pd.DataFrame) -> pd.DataFrame:
 
     The CURRENT fiscal year has no full-year figure yet (no 10-K), so it would be invisible.
     If 10-Q facts start the day after the last completed year ends, add that in-progress year."""
-    yr = df[df["days"].between(*YEAR_DAYS)][["start_d", "end_d"]].drop_duplicates()
+    # Only 10-K annual facts define fiscal years: utilities and REITs also report "twelve months ended
+    # June 30" inside 10-Qs, which would otherwise look like (overlapping) fiscal years.
+    annual = df[df["days"].between(*YEAR_DAYS) & df["form"].str.startswith("10-K")]
+    yr = annual[["start_d", "end_d"]].drop_duplicates()
     yr = yr.sort_values("start_d").drop_duplicates("end_d")
     if not yr.empty:
         nxt = yr["end_d"].max() + pd.Timedelta(days=1)
@@ -110,6 +113,7 @@ def _to_quarters(df: pd.DataFrame, ticker: str, metric: str, concept: str) -> pd
             continue
         in_year = df[(df["start_d"] >= y["start_d"]) & (df["end_d"] <= y["end_d"] + pd.Timedelta(days=3))]
         ytd = in_year[in_year["start_d"] == y["start_d"]].copy()
+        ytd = ytd[~(ytd["days"].between(*YEAR_DAYS) & ~ytd["form"].str.startswith("10-K"))]
         ytd["q"] = (ytd["days"] / 91.3).round().astype(int).clip(1, 4)
         direct = in_year[in_year["days"].between(*QUARTER_DAYS)]
         versions: dict[int, list[dict]] = {}

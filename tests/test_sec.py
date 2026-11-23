@@ -83,3 +83,17 @@ def test_current_fiscal_year_without_10k_is_included():
     df = sec.quarterly(facts("Revenues", items), "NVDA", "revenue")
     fy25 = sec.as_of(df, "2030-01-01").query("fiscal_year == 2025").sort_values("fiscal_q")
     assert list(fy25["value_usd"]) == [200, 210]
+
+
+def test_trailing_twelve_month_facts_in_10q_are_not_fiscal_years():
+    # A utility: calendar fiscal year, but its 10-Q for Q2 2025 also reports "twelve months ended June 30, 2025".
+    items = [
+        fact("2024-01-01", "2024-12-31", 400, "2025-02-20", form="10-K"),
+        fact("2025-01-01", "2025-03-31", 110, "2025-05-01"),
+        fact("2025-04-01", "2025-06-30", 120, "2025-08-01"), fact("2025-01-01", "2025-06-30", 230, "2025-08-01"),
+        fact("2024-07-01", "2025-06-30", 450, "2025-08-01"),                    # trailing twelve months (10-Q)
+        fact("2025-07-01", "2025-09-30", 130, "2025-10-30"), fact("2025-01-01", "2025-09-30", 360, "2025-10-30"),
+    ]
+    q = sec.quarterly(facts("Revenues", items), "D", "revenue")
+    got = q[q["fiscal_year"] == 2025].set_index("fiscal_q")["value_usd"].to_dict()
+    assert got == {1: 110, 2: 120, 3: 130}
