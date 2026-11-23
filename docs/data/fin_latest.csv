@@ -177,11 +177,11 @@ ANET,Arista Networks,3 · Servers & networking,gross_profit,2022Q4,0.769,47.04
 ANET,Arista Networks,3 · Servers & networking,gross_profit,2023Q1,0.805,45.26
 ANET,Arista Networks,3 · Servers & networking,gross_profit,2023Q2,0.884,37.44
 ANET,Arista Networks,3 · Servers & networking,gross_profit,2023Q3,0.942,32.74
-ANET,Arista Networks,3 · Servers & networking,gross_profit,2023Q4,0.999,30.01
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2023Q4,0.999,30.0
 ANET,Arista Networks,3 · Servers & networking,gross_profit,2024Q1,1.001,24.47
 ANET,Arista Networks,3 · Servers & networking,gross_profit,2024Q2,1.097,24.1
 ANET,Arista Networks,3 · Servers & networking,gross_profit,2024Q3,1.162,23.27
-ANET,Arista Networks,3 · Servers & networking,gross_profit,2024Q4,1.231,23.19
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2024Q4,1.231,23.2
 ANET,Arista Networks,3 · Servers & networking,gross_profit,2025Q1,1.276,27.43
 ANET,Arista Networks,3 · Servers & networking,gross_profit,2025Q2,1.439,31.12
 ANET,Arista Networks,3 · Servers & networking,gross_profit,2025Q3,1.49,28.28
@@ -212,7 +212,7 @@ ANET,Arista Networks,3 · Servers & networking,revenue,2023Q4,1.54,20.77
 ANET,Arista Networks,3 · Servers & networking,revenue,2024Q1,1.571,16.28
 ANET,Arista Networks,3 · Servers & networking,revenue,2024Q2,1.69,15.87
 ANET,Arista Networks,3 · Servers & networking,revenue,2024Q3,1.811,19.97
-ANET,Arista Networks,3 · Servers & networking,revenue,2024Q4,1.93,25.31
+ANET,Arista Networks,3 · Servers & networking,revenue,2024Q4,1.93,25.32
 ANET,Arista Networks,3 · Servers & networking,revenue,2025Q1,2.005,27.58
 ANET,Arista Networks,3 · Servers & networking,revenue,2025Q2,2.205,30.43
 ANET,Arista Networks,3 · Servers & networking,revenue,2025Q3,2.308,27.47
@@ -342,11 +342,11 @@ D,Dominion Energy,6 · Electricity,revenue,2020Q4,3.521,-9.6
 D,Dominion Energy,6 · Electricity,revenue,2021Q1,3.87,-1.73
 D,Dominion Energy,6 · Electricity,revenue,2021Q2,3.038,-2.19
 D,Dominion Energy,6 · Electricity,revenue,2021Q3,3.176,-11.95
-D,Dominion Energy,6 · Electricity,revenue,2021Q4,1.335,-62.08
+D,Dominion Energy,6 · Electricity,revenue,2021Q4,3.88,10.2
 D,Dominion Energy,6 · Electricity,revenue,2022Q1,3.112,-19.59
 D,Dominion Energy,6 · Electricity,revenue,2022Q2,3.058,0.66
 D,Dominion Energy,6 · Electricity,revenue,2022Q3,3.961,24.72
-D,Dominion Energy,6 · Electricity,revenue,2022Q4,3.807,185.17
+D,Dominion Energy,6 · Electricity,revenue,2022Q4,3.807,-1.88
 D,Dominion Energy,6 · Electricity,revenue,2023Q1,3.883,24.78
 D,Dominion Energy,6 · Electricity,revenue,2023Q2,3.166,3.53
 D,Dominion Energy,6 · Electricity,revenue,2023Q3,3.81,-3.81
@@ -489,11 +489,10 @@ DLR,Digital Realty,5 · Data-center landlords,revenue,2026Q1,1.635,16.16
 EQIX,Equinix,5 · Data-center landlords,capex,2019Q1,0.364,
 EQIX,Equinix,5 · Data-center landlords,capex,2019Q2,0.444,
 EQIX,Equinix,5 · Data-center landlords,capex,2019Q3,0.557,
-EQIX,Equinix,5 · Data-center landlords,capex,2019Q4,0.715,
-EQIX,Equinix,5 · Data-center landlords,capex,2020Q1,0.401,10.16
-EQIX,Equinix,5 · Data-center landlords,capex,2020Q2,0.482,8.51
-EQIX,Equinix,5 · Data-center landlords,capex,2020Q3,0.565,1.52
-EQIX,Equinix,5 · Data-center landlords,capex,2020Q4,0.834,16.76
+EQIX,Equinix,5 · Data-center landlords,capex,2020Q1,0.401,
+EQIX,Equinix,5 · Data-center landlords,capex,2020Q2,0.482,32.42
+EQIX,Equinix,5 · Data-center landlords,capex,2020Q3,0.565,27.27
+EQIX,Equinix,5 · Data-center landlords,capex,2020Q4,0.834,49.84
 EQIX,Equinix,5 · Data-center landlords,capex,2021Q1,0.564,40.57
 EQIX,Equinix,5 · Data-center landlords,capex,2021Q2,0.692,43.63
 EQIX,Equinix,5 · Data-center landlords,capex,2021Q3,0.678,19.99
@@ -530,11 +529,11 @@ EQIX,Equinix,5 · Data-center landlords,revenue,2021Q4,1.706,9.1
 EQIX,Equinix,5 · Data-center landlords,revenue,2022Q1,1.734,8.67
 EQIX,Equinix,5 · Data-center landlords,revenue,2022Q2,1.817,9.6
 EQIX,Equinix,5 · Data-center landlords,revenue,2022Q3,1.841,9.88
-EQIX,Equinix,5 · Data-center landlords,revenue,2022Q4,1.871,9.63
+EQIX,Equinix,5 · Data-center landlords,revenue,2022Q4,1.871,9.64
 EQIX,Equinix,5 · Data-center landlords,revenue,2023Q1,2.225,28.28
 EQIX,Equinix,5 · Data-center landlords,revenue,2023Q2,2.019,11.11
 EQIX,Equinix,5 · Data-center landlords,revenue,2023Q3,2.061,11.97
-EQIX,Equinix,5 · Data-center landlords,revenue,2023Q4,2.11,12.79
+EQIX,Equinix,5 · Data-center landlords,revenue,2023Q4,2.11,12.78
 EQIX,Equinix,5 · Data-center landlords,revenue,2024Q1,2.127,-4.4
 EQIX,Equinix,5 · Data-center landlords,revenue,2024Q2,2.159,6.93
 EQIX,Equinix,5 · Data-center landlords,revenue,2024Q3,2.201,6.79
@@ -630,11 +629,10 @@ GOOGL,Alphabet,1 · Cloud buyers,revenue,2019Q4,46.075,
 GOOGL,Alphabet,1 · Cloud buyers,revenue,2020Q1,41.159,13.26
 GOOGL,Alphabet,1 · Cloud buyers,revenue,2020Q2,38.297,-1.66
 GOOGL,Alphabet,1 · Cloud buyers,revenue,2020Q3,46.173,14.01
-GOOGL,Alphabet,1 · Cloud buyers,revenue,2020Q4,56.898,23.49
-GOOGL,Alphabet,1 · Cloud buyers,revenue,2021Q1,55.314,34.39
-GOOGL,Alphabet,1 · Cloud buyers,revenue,2021Q2,61.88,61.58
-GOOGL,Alphabet,1 · Cloud buyers,revenue,2021Q3,65.118,41.03
-GOOGL,Alphabet,1 · Cloud buyers,revenue,2021Q4,75.325,32.39
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2021Q1,55.314,20.05
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2021Q2,61.88,50.34
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2021Q3,65.118,70.03
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2021Q4,75.325,63.14
 GOOGL,Alphabet,1 · Cloud buyers,revenue,2022Q1,68.011,22.95
 GOOGL,Alphabet,1 · Cloud buyers,revenue,2022Q2,69.685,12.61
 GOOGL,Alphabet,1 · Cloud buyers,revenue,2022Q3,69.092,6.1
@@ -723,19 +721,19 @@ META,Meta,1 · Cloud buyers,capex,2019Q4,4.1,
 META,Meta,1 · Cloud buyers,capex,2020Q1,3.558,-7.27
 META,Meta,1 · Cloud buyers,capex,2020Q2,3.255,-10.4
 META,Meta,1 · Cloud buyers,capex,2020Q3,3.689,4.45
-META,Meta,1 · Cloud buyers,capex,2020Q4,4.661,13.68
+META,Meta,1 · Cloud buyers,capex,2020Q4,4.613,12.51
 META,Meta,1 · Cloud buyers,capex,2021Q1,4.303,20.94
 META,Meta,1 · Cloud buyers,capex,2021Q2,4.641,42.58
 META,Meta,1 · Cloud buyers,capex,2021Q3,4.346,17.81
-META,Meta,1 · Cloud buyers,capex,2021Q4,5.4,15.85
+META,Meta,1 · Cloud buyers,capex,2021Q4,5.4,17.06
 META,Meta,1 · Cloud buyers,capex,2022Q1,5.441,26.45
 META,Meta,1 · Cloud buyers,capex,2022Q2,7.572,63.15
 META,Meta,1 · Cloud buyers,capex,2022Q3,9.375,115.72
-META,Meta,1 · Cloud buyers,capex,2022Q4,8.798,62.93
+META,Meta,1 · Cloud buyers,capex,2022Q4,9.043,67.46
 META,Meta,1 · Cloud buyers,capex,2023Q1,6.823,25.4
 META,Meta,1 · Cloud buyers,capex,2023Q2,6.134,-18.99
 META,Meta,1 · Cloud buyers,capex,2023Q3,6.496,-30.71
-META,Meta,1 · Cloud buyers,capex,2023Q4,7.592,-13.71
+META,Meta,1 · Cloud buyers,capex,2023Q4,7.592,-16.05
 META,Meta,1 · Cloud buyers,capex,2024Q1,6.4,-6.2
 META,Meta,1 · Cloud buyers,capex,2024Q2,8.173,33.24
 META,Meta,1 · Cloud buyers,capex,2024Q3,8.258,27.12
@@ -785,7 +783,7 @@ MRVL,Marvell,2 · Chips & memory,gross_profit,2020Q4,0.421,
 MRVL,Marvell,2 · Chips & memory,gross_profit,2021Q1,0.418,27.93
 MRVL,Marvell,2 · Chips & memory,gross_profit,2021Q2,0.372,3.49
 MRVL,Marvell,2 · Chips & memory,gross_profit,2021Q3,0.588,54.25
-MRVL,Marvell,2 · Chips & memory,gross_profit,2021Q4,0.686,63.01
+MRVL,Marvell,2 · Chips & memory,gross_profit,2021Q4,0.686,62.99
 MRVL,Marvell,2 · Chips & memory,gross_profit,2022Q1,0.751,79.56
 MRVL,Marvell,2 · Chips & memory,gross_profit,2022Q2,0.786,111.4
 MRVL,Marvell,2 · Chips & memory,gross_profit,2022Q3,0.777,32.24
@@ -1196,11 +1194,11 @@ SO,Southern Company,6 · Electricity,capex,2019Q4,2.138,
 SO,Southern Company,6 · Electricity,capex,2020Q1,1.56,-7.03
 SO,Southern Company,6 · Electricity,capex,2020Q2,1.642,-9.08
 SO,Southern Company,6 · Electricity,capex,2020Q3,2.163,11.9
-SO,Southern Company,6 · Electricity,capex,2020Q4,2.157,0.89
+SO,Southern Company,6 · Electricity,capex,2020Q4,2.076,-2.9
 SO,Southern Company,6 · Electricity,capex,2021Q1,1.678,7.56
 SO,Southern Company,6 · Electricity,capex,2021Q2,1.706,3.9
 SO,Southern Company,6 · Electricity,capex,2021Q3,1.838,-15.03
-SO,Southern Company,6 · Electricity,capex,2021Q4,2.364,9.6
+SO,Southern Company,6 · Electricity,capex,2021Q4,2.364,13.87
 SO,Southern Company,6 · Electricity,capex,2022Q1,1.419,-15.44
 SO,Southern Company,6 · Electricity,capex,2022Q2,1.794,5.16
 SO,Southern Company,6 · Electricity,capex,2022Q3,2.289,24.54

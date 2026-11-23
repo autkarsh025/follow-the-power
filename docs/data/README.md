@@ -8,6 +8,7 @@ Refreshed daily by GitHub Actions. All files are CSV (UTF-8, comma-separated). T
 | `fin_latest.csv` | company × metric × calendar quarter (latest version) | ticker, name, layer, metric, quarter, value_b (USD billions), yoy (%) |
 | `zone_monthly.csv` | grid zone × month | zone, month (local), overnight_mw (median 1–5 AM), peak_mw (median daily max), flatness, baseload_yoy (%) |
 | `zone_weather_normalized.csv` | grid zone × month | zone, month, actual_mw, normalized_mw (weather removed), weather_part_mw, normalized_yoy, actual_yoy, tmean_c, hdd, cdd |
+| `zone_daily.csv` | grid zone × local day | zone, date, overnight_mw (median 1–5 AM), normalized_mw, deweathered_mw (weather & weekday removed), tmean_c |
 | `state_sales.csv` | state × month | state, sector (COM = commercial), month, sales_gwh |
 | `quality_checks.csv` | check × subject (latest run) | check_id, subject, severity, passed, value, detail |
 
