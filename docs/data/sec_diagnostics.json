@@ -44,7 +44,26 @@
    "PaymentsToAcquireAndDevelopRealEstate": {},
    "PaymentsToDevelopRealEstateAssets": {}
   },
-  "lookalikes": {},
+  "lookalikes": {
+   "PaymentsForRepurchaseOfCommonStock": {
+    "facts": 92,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-28"
+   },
+   "PaymentsToAcquireInvestments": {
+    "facts": 92,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-28"
+   },
+   "PaymentsForProceedsFromOtherInvestingActivities": {
+    "facts": 82,
+    "first_end": "2019-06-30",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-28"
+   }
+  },
   "latest_quarter": {
    "fiscal_year": "2027",
    "fiscal_q": "1",
@@ -112,7 +131,32 @@
    "PaymentsToAcquireAndDevelopRealEstate": {},
    "PaymentsToDevelopRealEstateAssets": {}
   },
-  "lookalikes": {},
+  "lookalikes": {
+   "PaymentsForRepurchaseOfCommonStock": {
+    "facts": 63,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-29"
+   },
+   "PaymentsToAcquireMarketableSecurities": {
+    "facts": 63,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-29"
+   },
+   "PaymentsToAcquireOtherInvestments": {
+    "facts": 63,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-29"
+   },
+   "PaymentsForProceedsFromOtherInvestingActivities": {
+    "facts": 62,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-29"
+   }
+  },
   "latest_quarter": {
    "fiscal_year": "2026",
    "fiscal_q": "3",
@@ -173,7 +217,26 @@
    "PaymentsToAcquireAndDevelopRealEstate": {},
    "PaymentsToDevelopRealEstateAssets": {}
   },
-  "lookalikes": {},
+  "lookalikes": {
+   "PaymentsToAcquireMarketableSecurities": {
+    "facts": 138,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-30"
+   },
+   "PaymentsToAcquireBusinessesNetOfCashAcquired": {
+    "facts": 115,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-30"
+   },
+   "PaymentsToAcquireAvailableForSaleSecuritiesDebt": {
+    "facts": 13,
+    "first_end": "2023-09-30",
+    "last_end": "2025-12-31",
+    "last_filed": "2026-10-30"
+   }
+  },
   "latest_quarter": {
    "fiscal_year": "2026",
    "fiscal_q": "3",
@@ -229,7 +292,32 @@
    "PaymentsToAcquireAndDevelopRealEstate": {},
    "PaymentsToDevelopRealEstateAssets": {}
   },
-  "lookalikes": {},
+  "lookalikes": {
+   "PaymentsForProceedsFromOtherInvestingActivities": {
+    "facts": 63,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-22"
+   },
+   "PaymentsForRepurchaseOfCommonStock": {
+    "facts": 63,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-22"
+   },
+   "PaymentsToAcquireAvailableForSaleSecuritiesDebt": {
+    "facts": 49,
+    "first_end": "2019-06-30",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-22"
+   },
+   "PaymentsToAcquireMarketableSecurities": {
+    "facts": 14,
+    "first_end": "2019-03-31",
+    "last_end": "2025-12-31",
+    "last_filed": "2026-01-29"
+   }
+  },
   "latest_quarter": {
    "fiscal_year": "2026",
    "fiscal_q": "3",
@@ -290,7 +378,32 @@
    "PaymentsToAcquireAndDevelopRealEstate": {},
    "PaymentsToDevelopRealEstateAssets": {}
   },
-  "lookalikes": {},
+  "lookalikes": {
+   "PaymentsToAcquireInvestments": {
+    "facts": 64,
+    "first_end": "2019-02-28",
+    "last_end": "2026-08-31",
+    "last_filed": "2026-09-11"
+   },
+   "PaymentsForRepurchaseOfCommonStock": {
+    "facts": 62,
+    "first_end": "2019-02-28",
+    "last_end": "2026-05-31",
+    "last_filed": "2026-06-22"
+   },
+   "PaymentsToAcquireBusinessesNetOfCashAcquired": {
+    "facts": 51,
+    "first_end": "2019-02-28",
+    "last_end": "2025-05-31",
+    "last_filed": "2025-06-18"
+   },
+   "PaymentsForRestructuring": {
+    "facts": 44,
+    "first_end": "2019-02-28",
+    "last_end": "2026-08-31",
+    "last_filed": "2026-09-11"
+   }
+  },
   "latest_quarter": {
    "fiscal_year": "2027",
    "fiscal_q": "1",
@@ -341,7 +454,62 @@
    "PaymentsToAcquireAndDevelopRealEstate": {},
    "PaymentsToDevelopRealEstateAssets": {}
   },
-  "lookalikes": {},
+  "lookalikes": {
+   "PaymentsForProceedsFromOtherInvestingActivities": {
+    "facts": 13,
+    "first_end": "2023-12-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-11-12"
+   },
+   "PaymentsToAcquireNotesReceivable": {
+    "facts": 13,
+    "first_end": "2023-12-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-11-12"
+   },
+   "PaymentsToAcquireBusinessesNetOfCashAcquired": {
+    "facts": 11,
+    "first_end": "2023-12-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-11-12"
+   },
+   "PaymentsToAcquireMarketableSecurities": {
+    "facts": 9,
+    "first_end": "2023-12-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-11-12"
+   },
+   "PaymentsToAcquireAvailableForSaleSecuritiesDebt": {
+    "facts": 2,
+    "first_end": "2024-03-31",
+    "last_end": "2025-03-31",
+    "last_filed": "2025-05-15"
+   },
+   "PaymentsToAcquireRestrictedInvestments": {
+    "facts": 2,
+    "first_end": "2024-03-31",
+    "last_end": "2025-03-31",
+    "last_filed": "2025-05-15"
+   },
+   "PaymentsForRepurchaseOfCommonStock": {
+    "facts": 2,
+    "first_end": "2024-09-30",
+    "last_end": "2025-09-30",
+    "last_filed": "2025-11-13"
+   },
+   "PaymentsToAcquireInterestInJointVenture": {
+    "facts": 2,
+    "first_end": "2025-06-30",
+    "last_end": "2026-06-30",
+    "last_filed": "2026-08-12"
+   },
+   "PaymentsToAcquireInterestInSubsidiariesAndAffiliates": {
+    "facts": 2,
+    "first_end": "2025-09-30",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-11-12"
+   }
+  },
   "latest_quarter": {
    "fiscal_year": "2026",
    "fiscal_q": "3",
@@ -922,44 +1090,7 @@
    "period_end": "2026-09-30",
    "concept": "RevenueFromContractWithCustomerExcludingAssessedTax"
   },
-  "bad_rows": [
-   {
-    "fiscal_year": "2019",
-    "fiscal_q": "1",
-    "period_start": "2019-01-01",
-    "period_end": "2019-03-31",
-    "value_usd": "0.0",
-    "concept": "Revenues",
-    "derived": "0"
-   },
-   {
-    "fiscal_year": "2019",
-    "fiscal_q": "2",
-    "period_start": "2019-04-01",
-    "period_end": "2019-06-30",
-    "value_usd": "0.0",
-    "concept": "Revenues",
-    "derived": "0"
-   },
-   {
-    "fiscal_year": "2019",
-    "fiscal_q": "3",
-    "period_start": "2019-07-01",
-    "period_end": "2019-09-30",
-    "value_usd": "0.0",
-    "concept": "Revenues",
-    "derived": "0"
-   },
-   {
-    "fiscal_year": "2019",
-    "fiscal_q": "4",
-    "period_start": "2019-10-01",
-    "period_end": "2019-12-31",
-    "value_usd": "0.0",
-    "concept": "Revenues",
-    "derived": "1"
-   }
-  ]
+  "bad_rows": []
  },
  "ETN revenue": {
   "candidates": {
@@ -1122,6 +1253,42 @@
     "first_end": "2019-03-31",
     "last_end": "2026-09-30",
     "last_filed": "2026-10-28"
+   },
+   "PaymentsToAcquireBusinessesNetOfCashAcquired": {
+    "facts": 48,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-28"
+   },
+   "PaymentsToAcquireEquityMethodInvestments": {
+    "facts": 22,
+    "first_end": "2022-12-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-28"
+   },
+   "PaymentsToAcquireShortTermInvestments": {
+    "facts": 20,
+    "first_end": "2022-12-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-28"
+   },
+   "PaymentsToAcquireLoansReceivable": {
+    "facts": 18,
+    "first_end": "2022-12-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-28"
+   },
+   "PaymentsForProceedsFromDerivativeInstrumentInvestingActivities": {
+    "facts": 18,
+    "first_end": "2022-12-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-28"
+   },
+   "PaymentsForRestructuring": {
+    "facts": 6,
+    "first_end": "2024-12-31",
+    "last_end": "2025-12-31",
+    "last_filed": "2026-02-11"
    }
   },
   "latest_quarter": {
@@ -1167,7 +1334,26 @@
     "last_filed": "2026-05-01"
    }
   },
-  "lookalikes": {},
+  "lookalikes": {
+   "PaymentsForProceedsFromOtherInvestingActivities": {
+    "facts": 47,
+    "first_end": "2019-12-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-01"
+   },
+   "PaymentsToAcquireEquityMethodInvestments": {
+    "facts": 23,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-01"
+   },
+   "PaymentsToAcquireBusinessesNetOfCashAcquired": {
+    "facts": 7,
+    "first_end": "2019-12-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-01"
+   }
+  },
   "latest_quarter": {
    "fiscal_year": "2026",
    "fiscal_q": "1",
@@ -1243,7 +1429,38 @@
    "PaymentsToAcquireAndDevelopRealEstate": {},
    "PaymentsToDevelopRealEstateAssets": {}
   },
-  "lookalikes": {},
+  "lookalikes": {
+   "PaymentsForProceedsFromOtherInvestingActivities": {
+    "facts": 59,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-01"
+   },
+   "PaymentsToAcquireMarketableSecurities": {
+    "facts": 59,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-01"
+   },
+   "PaymentsToAcquireProjects": {
+    "facts": 59,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-01"
+   },
+   "PaymentsForProceedsFromProductiveAssets": {
+    "facts": 25,
+    "first_end": "2019-12-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-01"
+   },
+   "PaymentsForRepurchaseOfPreferredStockAndPreferenceStock": {
+    "facts": 6,
+    "first_end": "2024-06-30",
+    "last_end": "2025-09-30",
+    "last_filed": "2025-10-31"
+   }
+  },
   "latest_quarter": {
    "fiscal_year": "2020",
    "fiscal_q": "1",
@@ -1307,69 +1524,45 @@
    "PaymentsToAcquireAndDevelopRealEstate": {},
    "PaymentsToDevelopRealEstateAssets": {}
   },
-  "lookalikes": {},
+  "lookalikes": {
+   "PaymentsToAcquireShortTermInvestments": {
+    "facts": 85,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-05"
+   },
+   "PaymentsForConstructionInProcess": {
+    "facts": 59,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-05"
+   },
+   "PaymentsForNuclearFuel": {
+    "facts": 59,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-05"
+   },
+   "PaymentsForProceedsFromOtherInvestingActivities": {
+    "facts": 59,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-05"
+   },
+   "PaymentsToAcquireInvestments": {
+    "facts": 59,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-05"
+   }
+  },
   "latest_quarter": {
    "fiscal_year": "2026",
    "fiscal_q": "1",
    "period_end": "2026-03-31",
    "concept": "PaymentsToAcquireProductiveAssets"
   },
-  "bad_rows": [
-   {
-    "fiscal_year": "2019",
-    "fiscal_q": "4",
-    "period_start": "2019-10-01",
-    "period_end": "2019-12-31",
-    "value_usd": "-2900000.0",
-    "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
-    "derived": "1"
-   },
-   {
-    "fiscal_year": "2020",
-    "fiscal_q": "3",
-    "period_start": "2020-07-01",
-    "period_end": "2020-09-30",
-    "value_usd": "0.0",
-    "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
-    "derived": "1"
-   },
-   {
-    "fiscal_year": "2020",
-    "fiscal_q": "4",
-    "period_start": "2020-10-01",
-    "period_end": "2020-12-31",
-    "value_usd": "0.0",
-    "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
-    "derived": "1"
-   },
-   {
-    "fiscal_year": "2020",
-    "fiscal_q": "1",
-    "period_start": "2020-01-01",
-    "period_end": "2020-03-31",
-    "value_usd": "0.0",
-    "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
-    "derived": "0"
-   },
-   {
-    "fiscal_year": "2024",
-    "fiscal_q": "3",
-    "period_start": "2024-07-01",
-    "period_end": "2024-09-30",
-    "value_usd": "0.0",
-    "concept": "PaymentsToAcquireProductiveAssets",
-    "derived": "1"
-   },
-   {
-    "fiscal_year": "2025",
-    "fiscal_q": "1",
-    "period_start": "2025-01-01",
-    "period_end": "2025-03-31",
-    "value_usd": "0.0",
-    "concept": "PaymentsToAcquireProductiveAssets",
-    "derived": "0"
-   }
-  ]
+  "bad_rows": []
  },
  "SO revenue": {
   "candidates": {
@@ -1423,7 +1616,38 @@
    "PaymentsToAcquireAndDevelopRealEstate": {},
    "PaymentsToDevelopRealEstateAssets": {}
   },
-  "lookalikes": {},
+  "lookalikes": {
+   "PaymentsForProceedsFromOtherInvestingActivities": {
+    "facts": 59,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-04-30"
+   },
+   "PaymentsForRemovalCosts": {
+    "facts": 59,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-04-30"
+   },
+   "PaymentsToInvestInDecommissioningFund": {
+    "facts": 59,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-04-30"
+   },
+   "PaymentsToMinorityShareholders": {
+    "facts": 57,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-04-30"
+   },
+   "PaymentsToAcquireBusinessesGross": {
+    "facts": 5,
+    "first_end": "2023-12-31",
+    "last_end": "2025-12-31",
+    "last_filed": "2026-02-19"
+   }
+  },
   "latest_quarter": {
    "fiscal_year": "2026",
    "fiscal_q": "1",
@@ -1472,7 +1696,26 @@
    "PaymentsToAcquireAndDevelopRealEstate": {},
    "PaymentsToDevelopRealEstateAssets": {}
   },
-  "lookalikes": {},
+  "lookalikes": {
+   "PaymentsForProceedsFromNuclearFuel": {
+    "facts": 59,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-04-23"
+   },
+   "PaymentsForProceedsFromOtherInvestingActivities": {
+    "facts": 59,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-04-23"
+   },
+   "PaymentsToInvestInDecommissioningFund": {
+    "facts": 59,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-04-23"
+   }
+  },
   "latest_quarter": null,
   "bad_rows": []
  },

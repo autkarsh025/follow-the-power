@@ -1,16 +1,10 @@
 ticker,name,layer,metric,quarter,value_b,yoy
 AEP,American Electric Power,6 · Electricity,capex,2019Q3,0.34,
-AEP,American Electric Power,6 · Electricity,capex,2019Q4,-0.003,
-AEP,American Electric Power,6 · Electricity,capex,2020Q1,0.0,
-AEP,American Electric Power,6 · Electricity,capex,2020Q3,0.0,
-AEP,American Electric Power,6 · Electricity,capex,2020Q4,0.0,-100.0
-AEP,American Electric Power,6 · Electricity,capex,2021Q1,0.103,-3648.28
-AEP,American Electric Power,6 · Electricity,capex,2024Q3,0.0,
-AEP,American Electric Power,6 · Electricity,capex,2024Q4,0.399,inf
-AEP,American Electric Power,6 · Electricity,capex,2025Q1,0.0,
-AEP,American Electric Power,6 · Electricity,capex,2025Q3,0.298,189.6
-AEP,American Electric Power,6 · Electricity,capex,2025Q4,1.796,inf
-AEP,American Electric Power,6 · Electricity,capex,2026Q1,0.965,141.85
+AEP,American Electric Power,6 · Electricity,capex,2021Q1,0.103,
+AEP,American Electric Power,6 · Electricity,capex,2024Q4,0.399,
+AEP,American Electric Power,6 · Electricity,capex,2025Q3,0.298,
+AEP,American Electric Power,6 · Electricity,capex,2025Q4,1.796,427.99
+AEP,American Electric Power,6 · Electricity,capex,2026Q1,0.965,837.8
 AEP,American Electric Power,6 · Electricity,revenue,2019Q1,4.057,
 AEP,American Electric Power,6 · Electricity,revenue,2019Q2,3.574,
 AEP,American Electric Power,6 · Electricity,revenue,2019Q3,4.315,
@@ -923,10 +917,10 @@ MU,Micron,2 · Chips & memory,gross_profit,2023Q1,-1.206,-132.81
 MU,Micron,2 · Chips & memory,gross_profit,2023Q2,-0.668,-116.56
 MU,Micron,2 · Chips & memory,gross_profit,2023Q3,-0.435,-116.59
 MU,Micron,2 · Chips & memory,gross_profit,2023Q4,-0.035,-103.92
-MU,Micron,2 · Chips & memory,gross_profit,2024Q1,1.079,-189.47
-MU,Micron,2 · Chips & memory,gross_profit,2024Q2,1.832,-374.25
-MU,Micron,2 · Chips & memory,gross_profit,2024Q3,2.737,-729.2
-MU,Micron,2 · Chips & memory,gross_profit,2024Q4,3.348,-9665.71
+MU,Micron,2 · Chips & memory,gross_profit,2024Q1,1.079,
+MU,Micron,2 · Chips & memory,gross_profit,2024Q2,1.832,
+MU,Micron,2 · Chips & memory,gross_profit,2024Q3,2.737,
+MU,Micron,2 · Chips & memory,gross_profit,2024Q4,3.348,
 MU,Micron,2 · Chips & memory,gross_profit,2025Q1,2.963,174.61
 MU,Micron,2 · Chips & memory,gross_profit,2025Q2,3.508,91.48
 MU,Micron,2 · Chips & memory,gross_profit,2025Q3,5.054,84.65
@@ -1253,14 +1247,14 @@ SO,Southern Company,6 · Electricity,revenue,2025Q2,6.973,7.89
 SO,Southern Company,6 · Electricity,revenue,2025Q3,7.823,7.55
 SO,Southern Company,6 · Electricity,revenue,2025Q4,6.981,10.09
 SO,Southern Company,6 · Electricity,revenue,2026Q1,8.397,8.0
-VRT,Vertiv,4 · Power & cooling gear,revenue,2019Q1,0.0,
-VRT,Vertiv,4 · Power & cooling gear,revenue,2019Q2,0.0,
-VRT,Vertiv,4 · Power & cooling gear,revenue,2019Q3,0.0,
-VRT,Vertiv,4 · Power & cooling gear,revenue,2019Q4,0.0,
-VRT,Vertiv,4 · Power & cooling gear,revenue,2020Q1,0.897,inf
-VRT,Vertiv,4 · Power & cooling gear,revenue,2020Q2,1.006,inf
-VRT,Vertiv,4 · Power & cooling gear,revenue,2020Q3,1.162,inf
-VRT,Vertiv,4 · Power & cooling gear,revenue,2020Q4,1.306,inf
+VRT,Vertiv,4 · Power & cooling gear,revenue,2019Q1,1.055,
+VRT,Vertiv,4 · Power & cooling gear,revenue,2019Q2,1.134,
+VRT,Vertiv,4 · Power & cooling gear,revenue,2019Q3,1.071,
+VRT,Vertiv,4 · Power & cooling gear,revenue,2019Q4,1.171,
+VRT,Vertiv,4 · Power & cooling gear,revenue,2020Q1,0.897,-14.93
+VRT,Vertiv,4 · Power & cooling gear,revenue,2020Q2,1.006,-11.32
+VRT,Vertiv,4 · Power & cooling gear,revenue,2020Q3,1.162,8.53
+VRT,Vertiv,4 · Power & cooling gear,revenue,2020Q4,1.306,11.44
 VRT,Vertiv,4 · Power & cooling gear,revenue,2021Q1,1.098,22.41
 VRT,Vertiv,4 · Power & cooling gear,revenue,2021Q2,1.26,25.32
 VRT,Vertiv,4 · Power & cooling gear,revenue,2021Q3,1.229,5.76
