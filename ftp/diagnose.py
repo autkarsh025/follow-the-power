@@ -15,7 +15,7 @@ import pandas as pd
 from ftp import config, sec
 
 LOOKALIKE = {"revenue": re.compile(r"Revenue", re.I),
-             "capex": re.compile(r"^Payments(To|For)(Acquire|Construction|Capital|Develop).*(Property|Plant|Asset|Construction|Capital|Utility|RealEstate)", re.I),
+             "capex": re.compile(r"^Payments(To|For)", re.I),
              "gross_profit": re.compile(r"GrossProfit", re.I)}
 
 

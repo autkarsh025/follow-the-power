@@ -329,7 +329,8 @@ def chain_growth(fin: pd.DataFrame, as_of: str | None = None) -> pd.DataFrame:
         s = g.groupby("quarter")["value_usd"].last().sort_index()
         s.index = pd.PeriodIndex(s.index, freq="Q")
         s = s[~s.index.duplicated()].asfreq("Q")
-        yoy = 100 * (s / s.shift(4) - 1)
+        prev = s.shift(4)
+        yoy = (100 * (s / prev - 1)).where(prev > 0)      # growth is undefined from a zero/negative base
         for q, val in s.items():
             if not np.isnan(val):
                 rows.append({"ticker": t, "metric": m, "quarter": str(q), "value_b": round(val / 1e9, 3),
@@ -521,7 +522,7 @@ def filing_feed(fin: pd.DataFrame, n: int = 25) -> list[dict]:
 
 
 def company_backtest(conn: sqlite3.Connection, ticker: str, metric: str = "revenue",
-                     zone: str | None = None) -> pd.DataFrame:
+                     zone: str | None = None, cache: dict | None = None) -> pd.DataFrame:
     """Point-in-time nowcast of a company's YoY growth for calendar quarter T, decided 7 days after T ends.
 
     Models (each refit only on history known at the decision date):
@@ -531,8 +532,11 @@ def company_backtest(conn: sqlite3.Connection, ticker: str, metric: str = "reven
       grid        growth_T ~ growth_{T-1} + Northern Virginia baseload growth_T
     Scored against growth as FIRST reported."""
     zone = zone or config.PRIMARY_ZONE
-    fin = leadlag.fin_versions(conn)
-    grid = power.zone_quarterly(conn, zone)
+    cache = {} if cache is None else cache          # shared across companies: capex history per decision date
+    if "fin" not in cache:
+        cache["fin"] = leadlag.fin_versions(conn)
+        cache["grid"] = power.zone_quarterly(conn, zone)
+    fin, grid = cache["fin"], cache["grid"]
     sub = fin[((fin["ticker"] == ticker) & (fin["metric"] == metric)) | (fin["metric"] == "capex")]
     if sub[sub["ticker"] == ticker].empty or grid.empty:
         return pd.DataFrame()
@@ -544,7 +548,9 @@ def company_backtest(conn: sqlite3.Connection, ticker: str, metric: str = "reven
             continue
         D = (pd.Period(T, freq="Q").end_time.normalize() + pd.Timedelta(days=leadlag.DECISION_LAG_DAYS)).strftime("%Y-%m-%d")
         own = _company_yoy(sub, ticker, metric, as_of=D)
-        cap = leadlag.series(sub, as_of=D).set_index("quarter")["capex_yoy"]
+        if ("cap", D) not in cache:
+            cache[("cap", D)] = leadlag.series(fin[fin["metric"] == "capex"], as_of=D).set_index("quarter")["capex_yoy"]
+        cap = cache[("cap", D)]
         g = grid[grid["known_date"] <= D].set_index("quarter")["overnight_yoy"]
         hist = pd.DataFrame({"y": own, "cap": cap}).join(g.rename("grid"), how="left")
         hist["y_prev"], hist["cap_prev"] = hist["y"].shift(1), hist["cap"].shift(1)
@@ -568,9 +574,9 @@ MODELS = ["naive", "capex", "own+capex", "grid"]
 
 def backtest_scoreboard(conn: sqlite3.Connection, tickers: list[str]) -> tuple[pd.DataFrame, dict]:
     """MAE per company and model on quarters where every model predicted; plus each company's backtest rows."""
-    rows, detail = [], {}
+    rows, detail, cache = [], {}, {}
     for t in tickers:
-        bt = company_backtest(conn, t)
+        bt = company_backtest(conn, t, cache=cache)
         if bt.empty:
             continue
         common = bt.dropna(subset=MODELS)

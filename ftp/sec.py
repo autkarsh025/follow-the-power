@@ -88,6 +88,11 @@ def quarterly(facts: dict, ticker: str, metric: str) -> pd.DataFrame:
         if df.empty or not (df["days"].between(*QUARTER_DAYS).any() or df["days"].between(*YEAR_DAYS).any()):
             continue
         out = _to_quarters(df, ticker, metric, concept)
+        if metric in ("revenue", "capex") and not out.empty:
+            # Revenue and capex can't be <= 0; such values come from stale or placeholder tags (e.g. a dormant
+            # `Revenues` tag holding zeros). Dropping them lets the next concept cover the quarter.
+            # (Gross profit CAN be negative: Micron in 2023.)
+            out = out[out["value_usd"] > 0]
         if not out.empty:
             parts.append(out.assign(_rank=rank))
     if not parts:

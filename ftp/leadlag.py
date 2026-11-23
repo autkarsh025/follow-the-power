@@ -49,8 +49,10 @@ def series(fin: pd.DataFrame, as_of: str | None = None) -> pd.DataFrame:
     nv = view[(view["ticker"] == "NVDA") & (view["metric"] == "revenue")].set_index("quarter")["value_usd"]
     cap = view[(view["metric"] == "capex")]
     hyperscalers = [t for t, c in config.COMPANIES.items() if c["role"] == "hyperscaler"]
-    pivot = cap.pivot_table(index="quarter", columns="ticker", values="value_usd", aggfunc="last")
-    capex = pivot.dropna(subset=[t for t in hyperscalers if t in pivot.columns]).sum(axis=1) \
+    pivot = cap[cap["ticker"].isin(hyperscalers)].pivot_table(index="quarter", columns="ticker", values="value_usd",
+                                                              aggfunc="last")
+    # Only the four hyperscalers, and only quarters where all four have reported.
+    capex = pivot[hyperscalers].dropna().sum(axis=1) \
         if not pivot.empty and set(hyperscalers) <= set(pivot.columns) else pd.Series(dtype=float)
     out = pd.DataFrame({"nvda_revenue": nv, "hyperscaler_capex": capex}).sort_index()
     out.index = pd.PeriodIndex(out.index, freq="Q")
@@ -74,11 +76,14 @@ def cross_correlation(a: pd.Series, b: pd.Series, max_lag: int = 4) -> pd.DataFr
 
 
 def _ols_predict(train: pd.DataFrame, x_cols: list[str], y_col: str, x_new: dict) -> float | None:
-    t = train.dropna(subset=x_cols + [y_col])
+    t = train.replace([np.inf, -np.inf], np.nan).dropna(subset=x_cols + [y_col])
     if len(t) < MIN_TRAIN or any(x_new.get(c) is None or pd.isna(x_new.get(c)) for c in x_cols):
         return None
     X = np.column_stack([np.ones(len(t))] + [t[c].to_numpy(float) for c in x_cols])
-    beta, *_ = np.linalg.lstsq(X, t[y_col].to_numpy(float), rcond=None)
+    try:
+        beta, *_ = np.linalg.lstsq(X, t[y_col].to_numpy(float), rcond=None)
+    except np.linalg.LinAlgError:
+        return None
     return float(beta[0] + sum(b * x_new[c] for b, c in zip(beta[1:], x_cols)))
 
 

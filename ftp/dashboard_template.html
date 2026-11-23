@@ -1,209 +1,719 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Follow the Power · the AI boom, seen through the electrical grid</title>
-<meta name="description" content="NVIDIA revenue, hyperscaler capex and Northern Virginia's data-center power demand, joined point-in-time, with a verified Claude analyst agent.">
+<title>Follow the Power · the AI boom, seen through money and electricity</title>
+<meta name="description" content="26 companies across the AI supply chain, hourly power demand in 5 data-center hubs, weather-normalized and point-in-time, explained by a verified Claude analyst agent.">
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
 <style>
-  :root { color-scheme: dark; --page:#121211; --s1:#1a1a19; --s2:#232321; --border:#2e2e2b; --t1:#f0efec; --t2:#c3c2b7; --t3:#8d8c84;
-          --nvda:#199e70; --capex:#3987e5; --power:#d95926; --va:#c98500; --good:#0ca30c; --warn:#fab219; --crit:#d03b3b; --accent:#d95926; }
-  * { box-sizing:border-box; } body { margin:0; background:var(--page); color:var(--t1); font:15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
-  .wrap { max-width:1240px; margin:0 auto; padding:30px 24px 64px; } a { color:var(--t2); }
-  header { display:flex; flex-wrap:wrap; justify-content:space-between; gap:16px; align-items:flex-start; }
-  h1 { font-size:30px; letter-spacing:-.02em; margin:0; } h1 span { color:var(--accent); }
-  .tag { color:var(--t2); margin:6px 0 0; max-width:720px; } .meta { color:var(--t3); font-size:13px; text-align:right; }
-  .btn { border:1px solid var(--border); background:var(--s1); color:var(--t2); font:inherit; font-size:13px; padding:5px 11px; border-radius:8px; text-decoration:none; white-space:nowrap; }
-  .intro { margin:22px 0 0; background:var(--s1); border:1px solid var(--border); border-radius:16px; padding:18px 20px; }
-  .intro h2 { margin:0 0 6px; font-size:21px; } .intro p.lede { color:var(--t2); margin:0 0 14px; max-width:920px; } .intro b { color:var(--t1); }
-  .steps { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
-  .step { background:var(--s2); border:1px solid var(--border); border-radius:12px; padding:14px 16px; }
-  .step .n { display:inline-grid; place-items:center; width:24px; height:24px; border-radius:50%; background:var(--accent); color:#fff; font-size:13px; font-weight:700; margin-bottom:6px; }
-  .step h4 { margin:0 0 4px; font-size:15px; } .step p { margin:0; color:var(--t2); font-size:13.5px; }
-  .kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-top:16px; }
-  .kpi { background:var(--s1); border:1px solid var(--border); border-radius:14px; padding:14px 16px; }
-  .kpi .l { color:var(--t3); font-size:13px; } .kpi .v { font-size:26px; font-weight:650; letter-spacing:-.02em; font-variant-numeric:tabular-nums; } .kpi .s { color:var(--t2); font-size:12.5px; }
-  h3.section { margin:30px 0 4px; font-size:13px; text-transform:uppercase; letter-spacing:.06em; color:var(--t3); font-weight:600; }
-  .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:10px; }
-  .card { background:var(--s1); border:1px solid var(--border); border-radius:14px; padding:18px 18px 10px; min-width:0; } .card.wide { grid-column:1/-1; }
-  .card h2 { font-size:16px; margin:0; } .card p.d { color:var(--t2); font-size:13px; margin:3px 0 6px; max-width:900px; }
-  .look { font-size:13px; background:var(--s2); border-left:3px solid var(--accent); border-radius:8px; padding:7px 10px; margin:2px 0 8px; max-width:900px; }
-  .look::before { content:"What to look for: "; font-weight:600; }
-  .chart { height:340px; } .chart.tall { height:380px; }
-  table { width:100%; border-collapse:collapse; font-size:13px; font-variant-numeric:tabular-nums; }
-  th { text-align:left; color:var(--t3); font-weight:500; padding:8px 10px; border-bottom:1px solid var(--border); } td { padding:7px 10px; border-bottom:1px solid var(--border); color:var(--t2); vertical-align:top; }
-  td.num, th.num { text-align:right; } .pill { display:inline-flex; gap:6px; align-items:center; color:var(--t1); } .dot { width:8px; height:8px; border-radius:50%; display:inline-block; }
-  details.ans { margin:8px 0; background:var(--s2); border:1px solid var(--border); border-radius:10px; padding:10px 14px; }
-  details.ans summary { cursor:pointer; color:var(--t1); } details.ans .q { color:var(--t3); font-size:13px; margin:8px 0 4px; } details.ans .a { white-space:pre-wrap; color:var(--t2); font-size:13.5px; }
-  .arch { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:8px 0 12px; } .arch .b { background:var(--s2); border:1px solid var(--border); border-radius:10px; padding:10px 14px; }
-  .arch .b b { display:block; font-size:14px; } .arch .b small { color:var(--t3); } .arch .ar { color:var(--t3); }
-  dl.gl { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px 28px; } dl.gl dt { font-weight:600; font-size:14px; } dl.gl dd { margin:2px 0 0; color:var(--t2); font-size:13.5px; }
-  footer { color:var(--t3); font-size:13px; margin-top:28px; line-height:1.7; } .empty { color:var(--t3); padding:40px 0; text-align:center; }
-  @media (max-width:900px) { .grid, .steps, dl.gl { grid-template-columns:1fr; } .kpis { grid-template-columns:repeat(2,minmax(0,1fr)); } .meta { text-align:left; } }
+:root{--page:#f4f3f0;--s1:#fcfcfb;--s2:#f0efec;--border:#e2e1dc;--t1:#0b0b0b;--t2:#52514e;--t3:#7d7c76;
+ --c1:#2a78d6;--c2:#eb6834;--c3:#1baf7a;--c4:#eda100;--c5:#e87ba4;--c6:#008300;--c7:#6250d6;--c8:#e34948;
+ --good:#0ca30c;--warn:#fab219;--crit:#d03b3b;--accent:#eb6834;--mid:#f0efec;color-scheme:light}
+:root[data-theme="dark"]{--page:#121211;--s1:#1a1a19;--s2:#232321;--border:#2e2e2b;--t1:#f0efec;--t2:#c3c2b7;--t3:#8d8c84;
+ --c1:#3987e5;--c2:#d95926;--c3:#199e70;--c4:#c98500;--c5:#d55181;--c6:#0ca30c;--c7:#9085e9;--c8:#e66767;--accent:#d95926;--mid:#383835;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--t1);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--c1)}.wrap{max-width:1280px;margin:0 auto;padding:22px 22px 70px}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px;align-items:flex-start}
+h1{font-size:28px;letter-spacing:-.02em;margin:0}h1 span{color:var(--accent)}.tag{color:var(--t2);margin:4px 0 0;max-width:760px}
+.meta{color:var(--t3);font-size:12.5px;text-align:right;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.btn{border:1px solid var(--border);background:var(--s1);color:var(--t2);font:inherit;font-size:13px;padding:5px 11px;border-radius:8px;text-decoration:none;cursor:pointer;white-space:nowrap}
+.btn:hover{color:var(--t1)}.btn.small{font-size:11.5px;padding:2px 8px}
+nav.tabs{position:sticky;top:0;z-index:20;background:var(--page);display:flex;gap:4px;overflow-x:auto;padding:12px 0 8px;margin-top:10px;border-bottom:1px solid var(--border)}
+nav.tabs button{border:0;background:none;color:var(--t2);font:inherit;font-size:14px;padding:7px 12px;border-radius:9px;cursor:pointer;white-space:nowrap}
+nav.tabs button.on{background:var(--s1);color:var(--t1);box-shadow:inset 0 0 0 1px var(--border);font-weight:600}
+section.tab{display:none}section.tab.on{display:block}
+.intro{margin:16px 0 0;background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:18px 20px}
+.intro h2{margin:0 0 6px;font-size:20px}.lede{color:var(--t2);margin:0 0 12px;max-width:960px}.lede b{color:var(--t1)}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.step{background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:13px 15px}
+.step .n{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;margin-bottom:5px}
+.step h4{margin:0 0 3px;font-size:14.5px}.step p{margin:0;color:var(--t2);font-size:13px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:14px}
+.kpi{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:13px 15px}
+.kpi .l{color:var(--t3);font-size:12.5px}.kpi .v{font-size:25px;font-weight:650;letter-spacing:-.02em;font-variant-numeric:tabular-nums}.kpi .s{color:var(--t2);font-size:12px}
+h3.section{margin:26px 0 2px;font-size:12.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);font-weight:600}
+p.sect{color:var(--t2);margin:2px 0 6px;font-size:13.5px;max-width:980px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:10px}
+.card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px 16px 10px;min-width:0;position:relative}.card.wide{grid-column:1/-1}
+.card h2{font-size:15.5px;margin:0;padding-right:70px}.card p.d{color:var(--t2);font-size:13px;margin:3px 0 6px;max-width:940px}
+.card .tools{position:absolute;top:12px;right:12px;display:flex;gap:4px}
+.look{font-size:12.8px;background:var(--s2);border-left:3px solid var(--accent);border-radius:8px;padding:6px 10px;margin:2px 0 8px;max-width:940px;color:var(--t2)}
+.look::before{content:"What to look for: ";font-weight:600;color:var(--t1)}
+.chart{height:330px}.chart.tall{height:400px}.chart.xtall{height:520px}.chart.short{height:250px}
+table{width:100%;border-collapse:collapse;font-size:12.8px;font-variant-numeric:tabular-nums}
+th{text-align:left;color:var(--t3);font-weight:500;padding:7px 8px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--s1)}
+td{padding:6px 8px;border-bottom:1px solid var(--border);color:var(--t2);vertical-align:top}td.num,th.num{text-align:right}
+tr.click{cursor:pointer}tr.click:hover td{background:var(--s2)}
+.scroll{max-height:420px;overflow:auto}
+.pill{display:inline-flex;gap:5px;align-items:center;color:var(--t1);white-space:nowrap}.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:none}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.chip{border:1px solid var(--border);background:var(--s2);color:var(--t2);border-radius:999px;padding:3px 10px;font-size:12.5px;cursor:pointer;user-select:none}
+.chip.on{color:var(--t1);border-color:var(--t3);background:var(--s1);font-weight:600}
+select,input[type=range]{font:inherit;font-size:13px}select{background:var(--s1);color:var(--t1);border:1px solid var(--border);border-radius:8px;padding:5px 8px}
+.ctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0}.ctl label{color:var(--t3);font-size:12.5px}
+.findings{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:14px}
+.finding{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:13px 15px}.finding h4{margin:0 0 4px;font-size:14px}.finding p{margin:0;color:var(--t2);font-size:13.3px}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin:8px 0 4px}
+.flow .b{flex:1 1 140px;background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:10px 12px;cursor:pointer}
+.flow .b:hover{border-color:var(--t3)}.flow .b b{display:block;font-size:13px}.flow .b .v{font-size:20px;font-weight:650;font-variant-numeric:tabular-nums}.flow .b small{color:var(--t3);font-size:11.5px}
+.flow .ar{align-self:center;color:var(--t3)}
+.ans{background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-size:13.8px;color:var(--t1);line-height:1.6}
+.ans .v{background:color-mix(in srgb,var(--good) 22%,transparent);border-bottom:2px solid var(--good);border-radius:3px;padding:0 2px;cursor:help}
+.ans .u{background:color-mix(in srgb,var(--crit) 22%,transparent);border-bottom:2px solid var(--crit);border-radius:3px;padding:0 2px;cursor:help}
+.ans .cite{font-size:11.5px;background:var(--s1);border:1px solid var(--border);border-radius:6px;padding:1px 6px;color:var(--t2);white-space:nowrap}
+.trace{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0}.trace .t{font-family:ui-monospace,Menlo,monospace;font-size:11.8px;background:var(--s2);border:1px solid var(--border);border-radius:7px;padding:3px 8px}
+.trace .t.err{border-color:var(--crit)}.trace .ar{color:var(--t3);font-size:12px}
+.mono{font-family:ui-monospace,Menlo,monospace;font-size:12px}pre.code{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;overflow:auto;font-size:12px}
+dl.gl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 28px}dl.gl dt{font-weight:600;font-size:13.5px}dl.gl dd{margin:2px 0 0;color:var(--t2);font-size:13px}
+.slider{width:100%}.big{font-size:22px;font-weight:650}
+footer{color:var(--t3);font-size:12.5px;margin-top:28px;line-height:1.7}.empty{color:var(--t3);padding:30px 0;text-align:center}
+.ok{color:var(--good)}.bad{color:var(--crit)}.muted{color:var(--t3)}
+@media(max-width:900px){.grid,.steps,dl.gl{grid-template-columns:1fr}.meta{align-items:flex-start;text-align:left}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <div><h1>follow<span>-</span>the<span>-</span>power ⚡</h1>
-      <p class="tag">Tracking the AI boom through the electrical grid: NVIDIA's revenue, big tech's spending on data centers, and the power demand of the world's largest data-center hub, joined point-in-time and explained by a verified Claude analyst.</p></div>
-    <div class="meta"><a class="btn" href="https://github.com/autkarsh025/follow-the-power">GitHub ↗</a><div id="built" style="margin-top:8px"></div></div>
-  </header>
+<header>
+  <div><h1>follow<span>-</span>the<span>-</span>power ⚡</h1>
+    <p class="tag">Tracking the AI boom through money <i>and</i> electricity: 26 companies across the AI supply chain, hourly power demand in 5 data-center hubs, all point-in-time, explained by a Claude analyst whose every number is verified.</p></div>
+  <div class="meta"><div><button class="btn" id="theme">☀️ Light</button> <a class="btn" href="https://github.com/autkarsh025/follow-the-power">GitHub ↗</a> <a class="btn" href="data/README.md">Open data ↗</a></div><div id="built"></div></div>
+</header>
+<nav class="tabs" id="tabs"></nav>
 
-  <section class="intro">
-    <h2>What is this?</h2>
-    <p class="lede">AI runs on GPUs, and GPUs run on electricity. Every NVIDIA chip ends up plugged into a data center that draws power around the clock, and that shows up in <b>public grid data</b>. This project follows the money from big tech's budgets to NVIDIA's revenue to the power grid, using only official public data, and tests honestly what the grid can and can't tell you.</p>
+<!-- ============================== OVERVIEW -->
+<section class="tab" data-tab="overview" data-title="Overview">
+  <div class="intro"><h2>What is this?</h2>
+    <p class="lede">AI runs on GPUs, and GPUs run on electricity. When big tech spends hundreds of billions on AI, the money flows down a <b>supply chain</b> (chips, servers, power equipment, data-center buildings) and ends as <b>electricity demand</b> on the grid. This project follows that money and that power using only official public data, and asks honestly what each can and can't tell you.</p>
     <div class="steps">
-      <div class="step"><span class="n">1</span><h4>The money</h4><p>Quarterly results from SEC filings: NVIDIA's revenue, and capital spending by Microsoft, Alphabet, Amazon and Meta. Every number keeps the date it was first published.</p></div>
-      <div class="step"><span class="n">2</span><h4>The power</h4><p>Hourly electricity demand in Northern Virginia (Dominion zone), home to the largest concentration of data centers on Earth. Data centers run 24/7, so they raise the <b>overnight</b> load.</p></div>
-      <div class="step"><span class="n">3</span><h4>The analyst</h4><p>A Claude agent answers questions with these tools. Every number it writes is automatically checked against the data, and it's scored by replaying history so it can't peek at the future.</p></div>
-    </div>
-  </section>
-
-  <section class="kpis" id="kpis"></section>
-
-  <h3 class="section">The money</h3>
+      <div class="step"><span class="n">1</span><h4>The money</h4><p>Quarterly revenue, capex and margins for 26 companies, from SEC filings. Every number keeps the date it became public, so history can be replayed without hindsight.</p></div>
+      <div class="step"><span class="n">2</span><h4>The power</h4><p>Hourly electricity demand in 5 data-center hubs, with weather removed. Data centers run 24/7, so they raise the <b>overnight</b> load; a sudden jump can mean a new campus switched on.</p></div>
+      <div class="step"><span class="n">3</span><h4>The analyst</h4><p>A Claude agent answers questions with <span class="ntools"></span> tools: SQL, statistics and searching filing text. Every number it writes is checked against the data, and it's tested by replaying history.</p></div>
+    </div></div>
+  <div class="findings" id="findings"></div>
+  <div class="kpis" id="kpis"></div>
+  <h3 class="section">The chain at a glance</h3>
+  <p class="sect">Trailing-12-month revenue growth for each layer of the AI supply chain (companies with data since 2019). Click a layer to explore it.</p>
+  <div class="flow" id="flow"></div>
   <div class="grid">
-    <div class="card wide"><h2>NVIDIA's revenue vs. big tech's data-center spending</h2>
-      <p class="d">Quarterly, in billions of dollars. Hyperscaler capex = Microsoft + Alphabet + Amazon + Meta capital expenditures (mostly data centers and the chips inside them).</p>
-      <p class="look">both lines bend upward together starting in 2023, when the AI build-out began. Capex is the money spent; a large share of it becomes NVIDIA revenue.</p>
-      <div class="chart tall" id="money"></div></div>
-    <div class="card"><h2>Growth rates</h2><p class="d">Year-over-year growth, %. Comparing each quarter with the same quarter a year earlier removes seasonal swings.</p>
-      <p class="look">NVIDIA's growth spiked first (2023), and hyperscaler capex growth climbed after it.</p><div class="chart" id="growth"></div></div>
-    <div class="card"><h2>Who's spending</h2><p class="d">Capital expenditures per company, billions USD per quarter.</p>
-      <p class="look">all four ramping at once: this is an industry-wide build-out, not one company.</p><div class="chart" id="cos"></div></div>
+    <div class="card wide" data-csv="money"><h2>Big tech's AI spending vs. NVIDIA's revenue</h2>
+      <p class="d">Quarterly, USD billions. Hyperscaler capex = Microsoft + Alphabet + Amazon + Meta capital expenditures (mostly data centers and the chips inside).</p>
+      <p class="look">both lines bend upward together from 2023, when the AI build-out began. Capex is the money spent; a big share becomes chip revenue.</p><div class="chart tall" id="money"></div></div>
+    <div class="card" data-csv="ov_power"><h2>Northern Virginia's always-on power</h2><p class="d">Monthly overnight baseload (median 1–5 AM), actual vs. weather-adjusted, MW.</p>
+      <p class="look">the weather-adjusted line strips out heat waves and cold snaps; what's left keeps climbing. That's new 24/7 load.</p><div class="chart" id="ov_power"></div></div>
+    <div class="card"><h2>Just reported</h2><p class="d">The latest SEC filings in the dataset, with headline numbers and growth.</p><div class="scroll" style="max-height:330px" id="feed"></div></div>
   </div>
+</section>
 
-  <h3 class="section">The power</h3>
+<!-- ============================== SUPPLY CHAIN -->
+<section class="tab" data-tab="chain" data-title="Supply chain">
+  <p class="sect" style="margin-top:14px">Six layers, 26 companies. Pick layers to compare; colors follow the layer (dashes tell companies apart within a layer).</p>
+  <div class="chips" id="layerchips"></div>
   <div class="grid">
-    <div class="card"><h2>Northern Virginia's overnight baseload</h2><p class="d">Median demand between 1 and 5 AM each month (MW), Dominion zone of PJM. Homes and offices are quiet at night; data centers aren't.</p>
-      <p class="look">the floor of the line (the spring and fall lows, when weather matters least) keeps rising. That's new 24/7 load.</p><div class="chart" id="baseload"></div></div>
-    <div class="card"><h2>A flatter day: the data-center signature</h2><p class="d">Average load by hour as a % of the daily peak: 2019 vs. the last 12 months.</p>
-      <p class="look">the recent line sits higher at night. Less difference between night and day means more always-on load, exactly what data centers add.</p><div class="chart" id="shape"></div></div>
-    <div class="card wide"><h2>Commercial electricity sales by state (2019 = 100)</h2><p class="d">Monthly retail sales to commercial customers (data centers count as commercial), summed by quarter and indexed to each state's 2019 average.</p>
-      <p class="look">Virginia pulling away from other states. Texas, Ohio and Arizona are where the next wave of data centers is going.</p><div class="chart" id="states"></div></div>
+    <div class="card wide" data-csv="race"><h2>The revenue race</h2><p class="d">Trailing-12-month revenue, indexed to each company's level at the end of 2019 (= 100). Log scale, so equal steps mean equal % growth.</p>
+      <p class="look">who pulled away when AI spending took off (2023+). A line at 1,000 means revenue grew 10×.</p><div class="chart xtall" id="race"></div></div>
+    <div class="card wide"><h2>Growth heatmap</h2><p class="d">Year-over-year revenue growth by company and calendar quarter (capex for cloud buyers). Red = growing, blue = shrinking, gray = flat.</p>
+      <p class="look">the red wave moving down the supply chain: chips first, then servers and power gear, then electricity.</p><div class="chart xtall" id="heat"></div></div>
+    <div class="card" data-csv="layertot"><h2>Layer totals</h2><p class="d">Trailing-12-month revenue growth per layer, % YoY (same companies throughout).</p>
+      <p class="look">which part of the chain is accelerating now.</p><div class="chart" id="layertot"></div></div>
+    <div class="card" data-csv="intensity"><h2>Capex intensity</h2><p class="d">Capital spending as a % of revenue for cloud buyers and data-center landlords.</p>
+      <p class="look">big tech now reinvests a much larger share of every revenue dollar into infrastructure.</p><div class="chart" id="intensity"></div></div>
+    <div class="card wide" data-csv="exposure"><h2>AI exposure score: who moves with big tech's spending?</h2>
+      <p class="d">For each company: correlation between hyperscaler capex growth and the company's revenue growth, at the lag (0–4 quarters) where it's strongest. The shaded band is noise: bars inside it aren't meaningful.</p>
+      <p class="look">chips and power-gear makers near the top: their revenue IS big tech's capex. Utilities sit lower because electricity bills move slowly.</p><div class="chart tall" id="exposure"></div><div class="scroll" id="exposure_t"></div></div>
+    <div class="card" data-csv="margins"><h2>Pricing power: gross margins</h2><p class="d">Gross profit as % of revenue (chips, memory, servers, networking).</p>
+      <p class="look">NVIDIA's margin jump in 2023 is what scarcity pricing looks like. Memory (Micron) is famously cyclical.</p><div class="chart" id="margins"></div></div>
+    <div class="card"><h2>Who leads whom: the full matrix</h2><p class="d">Strongest correlation between every pair of growth series (row vs. column) within ±4 quarters. Hover for the lag: positive = the row leads.</p>
+      <p class="look">dark cells = strongly linked. Hover to see if spending leads revenue.</p><div class="chart tall" id="matrix"></div></div>
   </div>
+</section>
 
-  <h3 class="section">Does the grid move with the money?</h3>
+<!-- ============================== COMPANY -->
+<section class="tab" data-tab="company" data-title="Company explorer">
+  <div class="ctl" style="margin-top:14px"><label>Company</label><select id="cosel"></select><span class="muted" id="colayer"></span></div>
+  <div class="kpis" id="cokpis"></div>
   <div class="grid">
-    <div class="card wide"><h2>Who leads whom</h2><p class="d">Correlation between growth rates at different time shifts. A bar at +k means the first series leads the second by k quarters. The shaded band is noise: bars inside it aren't meaningful (with only ~25 quarters, that band is wide).</p>
-      <p class="look">NVIDIA's growth peaks a few quarters before capex growth (negative lags on the first pair), and capex growth peaks about one quarter before Virginia's overnight load (+1 on the second pair). Money, then chips, then power.</p><div class="chart tall" id="cc"></div></div>
-    <div class="card wide"><h2>Can the grid forecast NVIDIA's revenue? An honest test</h2><p class="d">Each quarter, standing 7 days after it ends (before NVIDIA reports), three models predict NVIDIA's revenue growth using only data public that day. Lines show predictions vs. what NVIDIA later reported.</p>
-      <p class="look">the grid model doesn't beat the naive "growth continues" guess. Grid data confirms the build-out <i>after</i> the money moves; it doesn't front-run NVIDIA. Reporting that plainly is the point.</p><div class="chart" id="bt"></div><div id="scores"></div></div>
+    <div class="card" data-csv="co_val"><h2 id="co_val_t">Quarterly values</h2><p class="d">USD billions by calendar quarter (fiscal quarters mapped to the calendar quarter they mostly cover).</p><div class="chart" id="co_val"></div></div>
+    <div class="card" data-csv="co_yoy"><h2>Year-over-year growth</h2><p class="d">% vs. the same quarter a year earlier, with hyperscaler capex growth for comparison.</p>
+      <p class="look">does this company's growth follow big tech's spending, and with what delay?</p><div class="chart" id="co_yoy"></div></div>
+    <div class="card" data-csv="co_bt"><h2>Can we nowcast it?</h2><p class="d">Point-in-time backtest: each quarter, 7 days after it ends (before the company reports), models predict its revenue growth using only data public that day.</p><div class="chart" id="co_bt"></div><div id="co_bt_t"></div></div>
+    <div class="card"><h2>Filing history &amp; revisions</h2><p class="d">Every version of every quarter this company filed. Rows marked ✎ were later revised (restated).</p><div class="scroll" style="max-height:360px" id="co_hist"></div></div>
   </div>
+</section>
 
-  <h3 class="section">The analyst agent</h3>
+<!-- ============================== GRID -->
+<section class="tab" data-tab="grid" data-title="Grid zones">
+  <p class="sect" style="margin-top:14px">Five grid zones where data centers cluster, from EIA hourly demand data. Weather is removed with a degree-day regression (details on the Data-center detector tab).</p>
+  <div class="kpis" id="zonecards"></div>
   <div class="grid">
-    <div class="card wide"><h2>Evaluation: can the agent be trusted with numbers?</h2>
-      <p class="d">Questions whose correct answers are computed from the data. A case passes only if the right numbers appear, every number is verified against tool outputs, and, for time-travel cases, no number from after the "as of" date leaks in.</p>
-      <div id="evals"></div></div>
+    <div class="card wide" data-csv="zindex"><h2>Five hubs, one race (weather-adjusted)</h2><p class="d">Monthly overnight baseload with weather removed, indexed to each zone's 2019 average (= 100).</p>
+      <p class="look">which hubs are adding always-on load fastest. Lines that keep climbing through mild and harsh years alike = structural growth.</p><div class="chart tall" id="zindex"></div></div>
   </div>
-
-  <h3 class="section">How it works</h3>
+  <div class="ctl"><label>Zone</label><select class="zsel" data-scope="grid"></select></div>
   <div class="grid">
-    <div class="card wide"><div class="arch">
-      <div class="b"><b>SEC EDGAR</b><small>10-Q/10-K XBRL · filing dates</small></div><span class="ar">+</span>
-      <div class="b"><b>EIA</b><small>hourly zone demand · state sales</small></div><span class="ar">→</span>
-      <div class="b"><b>Point-in-time SQL</b><small>every value keeps when it became public</small></div><span class="ar">→</span>
-      <div class="b"><b>Power index</b><small>overnight baseload · flatness</small></div><span class="ar">→</span>
-      <div class="b"><b>Lead/lag + backtest</b><small>noise bands · no look-ahead</small></div><span class="ar">→</span>
-      <div class="b"><b>Claude agent</b><small>tools · skills · number verifier</small></div><span class="ar">→</span>
-      <div class="b"><b>Evals + this page</b><small>GitHub Actions</small></div></div>
-      <p class="d">Stack: Python · pandas · SQLite · Claude API (tool use) · pytest · GitHub Actions · Plotly. Data: SEC EDGAR XBRL API; U.S. Energy Information Administration (EIA-930 hourly subregion demand; retail sales).</p></div>
+    <div class="card wide" data-csv="zmon"><h2 id="zmon_t">Overnight baseload: actual vs. weather-adjusted</h2><p class="d">Monthly average of each day's 1–5 AM median load, MW.</p>
+      <p class="look">the gap between the lines is weather. In a hot July, the actual line pops above; the adjusted line shows the underlying trend.</p><div class="chart tall" id="zmon"></div></div>
+    <div class="card" data-csv="zyoy"><h2>Growth, with and without weather</h2><p class="d">% change vs. the same month a year earlier.</p><p class="look">the weather-adjusted growth is much steadier: that's the signal.</p><div class="chart" id="zyoy"></div></div>
+    <div class="card" data-csv="zweather"><h2>How much was weather?</h2><p class="d">Weather's contribution to overnight load each month (MW above/below a normal-weather month) and the average temperature.</p><div class="chart" id="zweather"></div></div>
+    <div class="card wide" data-csv="states"><h2>Commercial electricity sales by state (2019 = 100)</h2><p class="d">Quarterly retail sales to commercial customers (data centers count as commercial), EIA.</p>
+      <p class="look">Virginia pulling away; Texas, Ohio, Arizona and Georgia are where the next wave is landing.</p><div class="chart" id="states"></div></div>
+  </div>
+</section>
+
+<!-- ============================== DETECTOR -->
+<section class="tab" data-tab="detector" data-title="Data-center detector">
+  <p class="sect" style="margin-top:14px">Four ways to see data centers in grid data. They run flat out 24/7, so they lift the <b>floor</b> of the load curve, not just the peaks.</p>
+  <div class="ctl"><label>Zone</label><select class="zsel" data-scope="detector"></select></div>
+  <div class="grid">
+    <div class="card wide" data-csv="steps"><h2>Step-change detector</h2><p class="d">Weekly overnight load with weather and weekday effects removed. Markers show sudden, sustained jumps: the median of the next 4 weeks vs. the previous 4 weeks, above a noise threshold.</p>
+      <p class="look">big upward steps are consistent with a large new load (like a data-center campus) being energized. They're clues, not confirmations.</p><div class="chart tall" id="steps"></div><div id="steps_t"></div></div>
+    <div class="card" data-csv="tresp"><h2>Same temperature, more power</h2><p class="d">Average overnight load at each temperature (2 °C bins), one line per year. Darker = more recent.</p>
+      <p class="look">the whole curve shifting UP year after year: at the same temperature, the grid carries more load. Weather can't explain that.</p><div class="chart" id="tresp"></div></div>
+    <div class="card" data-csv="ldc"><h2>Load-duration curves</h2><p class="d">Every hour of the year sorted from highest to lowest load, as % of that year's peak. Load factor = average ÷ peak.</p>
+      <p class="look">the right end (the quietest hours) rising toward the peak = a flatter, more always-on grid.</p><div class="chart" id="ldc"></div></div>
+    <div class="card" data-csv="profiles"><h2>The flattening day</h2><p class="d">Average load by hour of day, % of that year's peak hour, one line per year.</p>
+      <p class="look">night hours climbing relative to the afternoon peak.</p><div class="chart" id="profiles"></div></div>
+    <div class="card"><h2>Hour × month heatmap</h2><p class="d">Average load (MW) for every hour of the day (rows) in every month (columns).</p>
+      <p class="look">the bottom rows (overnight) getting warmer-colored over time.</p><div class="chart" id="hm"></div></div>
+    <div class="card wide"><h2>How big is that? GPU calculator</h2><p class="d">Always-on load added since 2019 (weather-adjusted baseload, last 12 months vs. 2019), converted to equivalents. Move the sliders to change the assumptions.</p>
+      <div id="calc"></div></div>
+  </div>
+</section>
+
+<!-- ============================== FORECAST -->
+<section class="tab" data-tab="forecast" data-title="Forecasts & backtests">
+  <div class="ctl" style="margin-top:14px"><label>Zone</label><select class="zsel" data-scope="forecast"></select></div>
+  <div class="grid">
+    <div class="card wide" data-csv="fc"><h2 id="fc_t">If the trend continues: 24-month baseload projection</h2><p class="d">Log-linear trend fitted to the last 36 months of weather-adjusted overnight baseload. The band is the 10th–90th percentile range from a block bootstrap (resampling the model's errors and refitting).</p>
+      <p class="look">the width of the band. This is an extrapolation of the recent trend, not a prediction of specific new projects.</p><div class="chart tall" id="fc"></div></div>
+    <div class="card wide" data-csv="sb"><h2>Nowcast scoreboard: can money or power predict revenue?</h2>
+      <p class="d">For every company: each quarter, 7 days after it ends (before the company reports), four models predict its revenue growth using only information public that day. Average miss in percentage points; lower is better. Click a row.</p>
+      <p class="look">how rarely anything beats the naive "growth continues" guess. Reporting that honestly is the point.</p><div class="chart" id="sbchart"></div><div class="scroll" id="sb"></div></div>
+    <div class="card" data-csv="btc"><h2 id="btc_t">Backtest detail</h2><p class="d">Predictions vs. growth as first reported.</p><div class="chart" id="btc"></div></div>
+    <div class="card" data-csv="cc"><h2>Money → chips → power: who leads whom</h2><p class="d">Correlation between growth rates at time shifts of −4..+4 quarters. +k = the first series leads by k quarters. Shaded = noise band.</p>
+      <p class="look">NVIDIA's growth leads capex growth; capex growth leads Northern Virginia's baseload by about a quarter.</p><div class="chart" id="cc"></div></div>
+  </div>
+</section>
+
+<!-- ============================== TIME MACHINE -->
+<section class="tab" data-tab="time" data-title="⏳ Time machine">
+  <div class="intro"><h2>⏳ Time machine</h2><p class="lede">Every number here is stored with the date it became public. Drag the slider to stand on any past day and see <b>only what was known then</b>: no hindsight, no later revisions. This is how the backtests and the agent's time-travel tests work.</p>
+    <div class="ctl"><input class="slider" type="range" id="tm" min="0" max="100" value="100"></div>
+    <div class="big" id="tmdate"></div><div class="muted" id="tmnote"></div></div>
+  <div class="kpis" id="tmkpis"></div>
+  <div class="grid">
+    <div class="card wide"><h2>What you could see on that day vs. what we know now</h2><p class="d">Solid = known on the selected date. Faint = today's view. Quarters to the right of the solid line hadn't been reported yet.</p><div class="chart tall" id="tmchart"></div></div>
+    <div class="card"><h2>Latest known quarter, per company</h2><p class="d">As of the selected date.</p><div class="scroll" style="max-height:380px" id="tmtable"></div></div>
+    <div class="card"><h2>Filed in the 30 days before</h2><p class="d">What was news that month.</p><div class="scroll" style="max-height:380px" id="tmfeed"></div></div>
+  </div>
+</section>
+
+<!-- ============================== AGENT -->
+<section class="tab" data-tab="agent" data-title="🤖 AI analyst">
+  <div class="intro"><h2>🤖 The analyst agent, and how it's kept honest</h2>
+    <p class="lede">A Claude model answers finance questions by calling tools (point-in-time data, statistics, filing search, a calculator). Then <b>code checks every number</b> in its answer against what the tools returned; anything untraceable forces a rewrite. Quotes from filings must match the source word-for-word. Below: its test results and the <b>receipts</b> for every answer.</p>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><h4>Tools, not memory</h4><p><span class="ntools"></span> tools: financials for 26 companies, grid zones, weather adjustment, step detection, lead/lag, backtests, cited filing search, read-only SQL, calculator. Also served as an MCP server.</p></div>
+      <div class="step"><span class="n">2</span><h4>Verify every number</h4><p>Each figure must match a tool result within rounding, or a figure quoted in the question. Unverifiable → revise (up to 2×). Quotes are checked against retrieved filing text.</p></div>
+      <div class="step"><span class="n">3</span><h4>Test like an auditor</h4><p>Time travel (can't leak the future), planted false claims, refusing to invent forecasts, cited retrieval, multi-step math. Expected answers are computed from the data.</p></div>
+    </div></div>
+  <div class="kpis" id="agkpis"></div>
+  <div class="grid">
+    <div class="card"><h2>Results by category</h2><p class="d">Cases passed per test category.</p><div class="chart short" id="agcat"></div></div>
+    <div class="card"><h2>Leaderboard</h2><p class="d">Same cases, different models (when several were run).</p><div id="aglb"></div></div>
+    <div class="card wide"><h2>Every test case</h2><p class="d">Click a row to see the receipts below.</p><div class="scroll" id="agcases"></div></div>
+    <div class="card wide"><h2>🔍 Receipts</h2><p class="d">The question, the tools the agent called (in order), and its answer. <span class="pill"><span class="dot" style="background:var(--good)"></span>verified number</span> (hover to see which tool produced it) · <span class="pill"><span class="dot" style="background:var(--crit)"></span>unverified</span></p>
+      <div class="ctl"><select id="rsel"></select></div><div id="receipt"></div></div>
+    <div class="card"><h2>Retrieval benchmark (filing search)</h2><p class="d">Does the search find a relevant passage? 15 company questions, scored daily without an LLM: hit@3 and mean reciprocal rank.</p><div id="retr"></div></div>
+    <div class="card"><h2>Tools &amp; skills</h2><p class="d">What the agent can call, and the instruction packs ("skills") it loads on demand.</p><div class="scroll" style="max-height:380px" id="agtools"></div></div>
+    <div class="card wide"><h2>Use it yourself: MCP server</h2><p class="d">The same tools and skills, served over the Model Context Protocol, so Claude Desktop or Claude Code can query this dataset directly. Add to <span class="mono">claude_desktop_config.json</span>:</p>
+<pre class="code">{"mcpServers": {"follow-the-power": {
+  "command": "python", "args": ["-m", "ftp.mcp_server"],
+  "cwd": "/path/to/follow-the-power",
+  "env": {"FTP_AS_OF": ""}          // set e.g. "2025-05-01" for time-travel mode
+}}}</pre></div>
+  </div>
+</section>
+
+<!-- ============================== DATA -->
+<section class="tab" data-tab="data" data-title="Data & quality">
+  <div class="kpis" id="dqkpis"></div>
+  <div class="grid">
+    <div class="card wide"><h2>Automated quality checks (latest run)</h2><p class="d">Run after every load. <b>Critical</b> failures stop the pipeline so a broken source can't publish wrong numbers; <b>warnings</b> are shown here.</p>
+      <div class="chips" id="dqfilter"></div><div class="scroll" id="dq"></div></div>
+    <div class="card"><h2>SEC freshness</h2><p class="d">Latest filing date per company in the dataset.</p><div class="scroll" style="max-height:380px" id="fresh"></div></div>
+    <div class="card"><h2>Restatement tracker</h2><p class="d">Quarters whose value changed in a later filing. Point-in-time storage keeps both versions.</p><div class="scroll" style="max-height:380px" id="restate"></div></div>
+    <div class="card"><h2>Pipeline runs</h2><p class="d">Each source loads independently; incremental with a revision window.</p><div id="runs"></div></div>
+    <div class="card"><h2>Open dataset</h2><p class="d">Download the cleaned tables (refreshed daily). Column docs in <a href="data/README.md">data/README.md</a>.</p><div id="files"></div></div>
+    <div class="card wide"><h2>How it works</h2>
+      <div class="flow" style="cursor:default">
+        <div class="b"><b>SEC EDGAR</b><small>XBRL facts + 10-Q/10-K text, filing dates</small></div><span class="ar">+</span>
+        <div class="b"><b>EIA</b><small>hourly demand (5 zones), state sales</small></div><span class="ar">+</span>
+        <div class="b"><b>Open-Meteo</b><small>daily temperature (ERA5)</small></div><span class="ar">→</span>
+        <div class="b"><b>Point-in-time SQLite</b><small>incremental, idempotent, quality-gated</small></div><span class="ar">→</span>
+        <div class="b"><b>Analytics</b><small>weather model, steps, lead/lag, backtests</small></div><span class="ar">→</span>
+        <div class="b"><b>Claude agent</b><small>tools · skills · verifier · MCP</small></div><span class="ar">→</span>
+        <div class="b"><b>Evals + this page</b><small>GitHub Actions, daily</small></div></div>
+      <p class="d">Stack: Python · pandas · NumPy · SQLite · Claude API (tool use, prompt caching) · BM25 retrieval · MCP · pytest · GitHub Actions · Plotly.</p></div>
     <div class="card wide"><h2>Glossary</h2><dl class="gl">
-      <div><dt>Hyperscaler capex</dt><dd>Capital expenditures of the giant cloud companies, mostly data centers, servers and the GPUs inside them.</dd></div>
-      <div><dt>Overnight baseload</dt><dd>The lowest, steadiest demand of the night. It rises when always-on loads like data centers are added.</dd></div>
-      <div><dt>Point-in-time data</dt><dd>Recording when each number was first published, so a backtest only uses information that existed on that date.</dd></div>
-      <div><dt>Year-over-year (YoY)</dt><dd>Growth vs. the same quarter a year earlier, which cancels out seasons.</dd></div>
-      <div><dt>Noise band</dt><dd>About 2/√n. Correlations smaller than this are indistinguishable from chance with n data points.</dd></div>
-      <div><dt>Naive forecast</dt><dd>"Next quarter grows as fast as last quarter." The baseline any model has to beat.</dd></div>
-      <div><dt>Number verifier</dt><dd>Code that checks every figure the agent writes against the numbers its tools returned. Unverifiable figures force a rewrite.</dd></div>
-      <div><dt>Skills</dt><dd>Reusable instruction packs the agent loads when a task needs them (e.g. how to write a variance note).</dd></div></dl></div>
+      <div><dt>Hyperscaler capex</dt><dd>Capital spending by Microsoft, Alphabet, Amazon and Meta: mostly data centers, servers and GPUs.</dd></div>
+      <div><dt>Overnight baseload</dt><dd>Median grid load between 1 and 5 AM. Homes and offices are quiet; data centers aren't.</dd></div>
+      <div><dt>Weather-adjusted (normalized)</dt><dd>Load with temperature effects removed using heating/cooling degree days, so growth isn't just a hot summer.</dd></div>
+      <div><dt>Degree days</dt><dd>How far the day's average temperature is below (heating) or above (cooling) 18 °C.</dd></div>
+      <div><dt>Point-in-time</dt><dd>Storing when each number was first published, so analyses only use what was known on a given date.</dd></div>
+      <div><dt>Restatement</dt><dd>A company later revising a number it already reported.</dd></div>
+      <div><dt>Year-over-year (YoY)</dt><dd>Growth vs. the same quarter a year earlier, which cancels seasons.</dd></div>
+      <div><dt>Trailing 12 months (TTM)</dt><dd>Sum of the last four quarters: smooths out lumpy quarters.</dd></div>
+      <div><dt>Noise band</dt><dd>About 2/√n. Correlations smaller than this are indistinguishable from chance with n points.</dd></div>
+      <div><dt>Nowcast</dt><dd>Estimating a number for a period that's over but not yet reported.</dd></div>
+      <div><dt>Load factor</dt><dd>Average load ÷ peak load. Data centers push it toward 1.</dd></div>
+      <div><dt>PUE</dt><dd>Power usage effectiveness: total facility power ÷ IT power (cooling and losses on top).</dd></div>
+      <div><dt>BM25</dt><dd>A classic search-ranking formula: passages with rare query words, used often, rank higher.</dd></div>
+      <div><dt>MCP</dt><dd>Model Context Protocol: a standard way to plug tools and data into AI assistants.</dd></div></dl></div>
   </div>
-  <footer>Built by Utkarsh Agarwal. Data: SEC EDGAR, U.S. EIA. Not investment advice: this is a data-engineering and analysis project. · <a href="https://github.com/autkarsh025/follow-the-power">Source</a></footer>
+</section>
+
+<footer>Built by Utkarsh Agarwal. Data: SEC EDGAR, U.S. Energy Information Administration, Open-Meteo (ERA5). Not investment advice: a data-engineering and AI-evaluation project. · <a href="https://github.com/autkarsh025/follow-the-power">Source</a> · <a href="data/README.md">Open dataset</a></footer>
 </div>
 <script id="data" type="application/json">__DATA__</script>
 <script>
+"use strict";
 const D = JSON.parse(document.getElementById('data').textContent);
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt = (v, d = 0) => v == null || Number.isNaN(v) ? '—' : Number(v).toLocaleString('en-US', {maximumFractionDigits: d, minimumFractionDigits: d});
+const sgn = (v, d = 1) => v == null ? '—' : (v >= 0 ? '+' : '') + fmt(v, d);
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-const C = { t1: css('--t1'), t2: css('--t2'), t3: css('--t3'), b: css('--border'), s2: css('--s2'), nvda: css('--nvda'), capex: css('--capex'),
-            power: css('--power'), va: css('--va'), good: css('--good'), crit: css('--crit'), warn: css('--warn') };
-const cfg = { displayModeBar: false, responsive: true };
-const fmt = (v, d = 0) => v == null ? '—' : Number(v).toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: d });
-const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const L = (extra = {}) => Object.assign({ paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { family: 'Inter, system-ui', color: C.t2, size: 12 },
-  margin: { l: 58, r: 16, t: 10, b: 44 }, xaxis: { gridcolor: C.b }, yaxis: { gridcolor: C.b, zerolinecolor: C.t3 },
-  legend: { orientation: 'h', x: 0, y: -0.18, yanchor: 'top' }, hovermode: 'x unified',
-  hoverlabel: { bgcolor: C.s2, bordercolor: C.b, font: { color: C.t1 } } }, extra);
-const lastNN = (xs, ys) => { for (let i = ys.length - 1; i >= 0; i--) if (ys[i] != null) return [xs[i], ys[i]]; return [null, null]; };
+let C = {};
+function readColors() {
+  C = {t1: css('--t1'), t2: css('--t2'), t3: css('--t3'), b: css('--border'), s1: css('--s1'), s2: css('--s2'), mid: css('--mid'),
+       good: css('--good'), crit: css('--crit'), warn: css('--warn'), cat: [1,2,3,4,5,6,7,8].map(i => css('--c' + i))};
+}
+readColors();
+const cfg = {displayModeBar: false, responsive: true};
+const L = (x = {}) => Object.assign({paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: {family: 'Inter, system-ui', color: C.t2, size: 12},
+  margin: {l: 56, r: 14, t: 8, b: 42}, xaxis: Object.assign({gridcolor: C.b, linecolor: C.b, zeroline: false}, x.xaxis || {}),
+  yaxis: Object.assign({gridcolor: C.b, zerolinecolor: C.t3, linecolor: C.b}, x.yaxis || {}),
+  legend: {orientation: 'h', x: 0, y: -0.2, yanchor: 'top', font: {size: 11.5}}, hovermode: 'x unified',
+  hoverlabel: {bgcolor: C.s2, bordercolor: C.b, font: {color: C.t1}}}, Object.fromEntries(Object.entries(x).filter(([k]) => k !== 'xaxis' && k !== 'yaxis')));
+const TRACES = {};
+function plot(id, traces, layout) { if (!$(id)) return; TRACES[id] = traces; Plotly.react(id, traces, L(layout), cfg); }
+const CO = D.meta.companies;
+const LAYERS = [...new Set(Object.values(CO).map(c => c.layer))].sort();
+const layerColor = l => C.cat[LAYERS.indexOf(l) % 8];
+const DASH = ['solid', 'dot', 'dash', 'longdash', 'dashdot', 'longdashdot'];
+const coStyle = t => { const l = CO[t].layer; const peers = Object.keys(CO).filter(k => CO[k].layer === l); return {color: layerColor(l), dash: DASH[peers.indexOf(t) % 6]}; };
+const ZONES = Object.keys(D.zones);
+const zoneColor = z => C.cat[Object.keys(D.zones).indexOf(z) % 8];
+const seqColor = (i, n) => { const lo = [0x9e, 0xc5, 0xf4], hi = document.documentElement.dataset.theme === 'dark' ? [0x56, 0x98, 0xe7] : [0x0d, 0x36, 0x6b];
+  const hiD = [0xcd, 0xe2, 0xfb]; const a = document.documentElement.dataset.theme === 'dark' ? [0x1c, 0x5c, 0xab] : lo; const b = document.documentElement.dataset.theme === 'dark' ? hiD : hi;
+  const t = n <= 1 ? 1 : i / (n - 1); return 'rgb(' + a.map((v, k) => Math.round(v + (b[k] - v) * t)).join(',') + ')'; };
+function lastNN(xs, ys) { for (let i = ys.length - 1; i >= 0; i--) if (ys[i] != null) return [xs[i], ys[i]]; return [null, null]; }
+function table(rows, colsDef, opts = {}) {
+  if (!rows || !rows.length) return '<div class="empty">No data yet.</div>';
+  return '<table><tr>' + colsDef.map(c => `<th class="${c.num ? 'num' : ''}">${c.h}</th>`).join('') + '</tr>' +
+    rows.map((r, i) => `<tr class="${opts.click ? 'click' : ''}" data-i="${i}">` + colsDef.map(c => `<td class="${c.num ? 'num' : ''}">${c.f ? c.f(r) : esc(r[c.k])}</td>`).join('') + '</tr>').join('') + '</table>';
+}
+const status = (ok, a = 'pass', b = 'fail') => `<span class="pill"><span class="dot" style="background:${ok ? C.good : C.crit}"></span>${ok ? '✓ ' + a : '✕ ' + b}</span>`;
 
-document.getElementById('built').textContent = `Updated ${D.built_at} · ${fmt(D.hours)} grid hours`;
-// KPIs
-(() => {
-  const s = D.series, g = D.grid_q, ev = D.evals;
-  const [nq, nv] = lastNN(s.quarter, s.nvda_revenue_b), [, ny] = lastNN(s.quarter, s.nvda_yoy);
-  const [cq, cv] = lastNN(s.quarter, s.capex_b), [, cy] = lastNN(s.quarter, s.capex_yoy);
-  const [gq, gy] = lastNN(g.quarter || [], g.overnight_yoy || []);
-  const tiles = [[`NVIDIA revenue · ${nq}`, `$${fmt(nv, 1)}B`, `${ny >= 0 ? '+' : ''}${fmt(ny, 1)}% year over year`],
-    [`Hyperscaler capex · ${cq}`, `$${fmt(cv, 1)}B`, `${cy >= 0 ? '+' : ''}${fmt(cy, 1)}% year over year`],
-    [`N. Virginia overnight load · ${gq}`, `${gy >= 0 ? '+' : ''}${fmt(gy, 1)}%`, 'baseload, year over year'],
-    ['Agent evaluation', ev ? `${ev.passed}/${ev.total}` : '—', ev ? `cases passed · ${esc(ev.model)}` : 'runs on demand']];
-  document.getElementById('kpis').innerHTML = tiles.map(([l, v, s]) => `<div class="kpi"><div class="l">${esc(l)}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join('');
-})();
-
-const s = D.series;
-Plotly.react('money', [
-  { x: s.quarter, y: s.capex_b, name: 'Hyperscaler capex ($B)', type: 'scatter', mode: 'lines+markers', line: { color: C.capex, width: 2.5 }, marker: { size: 5 }, hovertemplate: '$%{y:.1f}B' },
-  { x: s.quarter, y: s.nvda_revenue_b, name: 'NVIDIA revenue ($B)', type: 'scatter', mode: 'lines+markers', line: { color: C.nvda, width: 2.5 }, marker: { size: 5 }, hovertemplate: '$%{y:.1f}B' },
-], L({ yaxis: { gridcolor: C.b, title: 'USD billions per quarter', rangemode: 'tozero' } }), cfg);
-Plotly.react('growth', [
-  { x: s.quarter, y: s.nvda_yoy, name: 'NVIDIA revenue', type: 'scatter', mode: 'lines', line: { color: C.nvda, width: 2.5 }, hovertemplate: '%{y:.1f}%' },
-  { x: s.quarter, y: s.capex_yoy, name: 'Hyperscaler capex', type: 'scatter', mode: 'lines', line: { color: C.capex, width: 2.5 }, hovertemplate: '%{y:.1f}%' },
-], L({ yaxis: { gridcolor: C.b, title: '% vs. a year earlier', zerolinecolor: C.t3 } }), cfg);
-const coColors = { MSFT: C.capex, GOOGL: C.va, AMZN: C.power, META: '#9085e9' };
-Plotly.react('cos', Object.entries(D.company_capex).map(([t, d]) => ({ x: d.quarter, y: d.capex_b, name: t, type: 'scatter', mode: 'lines',
-  line: { color: coColors[t] || C.t2, width: 2 }, hovertemplate: '$%{y:.1f}B' })), L({ yaxis: { gridcolor: C.b, title: 'USD billions', rangemode: 'tozero' } }), cfg);
-
-const gm = D.grid_m;
-Plotly.react('baseload', [{ x: gm.month, y: gm.overnight_mw, name: 'Overnight baseload (MW)', type: 'scatter', mode: 'lines', line: { color: C.power, width: 2 }, hovertemplate: '%{y:,.0f} MW' }],
-  L({ showlegend: false, yaxis: { gridcolor: C.b, title: 'MW (median, 1–5 AM)' } }), cfg);
-const ds = D.day_shape;
-Plotly.react('shape', Object.entries(ds).map(([k, v], i) => ({ x: v.hour, y: v.pct_of_peak, name: k, type: 'scatter', mode: 'lines',
-  line: { color: i ? C.power : C.t3, width: i ? 3 : 2, dash: i ? 'solid' : 'dot' }, hovertemplate: '%{y:.1f}% of peak' })),
-  L({ xaxis: { gridcolor: C.b, title: 'Local hour of day', dtick: 3 }, yaxis: { gridcolor: C.b, title: '% of daily peak' } }), cfg);
-const stColors = { VA: C.va, TX: C.power, OH: C.capex, AZ: '#d55181', OR: C.nvda, GA: '#9085e9' };
-Plotly.react('states', Object.entries(D.states).map(([st, d]) => ({ x: d.quarter, y: d.index, name: st, type: 'scatter', mode: 'lines',
-  line: { color: stColors[st] || C.t2, width: st === 'VA' ? 3.5 : 1.6 }, opacity: st === 'VA' ? 1 : 0.75, hovertemplate: '%{y:.0f}' })),
-  L({ yaxis: { gridcolor: C.b, title: 'Index (2019 = 100)' } }), cfg);
-
-const pairs = [['nvda_yoy->capex_yoy', 'NVIDIA revenue → hyperscaler capex', C.nvda], ['capex_yoy->overnight_yoy', 'Hyperscaler capex → N. Virginia overnight load', C.capex]];
-const band = Math.max(...pairs.flatMap(([k]) => D.cc[k].noise_band.filter(v => v != null)));
-Plotly.react('cc', pairs.map(([k, name, color]) => ({ x: D.cc[k].lag_quarters, y: D.cc[k].corr, name, type: 'bar', marker: { color }, hovertemplate: 'lag %{x}: r = %{y:.2f}' })),
-  L({ barmode: 'group', hovermode: 'closest', xaxis: { gridcolor: C.b, title: 'Shift in quarters (+k = first series leads)', dtick: 1 },
-      yaxis: { gridcolor: C.b, title: 'Correlation', range: [-1, 1] },
-      shapes: [{ type: 'rect', xref: 'paper', x0: 0, x1: 1, y0: -band, y1: band, fillcolor: C.t3, opacity: 0.12, line: { width: 0 } }],
-      annotations: [{ xref: 'paper', x: 1, y: band, text: `noise band ±${band.toFixed(2)}`, showarrow: false, xanchor: 'right', yanchor: 'bottom', font: { color: C.t3, size: 11 } }] }), cfg);
-
-const bt = D.backtest;
-if (bt.quarter) {
-  Plotly.react('bt', [
-    { x: bt.quarter, y: bt.actual_yoy, name: 'Actual (as first reported)', type: 'scatter', mode: 'lines+markers', line: { color: C.t1, width: 3 } },
-    { x: bt.quarter, y: bt.naive, name: 'Naive: growth continues', type: 'scatter', mode: 'lines', line: { color: C.t3, width: 2, dash: 'dot' } },
-    { x: bt.quarter, y: bt.grid, name: 'Grid model', type: 'scatter', mode: 'lines', line: { color: C.power, width: 2 } },
-    { x: bt.quarter, y: bt.capex, name: 'Capex model', type: 'scatter', mode: 'lines', line: { color: C.capex, width: 1.5 } },
-  ], L({ yaxis: { gridcolor: C.b, title: 'NVIDIA revenue growth, % YoY' } }), cfg);
-  document.getElementById('scores').innerHTML = `<table><tr><th>Model</th><th class="num">Average miss (percentage points)</th><th class="num">Quarters</th></tr>` +
-    D.scores.map(r => `<tr><td>${esc(r.model)}</td><td class="num">${fmt(r.mae_pp, 1)}</td><td class="num">${r.quarters}</td></tr>`).join('') + '</table>';
+// ---------- CSV export buttons on cards with data-csv
+function addCsvButtons() {
+  document.querySelectorAll('.card[data-csv]').forEach(card => {
+    if (card.querySelector('.tools')) return;
+    const id = card.dataset.csv, box = document.createElement('div'); box.className = 'tools';
+    box.innerHTML = '<button class="btn small" title="Download the chart data as CSV">⤓ CSV</button>';
+    box.firstChild.onclick = () => {
+      const tr = (TRACES[id] || []).filter(t => t.x && t.y && !t.z);
+      if (!tr.length) return;
+      const xs = [...new Set(tr.flatMap(t => t.x))];
+      const rows = [['x', ...tr.map(t => (t.name || 'y').replace(/,/g, ' '))]];
+      xs.forEach(x => rows.push([x, ...tr.map(t => { const i = t.x.indexOf(x); return i < 0 ? '' : (t.y[i] ?? ''); })]));
+      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([rows.map(r => r.join(',')).join('\n')], {type: 'text/csv'}));
+      a.download = `follow-the-power_${id}.csv`; a.click();
+    };
+    card.appendChild(box);
+  });
 }
 
-const ev = D.evals, box = document.getElementById('evals');
-if (!ev) box.innerHTML = '<div class="empty">The agent evaluation runs on demand; results appear here after the first run.</div>';
-else box.innerHTML = `<p class="d">${ev.passed}/${ev.total} passed · model ${esc(ev.model)} · ${esc(ev.run_at)} · ${fmt(ev.input_tokens)} input / ${fmt(ev.output_tokens)} output tokens</p>
-  <table><tr><th>Case</th><th>As of</th><th>Result</th><th>Numbers verified</th><th>Future leaked</th><th class="num">Revisions</th></tr>` +
-  ev.cases.map(c => `<tr><td>${esc(c.id)}</td><td>${esc(c.as_of || 'today')}</td><td><span class="pill"><span class="dot" style="background:${c.passed ? C.good : C.crit}"></span>${c.passed ? '✓ pass' : '✕ fail'}</span></td>
-    <td>${c.verifier_ok ? '✓ all' : '✕ ' + esc((c.unverified || []).join(', '))}</td><td>${(c.leaked_future || []).length ? '✕ ' + esc(c.leaked_future.join(', ')) : '✓ none'}</td><td class="num">${c.revisions}</td></tr>`).join('') +
-  '</table>' + ev.cases.map(c => `<details class="ans"><summary>${esc(c.id)}: read the agent's answer</summary><div class="q">Q (as of ${esc(c.as_of || 'today')}): ${esc(c.question)}</div><div class="a">${esc(c.answer)}</div></details>`).join('');
+// ---------- tabs
+const TABS = [...document.querySelectorAll('section.tab')];
+$('tabs').innerHTML = TABS.map(s => `<button data-t="${s.dataset.tab}">${s.dataset.title}</button>`).join('');
+const rendered = {};
+function show(t, push = true) {
+  if (!TABS.some(s => s.dataset.tab === t)) t = 'overview';
+  TABS.forEach(s => s.classList.toggle('on', s.dataset.tab === t));
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.t === t));
+  if (!rendered[t]) { try { R[t](); } catch (e) { console.error(t, e); } rendered[t] = true; }
+  else document.querySelectorAll(`section[data-tab="${t}"] .js-plotly-plot`).forEach(el => Plotly.Plots.resize(el));
+  if (push) history.replaceState(null, '', '#' + t);
+}
+document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => show(b.dataset.t));
+$('theme').onclick = () => {
+  const dark = document.documentElement.dataset.theme === 'dark';
+  document.documentElement.dataset.theme = dark ? 'light' : 'dark';
+  $('theme').textContent = dark ? '🌙 Dark' : '☀️ Light';
+  try { localStorage.setItem('ftp-theme', document.documentElement.dataset.theme); } catch (e) {}
+  readColors(); Object.keys(rendered).forEach(k => delete rendered[k]);
+  show((location.hash || '#overview').slice(1), false);
+};
+try { const t = localStorage.getItem('ftp-theme'); if (t) { document.documentElement.dataset.theme = t; $('theme').textContent = t === 'dark' ? '☀️ Light' : '🌙 Dark'; readColors(); } } catch (e) {}
+$('built').textContent = `Updated ${D.meta.built_at} · ${fmt(D.meta.hours)} grid hours · ${fmt(D.meta.fin_rows)} SEC data points · ${fmt(D.meta.chunks)} filing passages`;
+
+// shared zone selectors
+let ZONE = D.meta.primary_zone in D.zones ? D.meta.primary_zone : ZONES[0];
+function initZoneSelects() {
+  document.querySelectorAll('select.zsel').forEach(sel => {
+    sel.innerHTML = ZONES.map(z => `<option value="${z}">${esc(D.zones[z].label)}</option>`).join('');
+    sel.value = ZONE;
+    sel.onchange = () => { ZONE = sel.value; document.querySelectorAll('select.zsel').forEach(s => s.value = ZONE);
+      const scope = sel.dataset.scope; ({grid: renderZone, detector: R.detector, forecast: renderForecast})[scope]();
+      ['grid', 'detector', 'forecast'].filter(x => x !== scope).forEach(x => delete rendered[x]); };
+  });
+}
+const chainOf = (t, m) => D.chain.filter(r => r.ticker === t && r.metric === m);
+
+const R = {};
+// ============================== OVERVIEW
+R.overview = () => {
+  $('findings').innerHTML = (D.findings || []).map(f => `<div class="finding"><h4>${f.icon} ${esc(f.title)}</h4><p>${esc(f.text)}</p></div>`).join('');
+  const s = D.series, ev = D.evals, dom = D.zones[D.meta.primary_zone];
+  const [nq, nv] = lastNN(s.quarter, s.nvda_revenue_b), [, ny] = lastNN(s.quarter, s.nvda_yoy);
+  const [cq, cv] = lastNN(s.quarter, s.capex_b), [, cy] = lastNN(s.quarter, s.capex_yoy);
+  const totMW = Object.values(D.zones).reduce((a, z) => a + Math.max(0, (z.added || {}).added_mw || 0), 0);
+  const tiles = [[`Hyperscaler capex · ${cq}`, `$${fmt(cv, 1)}B`, `${sgn(cy, 0)}% year over year`],
+    [`NVIDIA revenue · ${nq}`, `$${fmt(nv, 1)}B`, `${sgn(ny, 0)}% year over year`],
+    ['N. Virginia baseload, weather-adj.', dom && dom.summary.normalized_12m_growth != null ? `${sgn(dom.summary.normalized_12m_growth)}%` : '—', 'last 12 months vs. prior 12'],
+    ['Always-on load added since 2019', `${fmt(totMW)} MW`, `5 hubs ≈ ${fmt(Math.round(totMW * 1000 / (D.meta.gpu_kw * D.meta.pue) / 1000) * 1000)} GPUs`],
+    ['Analyst agent', ev ? `${ev.passed}/${ev.total}` : '—', ev ? 'evaluation cases passed' : 'evaluation runs on demand']];
+  $('kpis').innerHTML = tiles.map(([l, v, x]) => `<div class="kpi"><div class="l">${esc(l)}</div><div class="v">${v}</div><div class="s">${esc(x)}</div></div>`).join('');
+  $('flow').innerHTML = LAYERS.map((l, i) => { const d = (D.layers || {})[l]; const y = d ? d.yoy[d.yoy.length - 1] : null;
+    return (i ? '<span class="ar">→</span>' : '') + `<div class="b" data-l="${esc(l)}" style="border-top:3px solid ${layerColor(l)}"><b>${esc(l.split('· ')[1])}</b><div class="v">${y == null ? '—' : sgn(y, 0) + '%'}</div><small>${d ? '$' + fmt(d.ttm_b[d.ttm_b.length - 1]) + 'B TTM · ' + d.companies + ' cos' : 'no full history'}</small></div>`; }).join('');
+  document.querySelectorAll('#flow .b').forEach(b => b.onclick = () => { CHAIN_SEL = new Set([b.dataset.l]); delete rendered.chain; show('chain'); });
+  plot('money', [
+    {x: s.quarter, y: s.capex_b, name: 'Hyperscaler capex ($B)', type: 'scatter', mode: 'lines+markers', line: {color: C.cat[0], width: 2.5}, marker: {size: 5}, hovertemplate: '$%{y:.1f}B'},
+    {x: s.quarter, y: s.nvda_revenue_b, name: 'NVIDIA revenue ($B)', type: 'scatter', mode: 'lines+markers', line: {color: C.cat[2], width: 2.5}, marker: {size: 5}, hovertemplate: '$%{y:.1f}B'}],
+    {yaxis: {title: 'USD billions per quarter', rangemode: 'tozero'}});
+  if (dom && dom.norm) plot('ov_power', [
+    {x: dom.norm.month, y: dom.norm.actual_mw, name: 'Actual', type: 'scatter', mode: 'lines', line: {color: C.t3, width: 1.5}, hovertemplate: '%{y:,.0f} MW'},
+    {x: dom.norm.month, y: dom.norm.normalized_mw, name: 'Weather-adjusted', type: 'scatter', mode: 'lines', line: {color: C.cat[1], width: 2.5}, hovertemplate: '%{y:,.0f} MW'}],
+    {yaxis: {title: 'MW'}});
+  $('feed').innerHTML = table(D.feed.slice(0, 14), [{h: 'Filed', k: 'filed'}, {h: 'Company', f: r => `<span class="pill"><span class="dot" style="background:${layerColor(CO[r.ticker].layer)}"></span>${esc(r.name)}</span>`},
+    {h: 'What', f: r => `${esc(r.metric.replace('_', ' '))} ${esc(r.quarter)}`}, {h: '$B', num: 1, f: r => fmt(r.value_b, 2)}, {h: 'YoY', num: 1, f: r => r.yoy == null ? '—' : sgn(r.yoy) + '%'}]);
+};
+
+// ============================== SUPPLY CHAIN
+let CHAIN_SEL = new Set(LAYERS.slice(1, 4));
+R.chain = () => {
+  $('layerchips').innerHTML = LAYERS.map(l => `<span class="chip ${CHAIN_SEL.has(l) ? 'on' : ''}" data-l="${esc(l)}"><span class="dot" style="background:${layerColor(l)}"></span> ${esc(l)}</span>`).join('') +
+    '<span class="chip" data-l="__all">all</span>';
+  document.querySelectorAll('#layerchips .chip').forEach(c => c.onclick = () => {
+    if (c.dataset.l === '__all') CHAIN_SEL = new Set(LAYERS); else CHAIN_SEL.has(c.dataset.l) && CHAIN_SEL.size > 1 ? CHAIN_SEL.delete(c.dataset.l) : CHAIN_SEL.add(c.dataset.l);
+    R.chain(); });
+  const sel = Object.keys(CO).filter(t => CHAIN_SEL.has(CO[t].layer));
+  plot('race', sel.filter(t => D.race[t]).map(t => ({x: D.race[t].quarter, y: D.race[t].index, name: `${t} · ${CO[t].name}`, type: 'scatter', mode: 'lines',
+    line: Object.assign({width: 2}, coStyle(t)), customdata: D.race[t].ttm_b, hovertemplate: `${t}: %{y:,.0f} ($%{customdata:,.1f}B TTM)<extra></extra>`})),
+    {yaxis: {type: 'log', title: 'TTM revenue index (end-2019 = 100, log)'}, legend: {orientation: 'v', x: 1.01, y: 1, yanchor: 'top', font: {size: 11}}, margin: {l: 60, r: 170, t: 8, b: 40}});
+  // heatmap
+  const qs = [...new Set(D.chain.map(r => r.quarter))].sort().slice(-14);
+  const rows = Object.keys(CO).filter(t => CHAIN_SEL.has(CO[t].layer)).map(t => { const m = CO[t].metrics.includes('revenue') ? 'revenue' : 'capex'; return [t, m]; });
+  const z = rows.map(([t, m]) => { const c = chainOf(t, m); return qs.map(q => { const r = c.find(x => x.quarter === q); return r && r.yoy != null ? Math.max(-100, Math.min(150, r.yoy)) : null; }); });
+  const raw = rows.map(([t, m]) => { const c = chainOf(t, m); return qs.map(q => { const r = c.find(x => x.quarter === q); return r && r.yoy != null ? r.yoy.toFixed(0) + '%' : ''; }); });
+  plot('heat', [{type: 'heatmap', x: qs, y: rows.map(([t, m]) => `${CO[t].name}${m === 'capex' ? ' (capex)' : ''}`), z, text: raw, texttemplate: '%{text}', textfont: {size: 10},
+    zmid: 0, zmin: -100, zmax: 150, colorscale: [[0, '#2a78d6'], [0.4, C.mid], [1, '#e34948']], hovertemplate: '%{y} %{x}: %{text}<extra></extra>', colorbar: {title: 'YoY %', thickness: 10}}],
+    {margin: {l: 170, r: 10, t: 8, b: 40}, hovermode: 'closest', yaxis: {autorange: 'reversed', gridcolor: 'rgba(0,0,0,0)'}, xaxis: {gridcolor: 'rgba(0,0,0,0)'}});
+  plot('layertot', Object.entries(D.layers || {}).map(([l, d]) => ({x: d.quarter, y: d.yoy, name: l.split('· ')[1], type: 'scatter', mode: 'lines', line: {color: layerColor(l), width: 2}, hovertemplate: '%{y:.0f}%'})),
+    {yaxis: {title: 'TTM revenue, % YoY'}});
+  plot('intensity', Object.entries(D.intensity).map(([t, d]) => ({x: d.quarter, y: d.pct, name: t, type: 'scatter', mode: 'lines', line: Object.assign({width: 2}, coStyle(t)), hovertemplate: t + ' %{y:.0f}%'})),
+    {yaxis: {title: 'capex as % of revenue'}});
+  plot('margins', Object.entries(D.margins).map(([t, d]) => ({x: d.quarter, y: d.pct, name: t, type: 'scatter', mode: 'lines', line: Object.assign({width: t === 'NVDA' ? 3 : 1.6}, coStyle(t)), hovertemplate: t + ' %{y:.0f}%'})),
+    {yaxis: {title: 'gross margin %'}});
+  const ex = D.exposure || [];
+  const band = ex.length ? Math.max(...ex.map(e => e.noise_band)) : 0.4;
+  plot('exposure', [{type: 'bar', x: ex.map(e => e.ticker), y: ex.map(e => e.corr), marker: {color: ex.map(e => layerColor(e.layer)), opacity: ex.map(e => e.meaningful ? 1 : 0.45)},
+    customdata: ex.map(e => [e.name, e.best_lag_q, e.beta, e.n]), hovertemplate: '%{customdata[0]}: r = %{y:.2f} at %{customdata[1]}-quarter lag (beta %{customdata[2]}, n=%{customdata[3]})<extra></extra>'}],
+    {hovermode: 'closest', yaxis: {title: 'correlation with capex growth', range: [-1, 1]}, shapes: [{type: 'rect', xref: 'paper', x0: 0, x1: 1, y0: -band, y1: band, fillcolor: C.t3, opacity: 0.13, line: {width: 0}}],
+     annotations: [{xref: 'paper', x: 1, y: band, text: `noise band ±${band.toFixed(2)}`, showarrow: false, xanchor: 'right', yanchor: 'bottom', font: {color: C.t3, size: 11}}]});
+  $('exposure_t').innerHTML = table(ex, [{h: 'Company', f: r => `<span class="pill"><span class="dot" style="background:${layerColor(r.layer)}"></span>${esc(r.name)}</span>`}, {h: 'Layer', f: r => esc(r.layer.split('· ')[1])},
+    {h: 'Correlation', num: 1, f: r => fmt(r.corr, 2)}, {h: 'Lag (q)', num: 1, k: 'best_lag_q'}, {h: 'Beta', num: 1, f: r => fmt(r.beta, 2)}, {h: 'R²', num: 1, f: r => fmt(r.r2, 2)}, {h: 'n', num: 1, k: 'n'},
+    {h: 'Meaningful?', f: r => r.meaningful ? '<span class="ok">✓ yes</span>' : '<span class="muted">noise</span>'}]);
+  const M = D.matrix;
+  if (M && M.names) plot('matrix', [{type: 'heatmap', x: M.names, y: M.names, z: M.corr, zmin: -1, zmax: 1, zmid: 0, colorscale: [[0, '#2a78d6'], [0.5, C.mid], [1, '#e34948']],
+    customdata: M.lag.map((r, i) => r.map((l, j) => [l, M.band[i][j]])), hovertemplate: '%{y} vs %{x}<br>r = %{z:.2f} at lag %{customdata[0]} (noise ±%{customdata[1]})<extra></extra>', colorbar: {thickness: 10}}],
+    {margin: {l: 170, r: 10, t: 8, b: 150}, hovermode: 'closest', xaxis: {tickangle: -45, gridcolor: 'rgba(0,0,0,0)'}, yaxis: {autorange: 'reversed', gridcolor: 'rgba(0,0,0,0)'}});
+};
+
+// ============================== COMPANY
+R.company = () => {
+  const sel = $('cosel');
+  if (!sel.options.length) {
+    sel.innerHTML = LAYERS.map(l => `<optgroup label="${esc(l)}">` + Object.keys(CO).filter(t => CO[t].layer === l).map(t => `<option value="${t}">${esc(CO[t].name)} (${t})</option>`).join('') + '</optgroup>').join('');
+    sel.value = 'NVDA'; sel.onchange = renderCompany;
+  }
+  renderCompany();
+};
+function renderCompany() {
+  const t = $('cosel').value, c = CO[t]; $('colayer').textContent = c.layer;
+  const ex = (D.exposure || []).find(e => e.ticker === t);
+  const tiles = [];
+  c.metrics.forEach(m => { const r = chainOf(t, m).slice(-1)[0]; if (r) tiles.push([`${m.replace('_', ' ')} · ${r.quarter}`, `$${fmt(r.value_b, 2)}B`, r.yoy == null ? '' : `${sgn(r.yoy)}% YoY`]); });
+  if (D.margins[t]) { const m = D.margins[t]; tiles.push(['Gross margin', `${fmt(m.pct[m.pct.length - 1], 1)}%`, m.quarter[m.quarter.length - 1]]); }
+  if (D.intensity[t]) { const m = D.intensity[t]; tiles.push(['Capex intensity', `${fmt(m.pct[m.pct.length - 1], 0)}%`, 'capex ÷ revenue']); }
+  if (ex) tiles.push(['AI exposure', fmt(ex.corr, 2), `corr. with capex growth, ${ex.best_lag_q}q lag${ex.meaningful ? '' : ' (noise)'}`]);
+  $('cokpis').innerHTML = tiles.map(([l, v, x]) => `<div class="kpi"><div class="l">${esc(l)}</div><div class="v">${v}</div><div class="s">${esc(x)}</div></div>`).join('');
+  const st = coStyle(t);
+  $('co_val_t').textContent = `${c.name}: quarterly ${c.metrics.map(m => m.replace('_', ' ')).join(', ')}`;
+  plot('co_val', c.metrics.map((m, i) => { const r = chainOf(t, m).filter(x => x.quarter >= '2019Q1'); return {x: r.map(x => x.quarter), y: r.map(x => x.value_b), name: m.replace('_', ' '), type: 'bar',
+    marker: {color: i === 0 ? st.color : C.cat[(LAYERS.indexOf(c.layer) + 3 + i) % 8]}, hovertemplate: '$%{y:.2f}B'}; }), {barmode: 'group', bargap: 0.25, yaxis: {title: 'USD billions'}});
+  const main = c.metrics.includes('revenue') ? 'revenue' : 'capex', r = chainOf(t, main).filter(x => x.quarter >= '2019Q1');
+  plot('co_yoy', [{x: r.map(x => x.quarter), y: r.map(x => x.yoy), name: `${c.name} ${main}`, type: 'scatter', mode: 'lines+markers', line: {color: st.color, width: 2.5}, marker: {size: 4}, hovertemplate: '%{y:.1f}%'},
+    {x: D.series.quarter, y: D.series.capex_yoy, name: 'Hyperscaler capex', type: 'scatter', mode: 'lines', line: {color: C.t3, width: 1.5, dash: 'dot'}, hovertemplate: '%{y:.1f}%'}],
+    {yaxis: {title: '% YoY'}});
+  const bt = D.bt_detail[t];
+  if (bt) {
+    plot('co_bt', [{x: bt.quarter, y: bt.actual_yoy, name: 'Actual (first reported)', type: 'scatter', mode: 'lines+markers', line: {color: C.t1, width: 2.5}},
+      ...['naive', 'own+capex', 'grid'].map((m, i) => ({x: bt.quarter, y: bt[m], name: m, type: 'scatter', mode: 'lines', line: {color: [C.t3, C.cat[0], C.cat[1]][i], width: 1.8, dash: i ? 'solid' : 'dot'}}))],
+      {yaxis: {title: '% YoY'}});
+    const s = (D.scoreboard || []).find(x => x.ticker === t);
+    $('co_bt_t').innerHTML = s ? `<p class="d">Average miss: naive ${fmt(s.naive, 1)} · capex ${fmt(s.capex, 1)} · own+capex ${fmt(s['own+capex'], 1)} · grid ${fmt(s.grid, 1)} pp over ${s.quarters} quarters. Best: <b>${esc(s.best)}</b>.</p>` : '';
+  } else { Plotly.purge('co_bt'); $('co_bt').innerHTML = '<div class="empty">Not enough history to backtest.</div>'; $('co_bt_t').innerHTML = ''; }
+  const vs = D.versions.filter(v => v.ticker === t).sort((a, b) => (b.quarter + b.filed_date).localeCompare(a.quarter + a.filed_date));
+  const cnt = {}; vs.forEach(v => { const k = v.metric + v.quarter; cnt[k] = (cnt[k] || 0) + 1; });
+  $('co_hist').innerHTML = table(vs, [{h: 'Quarter', k: 'quarter'}, {h: 'Metric', f: v => esc(v.metric.replace('_', ' '))}, {h: '$B', num: 1, f: v => fmt(v.value_b, 3)},
+    {h: 'Filed', k: 'filed_date'}, {h: '', f: v => cnt[v.metric + v.quarter] > 1 ? '<span title="this quarter has several versions">✎</span>' : ''}]);
+}
+
+// ============================== GRID
+R.grid = () => {
+  initZoneSelects();
+  $('zonecards').innerHTML = ZONES.map(z => { const s = D.zones[z].summary || {}, a = D.zones[z].added || {};
+    return `<div class="kpi" style="border-top:3px solid ${zoneColor(z)}"><div class="l">${esc(D.zones[z].label)}</div><div class="v">${s.normalized_12m_growth == null ? '—' : sgn(s.normalized_12m_growth) + '%'}</div>
+      <div class="s">weather-adj. 12-month growth · ${a.added_mw == null ? '' : sgn(a.added_mw, 0) + ' MW since 2019'}</div></div>`; }).join('');
+  plot('zindex', ZONES.filter(z => D.zones[z].index && D.zones[z].index.month).map(z => ({x: D.zones[z].index.month, y: D.zones[z].index.index, name: D.zones[z].label, type: 'scatter', mode: 'lines',
+    line: {color: zoneColor(z), width: z === D.meta.primary_zone ? 3 : 1.8}, hovertemplate: '%{y:.0f}'})), {yaxis: {title: 'index (2019 = 100)'}});
+  const st = D.states, stC = Object.keys(st);
+  plot('states', stC.map((k, i) => ({x: st[k].quarter, y: st[k].index, name: k, type: 'scatter', mode: 'lines', line: {color: C.cat[i % 8], width: k === 'VA' ? 3.2 : 1.6}, hovertemplate: k + ' %{y:.0f}'})),
+    {yaxis: {title: 'index (2019 = 100)'}});
+  renderZone();
+};
+function renderZone() {
+  const Z = D.zones[ZONE]; if (!Z) return;
+  $('zmon_t').textContent = `${Z.label}: overnight baseload, actual vs. weather-adjusted`;
+  if (Z.norm) {
+    plot('zmon', [{x: Z.norm.month, y: Z.norm.actual_mw, name: 'Actual', type: 'scatter', mode: 'lines', line: {color: C.t3, width: 1.5}, hovertemplate: '%{y:,.0f} MW'},
+      {x: Z.norm.month, y: Z.norm.normalized_mw, name: 'Weather-adjusted', type: 'scatter', mode: 'lines', line: {color: zoneColor(ZONE), width: 2.8}, hovertemplate: '%{y:,.0f} MW'}], {yaxis: {title: 'MW'}});
+    plot('zyoy', [{x: Z.norm.month, y: Z.norm.actual_yoy, name: 'Actual', type: 'scatter', mode: 'lines', line: {color: C.t3, width: 1.4}, hovertemplate: '%{y:.1f}%'},
+      {x: Z.norm.month, y: Z.norm.normalized_yoy, name: 'Weather-adjusted', type: 'scatter', mode: 'lines', line: {color: zoneColor(ZONE), width: 2.5}, hovertemplate: '%{y:.1f}%'}], {yaxis: {title: '% YoY'}});
+    plot('zweather', [{x: Z.norm.month, y: Z.norm.weather_part_mw, name: 'Weather effect (MW)', type: 'bar', marker: {color: Z.norm.weather_part_mw.map(v => v >= 0 ? C.cat[7] : C.cat[0])}, hovertemplate: '%{y:+,.0f} MW'}],
+      {yaxis: {title: 'MW vs. normal weather'}, showlegend: false});
+  } else {
+    plot('zmon', [{x: Z.monthly.month, y: Z.monthly.overnight_mw, name: 'Actual', type: 'scatter', mode: 'lines', line: {color: zoneColor(ZONE), width: 2}}], {yaxis: {title: 'MW'}});
+  }
+}
+
+// ============================== DETECTOR
+R.detector = () => {
+  initZoneSelects();
+  const Z = D.zones[ZONE]; if (!Z) return;
+  const w = Z.weekly, ycol = w.deweathered_mw ? 'deweathered_mw' : 'overnight_mw';
+  const ups = Z.steps || [];
+  plot('steps', [{x: w.date, y: w[ycol], name: w.deweathered_mw ? 'Overnight load, weather & weekday removed' : 'Overnight load', type: 'scatter', mode: 'lines', line: {color: zoneColor(ZONE), width: 1.8}, hovertemplate: '%{y:,.0f} MW'},
+    {x: ups.map(s => s.date), y: ups.map(s => s.after_mw), name: 'Detected step', type: 'scatter', mode: 'markers', marker: {size: 12, symbol: ups.map(s => s.step_mw > 0 ? 'triangle-up' : 'triangle-down'), color: ups.map(s => s.step_mw > 0 ? C.cat[7] : C.cat[0]), line: {width: 2, color: C.s1}},
+     customdata: ups.map(s => [s.step_mw, s.pct]), hovertemplate: 'step %{customdata[0]:+,.0f} MW (%{customdata[1]:+.1f}%)<extra></extra>'}],
+    {yaxis: {title: 'MW'}, shapes: ups.map(s => ({type: 'line', x0: s.date, x1: s.date, yref: 'paper', y0: 0, y1: 1, line: {color: C.t3, width: 1, dash: 'dot'}}))});
+  $('steps_t').innerHTML = `<p class="d">Threshold: ${fmt(Z.step_threshold)} MW. ${ups.length} step(s) detected.</p>` + table(ups, [{h: 'Date', k: 'date'}, {h: 'Step', num: 1, f: s => sgn(s.step_mw, 0) + ' MW'},
+    {h: 'Before → after', num: 1, f: s => `${fmt(s.before_mw)} → ${fmt(s.after_mw)} MW`}, {h: 'Change', num: 1, f: s => sgn(s.pct) + '%'}]);
+  const yrs = Object.keys(Z.temp_response || {});
+  plot('tresp', yrs.map((y, i) => ({x: Z.temp_response[y].temp_c, y: Z.temp_response[y].mw, name: y, type: 'scatter', mode: 'lines+markers', marker: {size: 4}, line: {color: seqColor(i, yrs.length), width: i === yrs.length - 1 ? 3 : 1.8}, hovertemplate: y + ': %{y:,.0f} MW'})),
+    {xaxis: {title: 'daily mean temperature (°C)'}, yaxis: {title: 'overnight load (MW)'}, hovermode: 'closest'});
+  const dy = Object.keys(Z.duration || {});
+  plot('ldc', dy.map((y, i) => ({x: Z.duration[y].hours_pct, y: Z.duration[y].pct_of_peak, name: `${y} (LF ${Z.duration[y].load_factor})`, type: 'scatter', mode: 'lines', line: {color: seqColor(i, dy.length), width: i === dy.length - 1 ? 3 : 1.6}, hovertemplate: y + ': %{y:.0f}%'})),
+    {xaxis: {title: '% of hours in the year'}, yaxis: {title: '% of annual peak'}, hovermode: 'closest'});
+  const py = Object.keys(Z.profiles || {});
+  plot('profiles', py.map((y, i) => ({x: [...Array(24).keys()], y: Z.profiles[y].pct_of_peak, name: y, type: 'scatter', mode: 'lines', line: {color: seqColor(i, py.length), width: i === py.length - 1 ? 3 : 1.6}, hovertemplate: y + ': %{y:.0f}%'})),
+    {xaxis: {title: 'local hour', dtick: 3}, yaxis: {title: '% of peak hour'}});
+  if (Z.heatmap && Z.heatmap.mw) plot('hm', [{type: 'heatmap', x: Z.heatmap.months, y: Z.heatmap.hours, z: Z.heatmap.mw, colorscale: [[0, '#cde2fb'], [0.5, '#3987e5'], [1, '#0d366b']], hovertemplate: '%{x} hour %{y}: %{z:,.0f} MW<extra></extra>', colorbar: {thickness: 10}}],
+    {hovermode: 'closest', yaxis: {title: 'hour of day', gridcolor: 'rgba(0,0,0,0)'}, xaxis: {gridcolor: 'rgba(0,0,0,0)'}});
+  renderCalc();
+};
+function renderCalc() {
+  const Z = D.zones[ZONE], a = Z.added;
+  if (!a) { $('calc').innerHTML = '<div class="empty">Needs at least two years of data.</div>'; return; }
+  $('calc').innerHTML = `<div class="ctl"><label>kW per GPU (incl. server, network)</label><input type="range" id="kw" min="0.7" max="2.5" step="0.05" value="${D.meta.gpu_kw}"><span id="kwv"></span>
+    <label>PUE (cooling overhead)</label><input type="range" id="pue" min="1.05" max="1.7" step="0.01" value="${D.meta.pue}"><span id="puev"></span></div><div class="kpis" id="calck"></div>
+    <p class="d">${esc(Z.label)}: ${a.basis} baseload averaged ${fmt(a.base_mw)} MW in 2019 and ${fmt(a.recent_mw)} MW over ${esc(a.recent_window)}. Defaults: an H100-class 8-GPU server draws about 10–11 kW (≈${D.meta.gpu_kw} kW per GPU); an average US home uses about ${D.meta.home_kw} kW on average. Not all new load is data centers (EVs, heat pumps, industry), so read these as upper-bound illustrations.</p>`;
+  const upd = () => { const kw = +$('kw').value, pue = +$('pue').value; $('kwv').textContent = kw.toFixed(2); $('puev').textContent = pue.toFixed(2);
+    $('calck').innerHTML = [['Always-on load added', `${sgn(a.added_mw, 0)} MW`, `${sgn(a.added_pct)}% vs. 2019`], ['≈ AI GPUs running 24/7', fmt(Math.round(a.added_mw * 1000 / (kw * pue) / 100) * 100), `${kw.toFixed(2)} kW × PUE ${pue.toFixed(2)}`],
+      ['≈ US homes', fmt(Math.round(a.added_mw * 1000 / D.meta.home_kw / 1000) * 1000), `${D.meta.home_kw} kW average per home`]].map(([l, v, x]) => `<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div><div class="s">${x}</div></div>`).join(''); };
+  $('kw').oninput = upd; $('pue').oninput = upd; upd();
+}
+
+// ============================== FORECAST
+R.forecast = () => {
+  initZoneSelects(); renderForecast();
+  const sb = (D.scoreboard || []).slice().sort((a, b) => (a.grid - a.naive) - (b.grid - b.naive));
+  plot('sbchart', [{type: 'bar', x: sb.map(r => r.ticker), y: sb.map(r => r.naive), name: 'naive', marker: {color: C.t3}},
+    {type: 'bar', x: sb.map(r => r.ticker), y: sb.map(r => r['own+capex']), name: 'own+capex', marker: {color: C.cat[0]}},
+    {type: 'bar', x: sb.map(r => r.ticker), y: sb.map(r => r.grid), name: 'grid', marker: {color: C.cat[1]}}],
+    {barmode: 'group', yaxis: {title: 'average miss (pp)', type: 'log'}});
+  const M = ['naive', 'capex', 'own+capex', 'grid'];
+  $('sb').innerHTML = table(sb, [{h: 'Company', f: r => esc(r.name)}, {h: 'Quarters', num: 1, k: 'quarters'},
+    ...M.map(m => ({h: m, num: 1, f: r => r.best === m ? `<b class="ok">${fmt(r[m], 1)}</b>` : fmt(r[m], 1)})), {h: 'Beats naive?', f: r => r.beats_naive ? '<span class="ok">✓ ' + esc(r.best) + '</span>' : '<span class="muted">no</span>'}], {click: 1});
+  document.querySelectorAll('#sb tr.click').forEach(tr => tr.onclick = () => renderBt(sb[+tr.dataset.i].ticker));
+  renderBt(D.bt_detail.NVDA ? 'NVDA' : Object.keys(D.bt_detail)[0]);
+  const pairs = [['nvda_yoy->capex_yoy', 'NVIDIA revenue → hyperscaler capex', C.cat[2]], ['capex_yoy->overnight_yoy', 'Capex → N. Virginia baseload', C.cat[0]]];
+  const band = Math.max(...pairs.flatMap(([k]) => (D.cc[k].noise_band || []).filter(v => v != null)));
+  plot('cc', pairs.map(([k, n, c]) => ({x: D.cc[k].lag_quarters, y: D.cc[k].corr, name: n, type: 'bar', marker: {color: c}, hovertemplate: 'lag %{x}: r = %{y:.2f}'})),
+    {barmode: 'group', hovermode: 'closest', xaxis: {title: 'shift (quarters; + = first series leads)', dtick: 1}, yaxis: {title: 'correlation', range: [-1, 1]},
+     shapes: [{type: 'rect', xref: 'paper', x0: 0, x1: 1, y0: -band, y1: band, fillcolor: C.t3, opacity: 0.13, line: {width: 0}}]});
+};
+function renderBt(t) {
+  const bt = D.bt_detail[t]; if (!bt) return;
+  $('btc_t').textContent = `Backtest detail: ${CO[t].name}`;
+  plot('btc', [{x: bt.quarter, y: bt.actual_yoy, name: 'Actual (first reported)', type: 'scatter', mode: 'lines+markers', line: {color: C.t1, width: 2.5}},
+    ...['naive', 'capex', 'own+capex', 'grid'].map((m, i) => ({x: bt.quarter, y: bt[m], name: m, type: 'scatter', mode: 'lines', line: {color: [C.t3, C.cat[2], C.cat[0], C.cat[1]][i], width: 1.7, dash: i ? 'solid' : 'dot'}}))],
+    {yaxis: {title: '% YoY'}});
+}
+function renderForecast() {
+  const Z = D.zones[ZONE], f = Z && Z.forecast;
+  $('fc_t').textContent = `${Z ? Z.label : ''}: 24-month baseload projection if the trend continues`;
+  if (!f || !f.months) { Plotly.purge('fc'); $('fc').innerHTML = '<div class="empty">Not enough weather-adjusted history.</div>'; return; }
+  const h = Z.norm;
+  plot('fc', [{x: h.month, y: h.normalized_mw, name: 'Weather-adjusted baseload', type: 'scatter', mode: 'lines', line: {color: zoneColor(ZONE), width: 2.3}, hovertemplate: '%{y:,.0f} MW'},
+    {x: f.months, y: f.p90, name: '90th pct', type: 'scatter', mode: 'lines', line: {width: 0}, showlegend: false, hovertemplate: 'p90 %{y:,.0f}'},
+    {x: f.months, y: f.p10, name: '10th–90th percentile', type: 'scatter', mode: 'lines', line: {width: 0}, fill: 'tonexty', fillcolor: 'rgba(128,128,128,0.22)', hovertemplate: 'p10 %{y:,.0f}'},
+    {x: f.months, y: f.p50, name: `Median path (${sgn(f.annual_growth_pct)}%/yr trend)`, type: 'scatter', mode: 'lines', line: {color: zoneColor(ZONE), width: 2.3, dash: 'dash'}, hovertemplate: '%{y:,.0f} MW'}],
+    {yaxis: {title: 'MW'}, shapes: [{type: 'line', x0: f.fit_from, x1: f.fit_from, yref: 'paper', y0: 0, y1: 1, line: {color: C.t3, width: 1, dash: 'dot'}}],
+     annotations: [{x: f.fit_from, yref: 'paper', y: 1, text: 'fit window starts', showarrow: false, xanchor: 'left', font: {size: 11, color: C.t3}}]});
+}
+
+// ============================== TIME MACHINE
+const HYPER = Object.keys(CO).filter(t => CO[t].role === 'hyperscaler');
+const tmStart = new Date('2020-01-01'), tmEnd = new Date(D.meta.built_at.slice(0, 10));
+const tmDays = Math.round((tmEnd - tmStart) / 864e5);
+function asOf(date) {
+  const best = {};
+  for (const v of D.versions) if (v.filed_date <= date) { const k = v.ticker + '|' + v.metric + '|' + v.quarter; if (!best[k] || best[k].filed_date <= v.filed_date) best[k] = v; }
+  return best;
+}
+function seriesFrom(view, t, m) { return Object.values(view).filter(v => v.ticker === t && v.metric === m).sort((a, b) => a.quarter.localeCompare(b.quarter)); }
+function capexFrom(view) { const by = {}; Object.values(view).filter(v => v.metric === 'capex' && HYPER.includes(v.ticker)).forEach(v => { (by[v.quarter] = by[v.quarter] || {})[v.ticker] = v.value_b; });
+  return Object.keys(by).sort().filter(q => HYPER.every(t => by[q][t] != null)).map(q => [q, HYPER.reduce((a, t) => a + by[q][t], 0)]); }
+R.time = () => {
+  const sl = $('tm'); sl.max = tmDays; sl.value = Math.round(tmDays * 0.55);
+  const now = asOf('9999'), nvNow = seriesFrom(now, 'NVDA', 'revenue').filter(v => v.quarter >= '2019Q1'), cxNow = capexFrom(now).filter(([q]) => q >= '2019Q1');
+  const upd = () => {
+    const d = new Date(tmStart.getTime() + (+sl.value) * 864e5).toISOString().slice(0, 10);
+    $('tmdate').textContent = new Date(d + 'T12:00:00').toLocaleDateString('en-US', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
+    const v = asOf(d), nv = seriesFrom(v, 'NVDA', 'revenue').filter(x => x.quarter >= '2019Q1'), cx = capexFrom(v).filter(([q]) => q >= '2019Q1');
+    const unknown = D.versions.filter(x => x.filed_date > d).length;
+    $('tmnote').textContent = `${fmt(unknown)} of ${fmt(D.versions.length)} data points in today's dataset hadn't been filed yet.`;
+    const g = D.grid_q, gi = g.known_date ? g.known_date.map((k, i) => k <= d ? i : -1).filter(i => i >= 0) : [];
+    const lastG = gi.length ? gi[gi.length - 1] : null;
+    const lastNv = nv[nv.length - 1], lastCx = cx[cx.length - 1];
+    const yoyOf = (arr, q) => { const p = arr.find(x => x[0] === q); return p; };
+    const nvPrev = lastNv ? nv.find(x => x.quarter === prevYear(lastNv.quarter)) : null, cxPrev = lastCx ? cx.find(x => x[0] === prevYear(lastCx[0])) : null;
+    $('tmkpis').innerHTML = [[`NVIDIA's latest known quarter`, lastNv ? `$${fmt(lastNv.value_b, 1)}B` : '—', lastNv ? `${lastNv.quarter}${nvPrev ? ' · ' + sgn(100 * (lastNv.value_b / nvPrev.value_b - 1), 0) + '% YoY' : ''}` : ''],
+      ['Hyperscaler capex, latest known', lastCx ? `$${fmt(lastCx[1], 1)}B` : '—', lastCx ? `${lastCx[0]}${cxPrev ? ' · ' + sgn(100 * (lastCx[1] / cxPrev[1] - 1), 0) + '% YoY' : ''}` : ''],
+      ['N. Virginia baseload, latest known', lastG != null ? sgn(g.overnight_yoy[lastG]) + '%' : '—', lastG != null ? `${g.quarter[lastG]} YoY` : '']]
+      .map(([l, val, x]) => `<div class="kpi"><div class="l">${l}</div><div class="v">${val}</div><div class="s">${x}</div></div>`).join('');
+    plot('tmchart', [{x: cxNow.map(p => p[0]), y: cxNow.map(p => p[1]), name: 'Capex (known today)', type: 'scatter', mode: 'lines', line: {color: C.cat[0], width: 1.5}, opacity: 0.3, hoverinfo: 'skip'},
+      {x: nvNow.map(p => p.quarter), y: nvNow.map(p => p.value_b), name: 'NVIDIA (known today)', type: 'scatter', mode: 'lines', line: {color: C.cat[2], width: 1.5}, opacity: 0.3, hoverinfo: 'skip'},
+      {x: cx.map(p => p[0]), y: cx.map(p => p[1]), name: 'Hyperscaler capex (known then)', type: 'scatter', mode: 'lines+markers', line: {color: C.cat[0], width: 3}, marker: {size: 5}, hovertemplate: '$%{y:.1f}B'},
+      {x: nv.map(p => p.quarter), y: nv.map(p => p.value_b), name: 'NVIDIA revenue (known then)', type: 'scatter', mode: 'lines+markers', line: {color: C.cat[2], width: 3}, marker: {size: 5}, hovertemplate: '$%{y:.1f}B'}],
+      {yaxis: {title: 'USD billions', rangemode: 'tozero'}, xaxis: {range: [nvNow.length ? nvNow[0].quarter : '2019Q1', nvNow.length ? nvNow[nvNow.length - 1].quarter : null]}});
+    const rows = Object.keys(CO).map(t => { const m = CO[t].metrics.includes('revenue') ? 'revenue' : 'capex'; const s = seriesFrom(v, t, m); const l = s[s.length - 1]; if (!l) return null;
+      const p = s.find(x => x.quarter === prevYear(l.quarter)); return {t, m, q: l.quarter, val: l.value_b, yoy: p ? 100 * (l.value_b / p.value_b - 1) : null, filed: l.filed_date}; }).filter(Boolean);
+    $('tmtable').innerHTML = table(rows, [{h: 'Company', f: r => `<span class="pill"><span class="dot" style="background:${layerColor(CO[r.t].layer)}"></span>${esc(CO[r.t].name)}</span>`},
+      {h: 'Quarter', k: 'q'}, {h: '$B', num: 1, f: r => fmt(r.val, 2)}, {h: 'YoY', num: 1, f: r => r.yoy == null ? '—' : sgn(r.yoy, 0) + '%'}, {h: 'Filed', k: 'filed'}]);
+    const from = new Date(new Date(d) - 30 * 864e5).toISOString().slice(0, 10);
+    const recent = D.versions.filter(x => x.filed_date > from && x.filed_date <= d).sort((a, b) => b.filed_date.localeCompare(a.filed_date));
+    $('tmfeed').innerHTML = table(recent.slice(0, 60), [{h: 'Filed', k: 'filed_date'}, {h: 'Company', f: r => esc(CO[r.ticker].name)}, {h: 'What', f: r => esc(r.metric.replace('_', ' ') + ' ' + r.quarter)}, {h: '$B', num: 1, f: r => fmt(r.value_b, 2)}]);
+  };
+  sl.oninput = upd; upd();
+};
+function prevYear(q) { return (+q.slice(0, 4) - 1) + q.slice(4); }
+
+// ============================== AGENT
+R.agent = () => {
+  const ev = D.evals;
+  const r = D.retrieval || {};
+  if (!ev) { $('agkpis').innerHTML = '<div class="empty">The agent evaluation runs on demand; results appear after the first run.</div>'; }
+  else {
+    const cached = ev.cache_read_tokens || 0, inTok = ev.input_tokens + cached;
+    $('agkpis').innerHTML = [['Cases passed', `${ev.passed}/${ev.total}`, ev.model], ['Numbers verified', fmt(ev.cases.reduce((a, c) => a + (c.numbers_checked || 0), 0)), 'checked against tool output'],
+      ['Avg. latency', `${fmt(ev.avg_seconds, 1)}s`, `${fmt(ev.avg_revisions, 2)} forced revisions per case`], ['Tokens', fmt(inTok + ev.output_tokens), `${inTok ? fmt(100 * cached / inTok, 0) : 0}% of input served from prompt cache`],
+      ['Judge score', ev.judge_mean ? `${fmt(ev.judge_mean, 2)}/5` : '—', 'LLM rubric (not pass/fail)'], ['Retrieval hit@3', r.hit_rate != null ? fmt(100 * r.hit_rate, 0) + '%' : '—', r.mrr != null ? `MRR ${fmt(r.mrr, 2)} · ${r.queries} queries` : 'filing search']]
+      .map(([l, v, x]) => `<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div><div class="s">${esc(x)}</div></div>`).join('');
+    const cats = Object.entries(ev.by_category || {});
+    plot('agcat', [{type: 'bar', y: cats.map(c => c[0]), x: cats.map(c => c[1].passed), name: 'passed', orientation: 'h', marker: {color: C.good}},
+      {type: 'bar', y: cats.map(c => c[0]), x: cats.map(c => c[1].total - c[1].passed), name: 'failed', orientation: 'h', marker: {color: C.crit}}],
+      {barmode: 'stack', margin: {l: 110, r: 10, t: 8, b: 30}, hovermode: 'closest', xaxis: {dtick: 1}});
+    $('aglb').innerHTML = table(ev.leaderboard || [ev], [{h: 'Model', k: 'model'}, {h: 'Passed', f: m => `${m.passed}/${m.total}`}, {h: 'Avg s', num: 1, f: m => fmt(m.avg_seconds, 1)},
+      {h: 'Output tokens', num: 1, f: m => fmt(m.output_tokens)}, {h: 'Judge', num: 1, f: m => m.judge_mean ? fmt(m.judge_mean, 2) : '—'}]);
+    $('agcases').innerHTML = table(ev.cases, [{h: 'Case', f: c => `<b>${esc(c.id)}</b><div class="muted" style="font-size:12px">${esc(c.why || '')}</div>`}, {h: 'Category', k: 'category'},
+      {h: 'As of', f: c => esc(c.as_of || 'today')}, {h: 'Result', f: c => status(c.passed)}, {h: 'Numbers', f: c => c.verifier_ok ? `<span class="ok">✓ ${c.numbers_checked || ''}</span>` : `<span class="bad">✕ ${esc((c.unverified || []).join(', '))}</span>`},
+      {h: 'Future leaked', f: c => (c.leaked_future || []).length ? `<span class="bad">✕ ${esc(c.leaked_future.join(', '))}</span>` : '<span class="ok">✓ none</span>'},
+      {h: 'Tools', num: 1, k: 'tool_calls'}, {h: 'Revisions', num: 1, k: 'revisions'}, {h: 's', num: 1, f: c => fmt(c.seconds, 1)}], {click: 1});
+    $('rsel').innerHTML = ev.cases.map((c, i) => `<option value="${i}">${c.passed ? '✓' : '✕'} ${esc(c.id)}</option>`).join('');
+    $('rsel').onchange = () => receipt(+$('rsel').value);
+    document.querySelectorAll('#agcases tr.click').forEach(tr => tr.onclick = () => { $('rsel').value = tr.dataset.i; receipt(+tr.dataset.i); $('receipt').scrollIntoView({behavior: 'smooth', block: 'center'}); });
+    receipt(0);
+  }
+  $('retr').innerHTML = r.rows ? `<p class="d">hit@${r.k}: <b>${fmt(100 * r.hit_rate, 0)}%</b> · MRR <b>${fmt(r.mrr, 2)}</b></p>` + table(r.rows, [{h: 'Company', k: 'ticker'}, {h: 'Query', k: 'query'},
+    {h: 'Rank', num: 1, f: x => x.rank == null ? '—' : x.rank}, {h: 'Hit', f: x => x.hit ? '<span class="ok">✓</span>' : '<span class="bad">✕</span>'}]) : '<div class="empty">Filing text not indexed yet.</div>';
+  $('agtools').innerHTML = '<h4 style="margin:4px 0">Tools</h4>' + table(D.agent.tools, [{h: 'Tool', f: t => `<span class="mono">${esc(t.name)}</span>`}, {h: 'What it does', f: t => esc(t.description.slice(0, 180)) + (t.description.length > 180 ? '…' : '')}]) +
+    '<h4 style="margin:12px 0 4px">Skills</h4>' + table(D.agent.skills, [{h: 'Skill', f: s => `<span class="mono">${esc(s.name)}</span>`}, {h: 'When it applies', k: 'description'}]);
+};
+function receipt(i) {
+  const c = D.evals.cases[i];
+  let html = esc(c.answer || '(no answer)');
+  // highlight numbers in order of appearance
+  let pos = 0, out = '';
+  for (const n of c.numbers || []) {
+    const t = esc(n.text), j = html.indexOf(t, pos);
+    if (j < 0) continue;
+    out += html.slice(pos, j) + `<span class="${n.verified ? 'v' : 'u'}" title="${n.verified ? 'from: ' + esc(n.source) : 'not traceable to any tool result'}">${t}</span>`;
+    pos = j + t.length;
+  }
+  html = out + html.slice(pos);
+  html = html.replace(/\[([A-Z]{1,5} 10-[QK][^\]]*)\]/g, '<span class="cite">📄 $1</span>').replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+  const trace = (c.trace || []).map((t, k) => (k ? '<span class="ar">→</span>' : '') + `<span class="t ${t.error ? 'err' : ''}" title="${esc(JSON.stringify(t.input))}">${esc(t.name)}${t.name === 'load_skill' ? ': ' + esc(t.input.name) : ''}${t.numbers_returned ? ' · ' + t.numbers_returned + ' nums' : ''}</span>`).join('');
+  const j = c.judge && c.judge.mean ? `<p class="d">Judge: grounded ${c.judge.grounded}/5 · clear ${c.judge.clear}/5 · caveats ${c.judge.caveats}/5 · answers ${c.judge.answers}/5. <i>${esc(c.judge.comment || '')}</i></p>` : '';
+  $('receipt').innerHTML = `<p class="d"><b>Q</b> (as of ${esc(c.as_of || 'today')}): ${esc(c.question)}</p><p class="d"><i>${esc(c.why || '')}</i></p>
+    <div class="trace">${trace || '<span class="muted">no tools called</span>'}</div><div class="ans">${html}</div>
+    <p class="d">${status(c.passed)} · ${c.numbers_checked || 0} numbers checked · ${c.revisions} revision(s) · ${fmt(c.seconds, 1)}s${(c.missing || []).length ? ' · missing expected: ' + esc(c.missing.join(', ')) : ''}${(c.bad_quotes || []).length ? ' · bad quotes: ' + c.bad_quotes.length : ''}</p>${j}`;
+}
+
+// ============================== DATA
+let DQ_FILTER = 'failing';
+R.data = () => {
+  const q = D.quality || [], ok = q.filter(x => x.passed).length;
+  const fins = {}; D.versions.forEach(v => { if (!fins[v.ticker] || fins[v.ticker] < v.filed_date) fins[v.ticker] = v.filed_date; });
+  $('dqkpis').innerHTML = [['Quality checks passed', `${ok}/${q.length}`, `${q.filter(x => !x.passed && x.severity === 'critical').length} critical failures`],
+    ['SEC data points', fmt(D.meta.fin_rows), `${Object.keys(CO).length} companies, every filed version`], ['Grid hours', fmt(D.meta.hours), `${ZONES.length} zones since 2019`],
+    ['Filing passages', fmt(D.meta.chunks), 'MD&A text for search'], ['Restated quarters', fmt((D.restatements || []).length), 'values revised after first filing']]
+    .map(([l, v, x]) => `<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div><div class="s">${x}</div></div>`).join('');
+  const draw = () => {
+    $('dqfilter').innerHTML = ['failing', 'all'].map(f => `<span class="chip ${DQ_FILTER === f ? 'on' : ''}" data-f="${f}">${f === 'failing' ? 'warnings & failures' : 'all checks'}</span>`).join('');
+    document.querySelectorAll('#dqfilter .chip').forEach(c => c.onclick = () => { DQ_FILTER = c.dataset.f; draw(); });
+    const rows = q.filter(x => DQ_FILTER === 'all' || !x.passed);
+    $('dq').innerHTML = table(rows, [{h: 'Status', f: x => x.passed ? '<span class="ok">✓ pass</span>' : (x.severity === 'critical' ? '<span class="bad">✕ critical</span>' : '<span style="color:var(--warn)">⚠ warn</span>')},
+      {h: 'Check', f: x => `<span class="mono">${esc(x.check_id)}</span>`}, {h: 'Subject', k: 'subject'}, {h: 'Detail', k: 'detail'}]);
+  };
+  draw();
+  $('fresh').innerHTML = table(Object.entries(fins).sort((a, b) => a[1].localeCompare(b[1])).map(([t, f]) => ({t, f, age: Math.round((tmEnd - new Date(f)) / 864e5)})),
+    [{h: 'Company', f: r => esc(CO[r.t] ? CO[r.t].name : r.t)}, {h: 'Latest filing', k: 'f'}, {h: 'Days ago', num: 1, f: r => r.age > 135 ? `<span style="color:var(--warn)">${r.age} ⚠</span>` : r.age}]);
+  $('restate').innerHTML = table(D.restatements, [{h: 'Company', k: 'ticker'}, {h: 'Metric', k: 'metric'}, {h: 'Quarter', f: r => esc(r.fiscal)}, {h: 'First', num: 1, f: r => fmt(r.first_b, 3)},
+    {h: 'Revised', num: 1, f: r => fmt(r.latest_b, 3)}, {h: 'Change', num: 1, f: r => sgn(r.change_pct, 2) + '%'}, {h: 'Revised on', k: 'latest_filed'}]);
+  $('runs').innerHTML = table(D.runs, [{h: 'Step', k: 'step'}, {h: 'Status', f: r => status(r.status === 'success', 'ok', 'failed')}, {h: 'Rows', num: 1, f: r => fmt(r.rows_loaded)}, {h: 'Finished', k: 'finished_at'}]);
+  const files = D.manifest ? Object.entries(D.manifest.files) : [];
+  $('files').innerHTML = table(files.map(([f, n]) => ({f, n})), [{h: 'File', f: r => `<a href="data/${esc(r.f)}">${esc(r.f)}</a>`}, {h: 'Rows', num: 1, f: r => fmt(r.n)}]);
+};
+
+document.querySelectorAll('.ntools').forEach(e => e.textContent = D.agent.tools.length);
+addCsvButtons();
+show((location.hash || '#overview').slice(1), false);
+window.addEventListener('hashchange', () => show(location.hash.slice(1), false));
 </script>
 </body>
 </html>

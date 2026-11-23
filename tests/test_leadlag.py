@@ -28,3 +28,17 @@ def test_power_index_and_cross_correlation():
     cc = leadlag.cross_correlation(q.set_index("quarter")["overnight_yoy"], s["nvda_yoy"])
     best = cc.loc[cc["corr"].abs().idxmax()]
     assert best["lag_quarters"] == 0 and best["corr"] > 0.9
+
+
+def test_hyperscaler_capex_sums_only_the_four_hyperscalers():
+    from ftp import db, leadlag
+    from fixtures import load_synthetic
+    conn = db.connect()
+    load_synthetic(conn, True)
+    before = leadlag.series(leadlag.fin_versions(conn)).set_index("quarter")["hyperscaler_capex"]
+    fin = leadlag.fin_versions(conn)
+    extra = fin[(fin["ticker"] == "MSFT") & (fin["metric"] == "capex")].copy()
+    extra["ticker"] = "ORCL"                       # another company with capex must NOT be added in
+    db.upsert(conn, "fin_quarterly", extra.drop(columns="quarter"), ["ticker", "metric", "fiscal_year", "fiscal_q", "filed_date"])
+    after = leadlag.series(leadlag.fin_versions(conn)).set_index("quarter")["hyperscaler_capex"]
+    assert after.dropna().equals(before.dropna())

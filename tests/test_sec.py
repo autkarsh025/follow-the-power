@@ -97,3 +97,12 @@ def test_trailing_twelve_month_facts_in_10q_are_not_fiscal_years():
     q = sec.quarterly(facts("Revenues", items), "D", "revenue")
     got = q[q["fiscal_year"] == 2025].set_index("fiscal_q")["value_usd"].to_dict()
     assert got == {1: 110, 2: 120, 3: 130}
+
+
+def test_zero_valued_priority_tag_falls_through_to_next_concept():
+    zeros = [fact("2024-01-01", "2024-03-31", 0, "2024-04-25"), fact("2024-01-01", "2024-12-31", 0, "2025-02-20", form="10-K")]
+    real = [fact("2024-01-01", "2024-03-31", 100, "2024-04-25"), fact("2024-01-01", "2024-12-31", 500, "2025-02-20", form="10-K")]
+    f = {"facts": {"us-gaap": {"Revenues": {"units": {"USD": zeros}},
+                               "RevenueFromContractWithCustomerExcludingAssessedTax": {"units": {"USD": real}}}}}
+    q = sec.quarterly(f, "VRT", "revenue")
+    assert q[q["fiscal_q"] == 1]["value_usd"].tolist() == [100]
