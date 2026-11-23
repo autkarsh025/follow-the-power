@@ -4,7 +4,7 @@ run_date,metric,value
 2026-11-23,DOM_normalized_12m_growth,8.72
 2026-11-23,FWES_normalized_12m_growth,1.68
 2026-11-23,NCEN_normalized_12m_growth,4.02
-2026-11-23,grid_hours,337561.0
+2026-11-23,grid_hours,337609.0
 2026-11-23,hyperscaler_capex_b,201.92
 2026-11-23,hyperscaler_capex_yoy,107.6
 2026-11-23,nvda_revenue_b,96.22
