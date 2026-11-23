@@ -125,7 +125,10 @@ def findings(d: dict) -> list[dict]:
     accel = []
     for z in d["zones"].values():
         segs = (z.get("regimes") or {}).get("segments") or []
-        if z.get("role") == "hub" and len(segs) >= 2 and segs[-1]["mw_per_year"] > 1.5 * max(segs[-2]["mw_per_year"], 50):
+        # A real acceleration: recent (2022+), fast (>= 300 MW/yr), and not just a rebound from a shrinking
+        # segment (Chicago's COVID dip and recovery would otherwise count).
+        if (z.get("role") == "hub" and len(segs) >= 2 and segs[-1]["from"] >= "2022-01" and segs[-1]["mw_per_year"] >= 300
+                and segs[-2]["mw_per_year"] >= 0 and segs[-1]["mw_per_year"] > 1.5 * max(segs[-2]["mw_per_year"], 50)):
             accel.append((segs[-1]["mw_per_year"] - segs[-2]["mw_per_year"], z, segs))
     for _, z, segs in sorted(accel, key=lambda x: -x[0])[:2]:
         out.append({"icon": "🚀", "title": f"{z['label'].split(' (')[0]} accelerated",
