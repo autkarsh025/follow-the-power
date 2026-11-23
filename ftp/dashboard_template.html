@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Follow the Power · the AI boom, seen through the electrical grid</title>
+<meta name="description" content="NVIDIA revenue, hyperscaler capex and Northern Virginia's data-center power demand, joined point-in-time, with a verified Claude analyst agent.">
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<style>
+  :root { color-scheme: dark; --page:#121211; --s1:#1a1a19; --s2:#232321; --border:#2e2e2b; --t1:#f0efec; --t2:#c3c2b7; --t3:#8d8c84;
+          --nvda:#199e70; --capex:#3987e5; --power:#d95926; --va:#c98500; --good:#0ca30c; --warn:#fab219; --crit:#d03b3b; --accent:#d95926; }
+  * { box-sizing:border-box; } body { margin:0; background:var(--page); color:var(--t1); font:15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .wrap { max-width:1240px; margin:0 auto; padding:30px 24px 64px; } a { color:var(--t2); }
+  header { display:flex; flex-wrap:wrap; justify-content:space-between; gap:16px; align-items:flex-start; }
+  h1 { font-size:30px; letter-spacing:-.02em; margin:0; } h1 span { color:var(--accent); }
+  .tag { color:var(--t2); margin:6px 0 0; max-width:720px; } .meta { color:var(--t3); font-size:13px; text-align:right; }
+  .btn { border:1px solid var(--border); background:var(--s1); color:var(--t2); font:inherit; font-size:13px; padding:5px 11px; border-radius:8px; text-decoration:none; white-space:nowrap; }
+  .intro { margin:22px 0 0; background:var(--s1); border:1px solid var(--border); border-radius:16px; padding:18px 20px; }
+  .intro h2 { margin:0 0 6px; font-size:21px; } .intro p.lede { color:var(--t2); margin:0 0 14px; max-width:920px; } .intro b { color:var(--t1); }
+  .steps { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+  .step { background:var(--s2); border:1px solid var(--border); border-radius:12px; padding:14px 16px; }
+  .step .n { display:inline-grid; place-items:center; width:24px; height:24px; border-radius:50%; background:var(--accent); color:#fff; font-size:13px; font-weight:700; margin-bottom:6px; }
+  .step h4 { margin:0 0 4px; font-size:15px; } .step p { margin:0; color:var(--t2); font-size:13.5px; }
+  .kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-top:16px; }
+  .kpi { background:var(--s1); border:1px solid var(--border); border-radius:14px; padding:14px 16px; }
+  .kpi .l { color:var(--t3); font-size:13px; } .kpi .v { font-size:26px; font-weight:650; letter-spacing:-.02em; font-variant-numeric:tabular-nums; } .kpi .s { color:var(--t2); font-size:12.5px; }
+  h3.section { margin:30px 0 4px; font-size:13px; text-transform:uppercase; letter-spacing:.06em; color:var(--t3); font-weight:600; }
+  .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:10px; }
+  .card { background:var(--s1); border:1px solid var(--border); border-radius:14px; padding:18px 18px 10px; min-width:0; } .card.wide { grid-column:1/-1; }
+  .card h2 { font-size:16px; margin:0; } .card p.d { color:var(--t2); font-size:13px; margin:3px 0 6px; max-width:900px; }
+  .look { font-size:13px; background:var(--s2); border-left:3px solid var(--accent); border-radius:8px; padding:7px 10px; margin:2px 0 8px; max-width:900px; }
+  .look::before { content:"What to look for: "; font-weight:600; }
+  .chart { height:340px; } .chart.tall { height:380px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; font-variant-numeric:tabular-nums; }
+  th { text-align:left; color:var(--t3); font-weight:500; padding:8px 10px; border-bottom:1px solid var(--border); } td { padding:7px 10px; border-bottom:1px solid var(--border); color:var(--t2); vertical-align:top; }
+  td.num, th.num { text-align:right; } .pill { display:inline-flex; gap:6px; align-items:center; color:var(--t1); } .dot { width:8px; height:8px; border-radius:50%; display:inline-block; }
+  details.ans { margin:8px 0; background:var(--s2); border:1px solid var(--border); border-radius:10px; padding:10px 14px; }
+  details.ans summary { cursor:pointer; color:var(--t1); } details.ans .q { color:var(--t3); font-size:13px; margin:8px 0 4px; } details.ans .a { white-space:pre-wrap; color:var(--t2); font-size:13.5px; }
+  .arch { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:8px 0 12px; } .arch .b { background:var(--s2); border:1px solid var(--border); border-radius:10px; padding:10px 14px; }
+  .arch .b b { display:block; font-size:14px; } .arch .b small { color:var(--t3); } .arch .ar { color:var(--t3); }
+  dl.gl { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px 28px; } dl.gl dt { font-weight:600; font-size:14px; } dl.gl dd { margin:2px 0 0; color:var(--t2); font-size:13.5px; }
+  footer { color:var(--t3); font-size:13px; margin-top:28px; line-height:1.7; } .empty { color:var(--t3); padding:40px 0; text-align:center; }
+  @media (max-width:900px) { .grid, .steps, dl.gl { grid-template-columns:1fr; } .kpis { grid-template-columns:repeat(2,minmax(0,1fr)); } .meta { text-align:left; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div><h1>follow<span>-</span>the<span>-</span>power ⚡</h1>
+      <p class="tag">Tracking the AI boom through the electrical grid: NVIDIA's revenue, big tech's spending on data centers, and the power demand of the world's largest data-center hub, joined point-in-time and explained by a verified Claude analyst.</p></div>
+    <div class="meta"><a class="btn" href="https://github.com/autkarsh025/follow-the-power">GitHub ↗</a><div id="built" style="margin-top:8px"></div></div>
+  </header>
+
+  <section class="intro">
+    <h2>What is this?</h2>
+    <p class="lede">AI runs on GPUs, and GPUs run on electricity. Every NVIDIA chip ends up plugged into a data center that draws power around the clock, and that shows up in <b>public grid data</b>. This project follows the money from big tech's budgets to NVIDIA's revenue to the power grid, using only official public data, and tests honestly what the grid can and can't tell you.</p>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><h4>The money</h4><p>Quarterly results from SEC filings: NVIDIA's revenue, and capital spending by Microsoft, Alphabet, Amazon and Meta. Every number keeps the date it was first published.</p></div>
+      <div class="step"><span class="n">2</span><h4>The power</h4><p>Hourly electricity demand in Northern Virginia (Dominion zone), home to the largest concentration of data centers on Earth. Data centers run 24/7, so they raise the <b>overnight</b> load.</p></div>
+      <div class="step"><span class="n">3</span><h4>The analyst</h4><p>A Claude agent answers questions with these tools. Every number it writes is automatically checked against the data, and it's scored by replaying history so it can't peek at the future.</p></div>
+    </div>
+  </section>
+
+  <section class="kpis" id="kpis"></section>
+
+  <h3 class="section">The money</h3>
+  <div class="grid">
+    <div class="card wide"><h2>NVIDIA's revenue vs. big tech's data-center spending</h2>
+      <p class="d">Quarterly, in billions of dollars. Hyperscaler capex = Microsoft + Alphabet + Amazon + Meta capital expenditures (mostly data centers and the chips inside them).</p>
+      <p class="look">both lines bend upward together starting in 2023, when the AI build-out began. Capex is the money spent; a large share of it becomes NVIDIA revenue.</p>
+      <div class="chart tall" id="money"></div></div>
+    <div class="card"><h2>Growth rates</h2><p class="d">Year-over-year growth, %. Comparing each quarter with the same quarter a year earlier removes seasonal swings.</p>
+      <p class="look">NVIDIA's growth spiked first (2023), and hyperscaler capex growth climbed after it.</p><div class="chart" id="growth"></div></div>
+    <div class="card"><h2>Who's spending</h2><p class="d">Capital expenditures per company, billions USD per quarter.</p>
+      <p class="look">all four ramping at once: this is an industry-wide build-out, not one company.</p><div class="chart" id="cos"></div></div>
+  </div>
+
+  <h3 class="section">The power</h3>
+  <div class="grid">
+    <div class="card"><h2>Northern Virginia's overnight baseload</h2><p class="d">Median demand between 1 and 5 AM each month (MW), Dominion zone of PJM. Homes and offices are quiet at night; data centers aren't.</p>
+      <p class="look">the floor of the line (the spring and fall lows, when weather matters least) keeps rising. That's new 24/7 load.</p><div class="chart" id="baseload"></div></div>
+    <div class="card"><h2>A flatter day: the data-center signature</h2><p class="d">Average load by hour as a % of the daily peak: 2019 vs. the last 12 months.</p>
+      <p class="look">the recent line sits higher at night. Less difference between night and day means more always-on load, exactly what data centers add.</p><div class="chart" id="shape"></div></div>
+    <div class="card wide"><h2>Commercial electricity sales by state (2019 = 100)</h2><p class="d">Monthly retail sales to commercial customers (data centers count as commercial), summed by quarter and indexed to each state's 2019 average.</p>
+      <p class="look">Virginia pulling away from other states. Texas, Ohio and Arizona are where the next wave of data centers is going.</p><div class="chart" id="states"></div></div>
+  </div>
+
+  <h3 class="section">Does the grid move with the money?</h3>
+  <div class="grid">
+    <div class="card wide"><h2>Who leads whom</h2><p class="d">Correlation between growth rates at different time shifts. A bar at +k means the first series leads the second by k quarters. The shaded band is noise: bars inside it aren't meaningful (with only ~25 quarters, that band is wide).</p>
+      <p class="look">NVIDIA's growth peaks a few quarters before capex growth (negative lags on the first pair), and capex growth peaks about one quarter before Virginia's overnight load (+1 on the second pair). Money, then chips, then power.</p><div class="chart tall" id="cc"></div></div>
+    <div class="card wide"><h2>Can the grid forecast NVIDIA's revenue? An honest test</h2><p class="d">Each quarter, standing 7 days after it ends (before NVIDIA reports), three models predict NVIDIA's revenue growth using only data public that day. Lines show predictions vs. what NVIDIA later reported.</p>
+      <p class="look">the grid model doesn't beat the naive "growth continues" guess. Grid data confirms the build-out <i>after</i> the money moves; it doesn't front-run NVIDIA. Reporting that plainly is the point.</p><div class="chart" id="bt"></div><div id="scores"></div></div>
+  </div>
+
+  <h3 class="section">The analyst agent</h3>
+  <div class="grid">
+    <div class="card wide"><h2>Evaluation: can the agent be trusted with numbers?</h2>
+      <p class="d">Questions whose correct answers are computed from the data. A case passes only if the right numbers appear, every number is verified against tool outputs, and, for time-travel cases, no number from after the "as of" date leaks in.</p>
+      <div id="evals"></div></div>
+  </div>
+
+  <h3 class="section">How it works</h3>
+  <div class="grid">
+    <div class="card wide"><div class="arch">
+      <div class="b"><b>SEC EDGAR</b><small>10-Q/10-K XBRL · filing dates</small></div><span class="ar">+</span>
+      <div class="b"><b>EIA</b><small>hourly zone demand · state sales</small></div><span class="ar">→</span>
+      <div class="b"><b>Point-in-time SQL</b><small>every value keeps when it became public</small></div><span class="ar">→</span>
+      <div class="b"><b>Power index</b><small>overnight baseload · flatness</small></div><span class="ar">→</span>
+      <div class="b"><b>Lead/lag + backtest</b><small>noise bands · no look-ahead</small></div><span class="ar">→</span>
+      <div class="b"><b>Claude agent</b><small>tools · skills · number verifier</small></div><span class="ar">→</span>
+      <div class="b"><b>Evals + this page</b><small>GitHub Actions</small></div></div>
+      <p class="d">Stack: Python · pandas · SQLite · Claude API (tool use) · pytest · GitHub Actions · Plotly. Data: SEC EDGAR XBRL API; U.S. Energy Information Administration (EIA-930 hourly subregion demand; retail sales).</p></div>
+    <div class="card wide"><h2>Glossary</h2><dl class="gl">
+      <div><dt>Hyperscaler capex</dt><dd>Capital expenditures of the giant cloud companies, mostly data centers, servers and the GPUs inside them.</dd></div>
+      <div><dt>Overnight baseload</dt><dd>The lowest, steadiest demand of the night. It rises when always-on loads like data centers are added.</dd></div>
+      <div><dt>Point-in-time data</dt><dd>Recording when each number was first published, so a backtest only uses information that existed on that date.</dd></div>
+      <div><dt>Year-over-year (YoY)</dt><dd>Growth vs. the same quarter a year earlier, which cancels out seasons.</dd></div>
+      <div><dt>Noise band</dt><dd>About 2/√n. Correlations smaller than this are indistinguishable from chance with n data points.</dd></div>
+      <div><dt>Naive forecast</dt><dd>"Next quarter grows as fast as last quarter." The baseline any model has to beat.</dd></div>
+      <div><dt>Number verifier</dt><dd>Code that checks every figure the agent writes against the numbers its tools returned. Unverifiable figures force a rewrite.</dd></div>
+      <div><dt>Skills</dt><dd>Reusable instruction packs the agent loads when a task needs them (e.g. how to write a variance note).</dd></div></dl></div>
+  </div>
+  <footer>Built by Utkarsh Agarwal. Data: SEC EDGAR, U.S. EIA. Not investment advice: this is a data-engineering and analysis project. · <a href="https://github.com/autkarsh025/follow-the-power">Source</a></footer>
+</div>
+<script id="data" type="application/json">__DATA__</script>
+<script>
+const D = JSON.parse(document.getElementById('data').textContent);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const C = { t1: css('--t1'), t2: css('--t2'), t3: css('--t3'), b: css('--border'), s2: css('--s2'), nvda: css('--nvda'), capex: css('--capex'),
+            power: css('--power'), va: css('--va'), good: css('--good'), crit: css('--crit'), warn: css('--warn') };
+const cfg = { displayModeBar: false, responsive: true };
+const fmt = (v, d = 0) => v == null ? '—' : Number(v).toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: d });
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const L = (extra = {}) => Object.assign({ paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { family: 'Inter, system-ui', color: C.t2, size: 12 },
+  margin: { l: 58, r: 16, t: 10, b: 44 }, xaxis: { gridcolor: C.b }, yaxis: { gridcolor: C.b, zerolinecolor: C.t3 },
+  legend: { orientation: 'h', x: 0, y: -0.18, yanchor: 'top' }, hovermode: 'x unified',
+  hoverlabel: { bgcolor: C.s2, bordercolor: C.b, font: { color: C.t1 } } }, extra);
+const lastNN = (xs, ys) => { for (let i = ys.length - 1; i >= 0; i--) if (ys[i] != null) return [xs[i], ys[i]]; return [null, null]; };
+
+document.getElementById('built').textContent = `Updated ${D.built_at} · ${fmt(D.hours)} grid hours`;
+// KPIs
+(() => {
+  const s = D.series, g = D.grid_q, ev = D.evals;
+  const [nq, nv] = lastNN(s.quarter, s.nvda_revenue_b), [, ny] = lastNN(s.quarter, s.nvda_yoy);
+  const [cq, cv] = lastNN(s.quarter, s.capex_b), [, cy] = lastNN(s.quarter, s.capex_yoy);
+  const [gq, gy] = lastNN(g.quarter || [], g.overnight_yoy || []);
+  const tiles = [[`NVIDIA revenue · ${nq}`, `$${fmt(nv, 1)}B`, `${ny >= 0 ? '+' : ''}${fmt(ny, 1)}% year over year`],
+    [`Hyperscaler capex · ${cq}`, `$${fmt(cv, 1)}B`, `${cy >= 0 ? '+' : ''}${fmt(cy, 1)}% year over year`],
+    [`N. Virginia overnight load · ${gq}`, `${gy >= 0 ? '+' : ''}${fmt(gy, 1)}%`, 'baseload, year over year'],
+    ['Agent evaluation', ev ? `${ev.passed}/${ev.total}` : '—', ev ? `cases passed · ${esc(ev.model)}` : 'runs on demand']];
+  document.getElementById('kpis').innerHTML = tiles.map(([l, v, s]) => `<div class="kpi"><div class="l">${esc(l)}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join('');
+})();
+
+const s = D.series;
+Plotly.react('money', [
+  { x: s.quarter, y: s.capex_b, name: 'Hyperscaler capex ($B)', type: 'scatter', mode: 'lines+markers', line: { color: C.capex, width: 2.5 }, marker: { size: 5 }, hovertemplate: '$%{y:.1f}B' },
+  { x: s.quarter, y: s.nvda_revenue_b, name: 'NVIDIA revenue ($B)', type: 'scatter', mode: 'lines+markers', line: { color: C.nvda, width: 2.5 }, marker: { size: 5 }, hovertemplate: '$%{y:.1f}B' },
+], L({ yaxis: { gridcolor: C.b, title: 'USD billions per quarter', rangemode: 'tozero' } }), cfg);
+Plotly.react('growth', [
+  { x: s.quarter, y: s.nvda_yoy, name: 'NVIDIA revenue', type: 'scatter', mode: 'lines', line: { color: C.nvda, width: 2.5 }, hovertemplate: '%{y:.1f}%' },
+  { x: s.quarter, y: s.capex_yoy, name: 'Hyperscaler capex', type: 'scatter', mode: 'lines', line: { color: C.capex, width: 2.5 }, hovertemplate: '%{y:.1f}%' },
+], L({ yaxis: { gridcolor: C.b, title: '% vs. a year earlier', zerolinecolor: C.t3 } }), cfg);
+const coColors = { MSFT: C.capex, GOOGL: C.va, AMZN: C.power, META: '#9085e9' };
+Plotly.react('cos', Object.entries(D.company_capex).map(([t, d]) => ({ x: d.quarter, y: d.capex_b, name: t, type: 'scatter', mode: 'lines',
+  line: { color: coColors[t] || C.t2, width: 2 }, hovertemplate: '$%{y:.1f}B' })), L({ yaxis: { gridcolor: C.b, title: 'USD billions', rangemode: 'tozero' } }), cfg);
+
+const gm = D.grid_m;
+Plotly.react('baseload', [{ x: gm.month, y: gm.overnight_mw, name: 'Overnight baseload (MW)', type: 'scatter', mode: 'lines', line: { color: C.power, width: 2 }, hovertemplate: '%{y:,.0f} MW' }],
+  L({ showlegend: false, yaxis: { gridcolor: C.b, title: 'MW (median, 1–5 AM)' } }), cfg);
+const ds = D.day_shape;
+Plotly.react('shape', Object.entries(ds).map(([k, v], i) => ({ x: v.hour, y: v.pct_of_peak, name: k, type: 'scatter', mode: 'lines',
+  line: { color: i ? C.power : C.t3, width: i ? 3 : 2, dash: i ? 'solid' : 'dot' }, hovertemplate: '%{y:.1f}% of peak' })),
+  L({ xaxis: { gridcolor: C.b, title: 'Local hour of day', dtick: 3 }, yaxis: { gridcolor: C.b, title: '% of daily peak' } }), cfg);
+const stColors = { VA: C.va, TX: C.power, OH: C.capex, AZ: '#d55181', OR: C.nvda, GA: '#9085e9' };
+Plotly.react('states', Object.entries(D.states).map(([st, d]) => ({ x: d.quarter, y: d.index, name: st, type: 'scatter', mode: 'lines',
+  line: { color: stColors[st] || C.t2, width: st === 'VA' ? 3.5 : 1.6 }, opacity: st === 'VA' ? 1 : 0.75, hovertemplate: '%{y:.0f}' })),
+  L({ yaxis: { gridcolor: C.b, title: 'Index (2019 = 100)' } }), cfg);
+
+const pairs = [['nvda_yoy->capex_yoy', 'NVIDIA revenue → hyperscaler capex', C.nvda], ['capex_yoy->overnight_yoy', 'Hyperscaler capex → N. Virginia overnight load', C.capex]];
+const band = Math.max(...pairs.flatMap(([k]) => D.cc[k].noise_band.filter(v => v != null)));
+Plotly.react('cc', pairs.map(([k, name, color]) => ({ x: D.cc[k].lag_quarters, y: D.cc[k].corr, name, type: 'bar', marker: { color }, hovertemplate: 'lag %{x}: r = %{y:.2f}' })),
+  L({ barmode: 'group', hovermode: 'closest', xaxis: { gridcolor: C.b, title: 'Shift in quarters (+k = first series leads)', dtick: 1 },
+      yaxis: { gridcolor: C.b, title: 'Correlation', range: [-1, 1] },
+      shapes: [{ type: 'rect', xref: 'paper', x0: 0, x1: 1, y0: -band, y1: band, fillcolor: C.t3, opacity: 0.12, line: { width: 0 } }],
+      annotations: [{ xref: 'paper', x: 1, y: band, text: `noise band ±${band.toFixed(2)}`, showarrow: false, xanchor: 'right', yanchor: 'bottom', font: { color: C.t3, size: 11 } }] }), cfg);
+
+const bt = D.backtest;
+if (bt.quarter) {
+  Plotly.react('bt', [
+    { x: bt.quarter, y: bt.actual_yoy, name: 'Actual (as first reported)', type: 'scatter', mode: 'lines+markers', line: { color: C.t1, width: 3 } },
+    { x: bt.quarter, y: bt.naive, name: 'Naive: growth continues', type: 'scatter', mode: 'lines', line: { color: C.t3, width: 2, dash: 'dot' } },
+    { x: bt.quarter, y: bt.grid, name: 'Grid model', type: 'scatter', mode: 'lines', line: { color: C.power, width: 2 } },
+    { x: bt.quarter, y: bt.capex, name: 'Capex model', type: 'scatter', mode: 'lines', line: { color: C.capex, width: 1.5 } },
+  ], L({ yaxis: { gridcolor: C.b, title: 'NVIDIA revenue growth, % YoY' } }), cfg);
+  document.getElementById('scores').innerHTML = `<table><tr><th>Model</th><th class="num">Average miss (percentage points)</th><th class="num">Quarters</th></tr>` +
+    D.scores.map(r => `<tr><td>${esc(r.model)}</td><td class="num">${fmt(r.mae_pp, 1)}</td><td class="num">${r.quarters}</td></tr>`).join('') + '</table>';
+}
+
+const ev = D.evals, box = document.getElementById('evals');
+if (!ev) box.innerHTML = '<div class="empty">The agent evaluation runs on demand; results appear here after the first run.</div>';
+else box.innerHTML = `<p class="d">${ev.passed}/${ev.total} passed · model ${esc(ev.model)} · ${esc(ev.run_at)} · ${fmt(ev.input_tokens)} input / ${fmt(ev.output_tokens)} output tokens</p>
+  <table><tr><th>Case</th><th>As of</th><th>Result</th><th>Numbers verified</th><th>Future leaked</th><th class="num">Revisions</th></tr>` +
+  ev.cases.map(c => `<tr><td>${esc(c.id)}</td><td>${esc(c.as_of || 'today')}</td><td><span class="pill"><span class="dot" style="background:${c.passed ? C.good : C.crit}"></span>${c.passed ? '✓ pass' : '✕ fail'}</span></td>
+    <td>${c.verifier_ok ? '✓ all' : '✕ ' + esc((c.unverified || []).join(', '))}</td><td>${(c.leaked_future || []).length ? '✕ ' + esc(c.leaked_future.join(', ')) : '✓ none'}</td><td class="num">${c.revisions}</td></tr>`).join('') +
+  '</table>' + ev.cases.map(c => `<details class="ans"><summary>${esc(c.id)}: read the agent's answer</summary><div class="q">Q (as of ${esc(c.as_of || 'today')}): ${esc(c.question)}</div><div class="a">${esc(c.answer)}</div></details>`).join('');
+</script>
+</body>
+</html>
