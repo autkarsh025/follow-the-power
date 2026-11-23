@@ -1,0 +1,359 @@
+{
+  "written_at": "2026-11-23 11:38 UTC",
+  "model": "claude-sonnet-5-5",
+  "answer": "### Spending\nCombined capex at Microsoft, Alphabet, Amazon and Meta was $201.92B in 2026Q3, up 107.6% year over year. That is up from $165.05B in 2026Q2 (+87.0% YoY), a rise of 22.3% in one quarter. Capex is growing much faster than revenue, so intensity (capex \u00f7 revenue) is rising. Microsoft's was 42.7% in 2026Q3, against 39.8% in 2026Q2. Meta's was 52.5% in 2026Q3 ($33.94B capex on $64.6B revenue).\n\n### Suppliers\nGrowth is strongest at the suppliers closest to the chips. In 2026Q3, Micron's revenue was up 379.3% and Super Micro's up 297.5%. Vertiv, in power and cooling gear, was up 61.2% and Arista, in networking, up 58.5%. Broadcom's 2026Q2 revenue was up 85.5%, and NVIDIA's 2026Q2 revenue was up 105.8%. Growth is lower at the electricity end: Vistra was up 27.7% in 2026Q3, and Constellation up 23.0% in 2026Q2. Caveat: Micron and Super Micro are growing from smaller bases, and total revenue doesn't isolate their AI business. Quarters are also not all the same, because fiscal calendars differ.\n\n### Power\nNorthern Virginia overnight baseload was up 13.3% YoY in 2026Q3 (the zone_overview figure). The weather-adjusted figure for 2026-10 was 13.1%, and the model fit is good (R\u00b2 0.894). Weather was a small factor in October (+18 MW), but it added 218 MW in 2026-09. That means the actual 17.0% for September overstates the weather-adjusted 14.0%. Weather-adjusted growth over the last 12 months versus the prior 12 was 8.7%, so the recent pace is faster. No step change was detected (the threshold is 811 MW). The growth looks like many loads building up gradually, not one large load switching on. Caveat: this is one weather station, and overnight load also includes industry and electrification.\n\n### In their own words\nNVIDIA said Data Center revenue was \"$75.2 billion, up 92% from a year ago and up 21% sequentially, driven by the ramp of our Blackwell 300 products\" [NVDA 10-Q filed 2026-05-20, MD&A \u00b613]. This covers the fiscal quarter ended 2026-04-26. In the same filing, hyperscalers were \"approximately 50% of Data Center revenue.\" Dominion lists as a risk \"significant accelerated growth in demand due to new data centers, including the concentration of data centers primarily in Loudoun County, Virginia\" [D 10-Q filed 2026-10-30, MD&A \u00b68]. That language is risk boilerplate, not a demand figure.\n\n### What to watch\n1. **Capex outrunning revenue.** Capex growth of 107.6% is far above the revenue growth of the cloud companies (Microsoft +18.8%, Meta +26.1% in 2026Q3). Any sign that hyperscalers are slowing spending would hit suppliers first. NVIDIA's 2026Q3 revenue isn't reported yet, so we can't see how it tracks capex.\n2. **Grid constraints in Northern Virginia.** Weather-adjusted growth of 13.1% in 2026-10 depends on new power and permits. Watch for a step change above the 811 MW threshold, or for permitting delays, which Dominion flags as a risk. Dominion's 2026Q3 revenue is another signal to watch.",
+  "numbers": [
+    {
+      "text": "$201.92B",
+      "verified": true,
+      "source": "quarterly_financials"
+    },
+    {
+      "text": "107.6%",
+      "verified": true,
+      "source": "quarterly_financials"
+    },
+    {
+      "text": "$165.05B",
+      "verified": true,
+      "source": "quarterly_financials"
+    },
+    {
+      "text": "87.0%",
+      "verified": true,
+      "source": "quarterly_financials"
+    },
+    {
+      "text": "22.3%",
+      "verified": true,
+      "source": "calculate"
+    },
+    {
+      "text": "42.7%",
+      "verified": true,
+      "source": "calculate"
+    },
+    {
+      "text": "39.8%",
+      "verified": true,
+      "source": "calculate"
+    },
+    {
+      "text": "52.5%",
+      "verified": true,
+      "source": "calculate"
+    },
+    {
+      "text": "$33.94B",
+      "verified": true,
+      "source": "company_financials"
+    },
+    {
+      "text": "$64.6B",
+      "verified": true,
+      "source": "company_financials"
+    },
+    {
+      "text": "379.3%",
+      "verified": true,
+      "source": "supply_chain_snapshot"
+    },
+    {
+      "text": "297.5%",
+      "verified": true,
+      "source": "supply_chain_snapshot"
+    },
+    {
+      "text": "61.2%",
+      "verified": true,
+      "source": "supply_chain_snapshot"
+    },
+    {
+      "text": "58.5%",
+      "verified": true,
+      "source": "supply_chain_snapshot"
+    },
+    {
+      "text": "85.5%",
+      "verified": true,
+      "source": "quarterly_financials"
+    },
+    {
+      "text": "105.8%",
+      "verified": true,
+      "source": "quarterly_financials"
+    },
+    {
+      "text": "27.7%",
+      "verified": true,
+      "source": "supply_chain_snapshot"
+    },
+    {
+      "text": "23.0%",
+      "verified": true,
+      "source": "supply_chain_snapshot"
+    },
+    {
+      "text": "13.3%",
+      "verified": true,
+      "source": "zone_overview"
+    },
+    {
+      "text": "13.1%",
+      "verified": true,
+      "source": "weather_adjusted"
+    },
+    {
+      "text": "0.894",
+      "verified": true,
+      "source": "weather_adjusted"
+    },
+    {
+      "text": "18 MW",
+      "verified": true,
+      "source": "company_financials"
+    },
+    {
+      "text": "218 MW",
+      "verified": true,
+      "source": "weather_adjusted"
+    },
+    {
+      "text": "17.0%",
+      "verified": true,
+      "source": "weather_adjusted"
+    },
+    {
+      "text": "14.0%",
+      "verified": true,
+      "source": "weather_adjusted"
+    },
+    {
+      "text": "8.7%",
+      "verified": true,
+      "source": "zone_overview"
+    },
+    {
+      "text": "811 MW",
+      "verified": true,
+      "source": "step_changes"
+    },
+    {
+      "text": "$75.2 billion",
+      "verified": true,
+      "source": "search_filings"
+    },
+    {
+      "text": "92%",
+      "verified": true,
+      "source": "company_financials"
+    },
+    {
+      "text": "21%",
+      "verified": true,
+      "source": "supply_chain_snapshot"
+    },
+    {
+      "text": "300",
+      "verified": true,
+      "source": "zone_overview"
+    },
+    {
+      "text": "13",
+      "verified": true,
+      "source": "supply_chain_snapshot"
+    },
+    {
+      "text": "50%",
+      "verified": true,
+      "source": "search_filings"
+    },
+    {
+      "text": "107.6%",
+      "verified": true,
+      "source": "quarterly_financials"
+    },
+    {
+      "text": "18.8%",
+      "verified": true,
+      "source": "company_financials"
+    },
+    {
+      "text": "26.1%",
+      "verified": true,
+      "source": "company_financials"
+    },
+    {
+      "text": "13.1%",
+      "verified": true,
+      "source": "weather_adjusted"
+    },
+    {
+      "text": "811 MW",
+      "verified": true,
+      "source": "step_changes"
+    }
+  ],
+  "trace": [
+    {
+      "name": "load_skill",
+      "input": {
+        "name": "supply-chain"
+      },
+      "error": null,
+      "numbers_returned": 0
+    },
+    {
+      "name": "load_skill",
+      "input": {
+        "name": "weather-adjustment"
+      },
+      "error": null,
+      "numbers_returned": 0
+    },
+    {
+      "name": "quarterly_financials",
+      "input": {
+        "last_n": 4
+      },
+      "error": null,
+      "numbers_returned": 14
+    },
+    {
+      "name": "company_financials",
+      "input": {
+        "ticker": "MSFT",
+        "metric": "capex",
+        "last_n": 2
+      },
+      "error": null,
+      "numbers_returned": 4
+    },
+    {
+      "name": "company_financials",
+      "input": {
+        "ticker": "MSFT",
+        "metric": "revenue",
+        "last_n": 2
+      },
+      "error": null,
+      "numbers_returned": 4
+    },
+    {
+      "name": "company_financials",
+      "input": {
+        "ticker": "META",
+        "metric": "capex",
+        "last_n": 2
+      },
+      "error": null,
+      "numbers_returned": 4
+    },
+    {
+      "name": "company_financials",
+      "input": {
+        "ticker": "META",
+        "metric": "revenue",
+        "last_n": 2
+      },
+      "error": null,
+      "numbers_returned": 4
+    },
+    {
+      "name": "supply_chain_snapshot",
+      "input": {},
+      "error": null,
+      "numbers_returned": 92
+    },
+    {
+      "name": "zone_overview",
+      "input": {},
+      "error": null,
+      "numbers_returned": 25
+    },
+    {
+      "name": "weather_adjusted",
+      "input": {
+        "zone": "DOM",
+        "last_n": 6
+      },
+      "error": null,
+      "numbers_returned": 38
+    },
+    {
+      "name": "step_changes",
+      "input": {
+        "zone": "DOM"
+      },
+      "error": null,
+      "numbers_returned": 1
+    },
+    {
+      "name": "search_filings",
+      "input": {
+        "query": "Data Center revenue increase driven by",
+        "ticker": "NVDA",
+        "k": 3
+      },
+      "error": null,
+      "numbers_returned": 41
+    },
+    {
+      "name": "search_filings",
+      "input": {
+        "query": "data center demand load growth Northern Virginia",
+        "ticker": "D",
+        "k": 3
+      },
+      "error": null,
+      "numbers_returned": 0
+    },
+    {
+      "name": "calculate",
+      "input": {
+        "expression": "39.37 / 92.28 * 100"
+      },
+      "error": null,
+      "numbers_returned": 1
+    },
+    {
+      "name": "calculate",
+      "input": {
+        "expression": "33.94 / 64.6 * 100"
+      },
+      "error": null,
+      "numbers_returned": 1
+    },
+    {
+      "name": "calculate",
+      "input": {
+        "expression": "(201.92 / 165.05 - 1) * 100"
+      },
+      "error": null,
+      "numbers_returned": 1
+    },
+    {
+      "name": "calculate",
+      "input": {
+        "expression": "35.8 / 90.01 * 100"
+      },
+      "error": null,
+      "numbers_returned": 1
+    }
+  ],
+  "verification": {
+    "numbers_checked": 38,
+    "unverified": [],
+    "ok": true,
+    "bad_quotes": []
+  },
+  "revisions": 0,
+  "usage": {
+    "input_tokens": 26040,
+    "output_tokens": 2594,
+    "cache_read_tokens": 14544,
+    "cache_write_tokens": 872
+  },
+  "seconds": 19.1,
+  "error": null
+}
