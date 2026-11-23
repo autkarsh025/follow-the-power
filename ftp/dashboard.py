@@ -16,6 +16,7 @@ from ftp import analytics, config, filings, leadlag, power, quality
 TEMPLATE = config.ROOT / "ftp" / "dashboard_template.html"
 OUT = config.ROOT / "docs" / "index.html"
 EVALS = config.ROOT / "evals" / "results.json"
+MEMO = config.ROOT / "reports" / "latest.json"
 MANIFEST = config.ROOT / "docs" / "data" / "manifest.json"
 
 
@@ -194,6 +195,10 @@ def build() -> None:
         "margins": analytics.gross_margins(fin), "race": analytics.revenue_race(fin), "layers": analytics.layer_totals(fin),
         "matrix": analytics.lead_lag_matrix(chain_df), "feed": analytics.filing_feed(fin),
         "restatements": recs(analytics.restatements(fin)),
+        "flags": recs(analytics.variance_flags(fin).head(80)),
+        "memo": json.loads(MEMO.read_text()) if MEMO.exists() else None,
+        "memo_archive": sorted([f.stem for f in (config.ROOT / "reports").glob("20*.md")], reverse=True)[:20]
+        if (config.ROOT / "reports").exists() else [],
         "scoreboard": recs(sb), "bt_detail": {t: cols(v) for t, v in detail.items()},
         "grid_q": cols(gq),
         "quality": recs(quality.latest(conn)) if conn.execute("SELECT name FROM sqlite_master WHERE name='quality_checks'").fetchone() else [],

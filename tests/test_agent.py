@@ -147,3 +147,13 @@ def test_eval_main_end_to_end_with_fake_llm(dbp, tmp_path, monkeypatch):
     out = evals.main(["--only", "latest_nvda,no_forecast", "--models", "fake-a,fake-b"], llm=llm, db_path=dbp)
     assert out["total"] == 2 and len(out["leaderboard"]) == 2
     assert (tmp_path / "ev" / "results.md").exists() and out["by_category"]
+
+
+def test_memo_writes_report_with_receipts(dbp, tmp_path, monkeypatch):
+    from ftp import memo
+    monkeypatch.setattr(memo, "OUT", tmp_path / "reports")
+    llm = scripted([("tool", "quarterly_financials", {"last_n": 2}),
+                    ("text", lambda r: f"### Spending\nCapex grew {r[0]['rows'][-1]['capex_yoy_pct']}%.")])
+    out = memo.main(llm=llm, db_path=dbp)
+    assert out["verification"]["ok"] and out["numbers"][0]["source"] == "quarterly_financials"
+    assert (tmp_path / "reports" / "latest.json").exists() and len(list((tmp_path / "reports").glob("*.md"))) == 1

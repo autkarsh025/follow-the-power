@@ -123,3 +123,15 @@ def test_company_level_analytics():
     sb, detail = analytics.backtest_scoreboard(conn, ["NVDA"])
     assert len(sb) == 1 and sb["best"].iloc[0] in analytics.MODELS and not detail["NVDA"].empty
     assert all(detail["NVDA"]["decision_date"] > detail["NVDA"]["quarter"].str[:4])
+
+
+def test_variance_flags_catch_a_sudden_acceleration():
+    conn = db.connect()
+    load_synthetic(conn, False)
+    fin = leadlag.fin_versions(conn)
+    q = fin[(fin["ticker"] == "NVDA")].sort_values("quarter")
+    target = q["quarter"].iloc[-3]
+    fin.loc[(fin["ticker"] == "NVDA") & (fin["quarter"] == target), "value_usd"] *= 3     # an outlier quarter
+    flags = analytics.variance_flags(fin)
+    hit = flags[(flags["ticker"] == "NVDA") & (flags["quarter"] == target)]
+    assert len(hit) == 1 and hit["direction"].iloc[0] == "acceleration" and hit["z"].iloc[0] >= 2

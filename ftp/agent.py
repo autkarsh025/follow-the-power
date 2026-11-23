@@ -29,7 +29,7 @@ MAX_TOKENS = 1500
 LLM = Callable[[str, list, list], dict]
 
 
-def system_prompt(tb: Toolbox) -> str:
+def system_prompt(tb: Toolbox, words: int = 200) -> str:
     when = (f"Today is {tb.as_of}. You only know data that was public on this date; never mention or guess later "
             f"results." if tb.as_of else "Use the latest available data.")
     skills = "\n".join(f"- {s['name']}: {s['description']}" for s in tb.skills.values())
@@ -50,7 +50,7 @@ Rules:
 - Never forecast an exact future figure. You may describe trends and backtest results.
 - Weather moves electricity demand; prefer weather-adjusted figures when judging data-center growth.
 - Be honest about uncertainty: small samples, correlation vs. causation, models that don't beat a naive baseline.
-- Answer in under 200 words, in plain business language.
+- Answer in under {words} words, in plain business language.
 
 Skills (call `load_skill` with a name to get detailed instructions before starting a matching task):
 {skills}"""
@@ -102,13 +102,14 @@ class Result:
         return self.__dict__.copy()
 
 
-def run(question: str, llm: LLM, as_of: str | None = None, db_path=None) -> Result:
+def run(question: str, llm: LLM, as_of: str | None = None, db_path=None, words: int = 200,
+        max_turns: int = MAX_TURNS) -> Result:
     t0 = time.time()
     tb = Toolbox(db_path, as_of=as_of)
     res = Result(question, as_of)
-    system, tools = system_prompt(tb), tb.specs()
+    system, tools = system_prompt(tb, words), tb.specs()
     messages: list[dict] = [{"role": "user", "content": question}]
-    for _ in range(MAX_TURNS):
+    for _ in range(max_turns):
         reply = llm(system, tools, messages)
         for k, v in (reply.get("usage") or {}).items():
             res.usage[k] = res.usage.get(k, 0) + v

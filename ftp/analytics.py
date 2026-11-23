@@ -588,3 +588,30 @@ def backtest_scoreboard(conn: sqlite3.Connection, tickers: list[str]) -> tuple[p
                      "beats_naive": best != "naive"})
         detail[t] = bt
     return pd.DataFrame(rows), detail
+
+
+def variance_flags(fin: pd.DataFrame, z: float = 2.0, min_hist: int = 8) -> pd.DataFrame:
+    """Unusual quarters: growth ACCELERATION (change in YoY growth vs the previous quarter) that is more than
+    `z` robust standard deviations from that company's own history. Robust = median and MAD, so one wild
+    quarter doesn't hide the next. An FP&A-style "what moved unusually this quarter" screen."""
+    cg = chain_growth(fin)
+    rows = []
+    for (t, m), g in cg.groupby(["ticker", "metric"]):
+        if m == "gross_profit":
+            continue
+        s = g.set_index("quarter")["yoy"].astype(float).dropna()
+        acc = s.diff().dropna()
+        for i in range(min_hist, len(acc)):
+            hist = acc.iloc[:i]
+            med = hist.median()
+            mad = (hist - med).abs().median() * 1.4826
+            if not mad or np.isnan(mad):
+                continue
+            score = (acc.iloc[i] - med) / mad
+            if abs(score) >= z:
+                q = acc.index[i]
+                rows.append({"ticker": t, "name": config.COMPANIES.get(t, {}).get("name"), "metric": m, "quarter": q,
+                             "yoy": round(float(s[q]), 1), "prev_yoy": round(float(s.shift(1)[q]), 1),
+                             "change_pp": round(float(acc.iloc[i]), 1), "z": round(float(score), 1),
+                             "direction": "acceleration" if score > 0 else "deceleration"})
+    return pd.DataFrame(rows).sort_values("quarter", ascending=False).reset_index(drop=True) if rows else pd.DataFrame()

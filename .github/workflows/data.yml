@@ -10,6 +10,10 @@ on:
         description: "Run the Claude agent evaluation (uses the Anthropic API)"
         type: boolean
         default: false
+      run_memo:
+        description: "Have the agent write this week's research memo (uses the Anthropic API)"
+        type: boolean
+        default: false
       full_backfill:
         description: "Re-download all history instead of incremental"
         type: boolean
@@ -62,7 +66,13 @@ jobs:
         if: ${{ github.event.inputs.run_evals == 'true' }}
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python -m ftp.evals
+        run: python -m ftp.evals --judge
+
+      - name: Research memo (Claude)
+        if: ${{ github.event.inputs.run_memo == 'true' }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python -m ftp.memo
 
       - name: Build dashboard
         run: python -m ftp.dashboard
@@ -71,7 +81,7 @@ jobs:
         run: |
           git config user.name "follow-the-power bot"
           git config user.email "actions@users.noreply.github.com"
-          git add docs/ evals/ 2>/dev/null || true
+          git add docs/ evals/ reports/ 2>/dev/null || true
           git diff --cached --quiet || git commit -m "Daily data refresh"
           # main may have moved while this ran (e.g. a code push): rebase the data commit on top, retry
           for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
