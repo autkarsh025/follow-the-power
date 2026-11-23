@@ -83,6 +83,7 @@ def zone_payload(conn, zone: str) -> dict | None:
         out["norm_stats"] = {"r2": norm["r2"], "coef": norm["coef"], "days": norm["days"],
                              "weather_share_within_month": norm["weather_share_within_month"]}
         out["forecast"] = analytics.forecast(nm)
+        out["regimes"] = analytics.growth_regimes(nm)
     return out
 
 
@@ -121,6 +122,20 @@ def findings(d: dict) -> list[dict]:
         out.append({"icon": "🗺️", "title": f"Across {len(hubs)} data-center hubs",
                     "text": f"Together they added about {tot:,} MW of weather-adjusted always-on load versus their base year, "
                             f"roughly {int(round(tot * 1000 / (analytics.KW_PER_GPU_IT * analytics.PUE), -4)):,} GPUs' worth.{extra}"})
+    for z in d["zones"].values():
+        rg = z.get("regimes") or {}
+        segs = rg.get("segments") or []
+        if z.get("role") == "hub" and len(segs) >= 2 and segs[-1]["mw_per_year"] > 2 * max(segs[-2]["mw_per_year"], 50):
+            out.append({"icon": "🚀", "title": f"{z['label'].split(' (')[0]} took off",
+                        "text": f"Weather-adjusted always-on load grew about {segs[-2]['mw_per_year']:,} MW/yr until {segs[-1]['from']}, "
+                                f"then {segs[-1]['mw_per_year']:,} MW/yr ({segs[-1]['pct_per_year']:+.1f}%/yr), a statistically detected break "
+                                "consistent with a wave of new data-center campuses."})
+    dom_rg = (d["zones"].get(config.PRIMARY_ZONE) or {}).get("regimes") or {}
+    if dom_rg.get("segments") and len(dom_rg["segments"]) == 1:
+        sg = dom_rg["segments"][0]
+        out.append({"icon": "📈", "title": "Northern Virginia: a steady ramp",
+                    "text": f"No break detected: its weather-adjusted baseload has climbed a steady ~{sg['mw_per_year']:,} MW per year "
+                            f"({sg['pct_per_year']:+.1f}%/yr) since {sg['from']}. Data-center growth arrives as a ramp, not a jump."})
     ex = d.get("exposure") or []
     good = [e for e in ex if e["meaningful"]]
     if good:

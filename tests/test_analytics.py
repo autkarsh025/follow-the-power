@@ -157,3 +157,14 @@ def test_upcoming_filings_follow_the_annual_rhythm():
             rows.append({"ticker": "MSFT", "filed_date": f"{y}-{md}"})
     up = analytics.upcoming_filings(pd.DataFrame(rows), today="2026-01-10")
     assert up[0]["expected"] == "2026-01-28" and up[0]["days_until"] == 18
+
+
+def test_growth_regimes_find_the_acceleration():
+    months = pd.period_range("2019-01", "2026-10", freq="M").astype(str)
+    t = np.arange(len(months))
+    y = 10_000 + 20 * t + 60 * np.clip(t - 48, 0, None) + np.random.default_rng(2).normal(0, 40, len(t))   # speeds up in 2023-01
+    rg = analytics.growth_regimes(pd.DataFrame({"month": months, "normalized_mw": y}))
+    assert len(rg["breaks"]) >= 1 and abs(pd.Period(rg["breaks"][0], "M").ordinal - pd.Period("2023-01", "M").ordinal) <= 3
+    assert rg["segments"][0]["mw_per_year"] < rg["segments"][-1]["mw_per_year"]
+    flat = analytics.growth_regimes(pd.DataFrame({"month": months, "normalized_mw": 10_000 + 20 * t + np.random.default_rng(2).normal(0, 40, len(t))}))
+    assert flat["breaks"] == []                    # BIC refuses to invent a break in a straight line

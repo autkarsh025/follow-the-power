@@ -170,12 +170,14 @@ def deseasonalize(s: pd.Series) -> pd.Series:
     return s - pd.Series(prof.reindex(doy).to_numpy(), index=s.index)
 
 
-def step_changes(daily: pd.DataFrame, col: str = "deweathered_mw", window: int = 28, min_sep: int = 60,
+def step_changes(daily: pd.DataFrame, col: str = "deweathered_mw", window: int = 56, min_sep: int = 120,
                  k: float = 4.0, min_frac: float = 0.015) -> pd.DataFrame:
     """Sudden, sustained level shifts in daily baseload.
 
     The series is first deseasonalized (see `deseasonalize`). Then for every day t:
-    jump = median(next `window` days) - median(previous `window` days). A step is a local maximum of |jump|
+    jump = median(next `window` days) - median(previous `window` days) (8 weeks: long enough that a cold
+    snap the weather model underfits doesn't qualify; validated on real data, where it flags the April 2020
+    oil-price crash in West Texas and nothing spurious in the AI hubs, whose growth is a gradual ramp). A step is a local maximum of |jump|
     (no larger one within `min_sep` days) that is bigger than k x a robust noise scale (MAD of the jump
     series) AND bigger than `min_frac` of the typical load. Medians make it robust to single odd days;
     requiring a sustained shift ignores heat waves."""
@@ -664,3 +666,45 @@ def upcoming_filings(fin: pd.DataFrame, today: str | None = None, horizon_days: 
             out.append({"ticker": t, "name": config.COMPANIES.get(t, {}).get("name"), "expected": nxt.strftime("%Y-%m-%d"),
                         "last_filed": dates[-1].strftime("%Y-%m-%d"), "days_until": int((nxt - today_ts).days)})
     return sorted(out, key=lambda r: r["expected"])
+
+
+
+def growth_regimes(monthly: pd.DataFrame, col: str = "normalized_mw", max_breaks: int = 2, min_seg: int = 12) -> dict:
+    """When did growth speed up or slow down? Piecewise-linear trend with 0..max_breaks breakpoints
+    (continuous segments, each >= min_seg months), chosen by BIC so extra breaks must earn their keep.
+    Returns each segment's slope in MW per year and its % growth rate."""
+    if monthly is None or monthly.empty or col not in monthly:
+        return {}
+    s = monthly.set_index("month")[col].dropna()
+    n = len(s)
+    if n < 2 * min_seg:
+        return {}
+    t = np.arange(n, dtype=float)
+    y = s.to_numpy()
+
+    def fit(breaks):
+        X = np.column_stack([np.ones(n), t] + [np.clip(t - b, 0, None) for b in breaks])   # hinge terms: continuous
+        beta, *_ = np.linalg.lstsq(X, y, rcond=None)
+        rss = float(((y - X @ beta) ** 2).sum())
+        return rss, beta, X @ beta
+
+    best = None
+    cands = [()] + [(b,) for b in range(min_seg, n - min_seg)]
+    if max_breaks >= 2:
+        cands += [(a, b) for a in range(min_seg, n - 2 * min_seg) for b in range(a + min_seg, n - min_seg)]
+    for br in cands:
+        rss, beta, yhat = fit(br)
+        k = 2 + 2 * len(br)                       # each break: a slope change + its location
+        bic = n * np.log(rss / n) + k * np.log(n)
+        if best is None or bic < best[0]:
+            best = (bic, br, beta, yhat)
+    _, br, beta, yhat = best
+    edges = [0, *br, n - 1]
+    segs = []
+    for i in range(len(edges) - 1):
+        slope = beta[1] + sum(beta[2 + j] for j in range(i))
+        a, b = edges[i], edges[i + 1]
+        mid_level = float(yhat[(a + b) // 2])
+        segs.append({"from": s.index[a], "to": s.index[b], "mw_per_year": round(12 * float(slope)),
+                     "pct_per_year": round(100 * 12 * float(slope) / mid_level, 1)})
+    return {"breaks": [s.index[b] for b in br], "segments": segs, "fitted": np.round(yhat).tolist(), "month": s.index.tolist()}

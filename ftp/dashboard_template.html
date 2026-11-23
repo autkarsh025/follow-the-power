@@ -170,8 +170,10 @@ footer{color:var(--t3);font-size:12.5px;margin-top:28px;line-height:1.7}.empty{c
   <p class="sect" style="margin-top:14px">Four ways to see data centers in grid data. They run flat out 24/7, so they lift the <b>floor</b> of the load curve, not just the peaks.</p>
   <div class="ctl"><label>Zone</label><select class="zsel" data-scope="detector"></select></div>
   <div class="grid">
-    <div class="card wide" data-csv="steps"><h2>Step-change detector</h2><p class="d">Weekly overnight load with weather and weekday effects removed. Markers show sudden, sustained jumps: the median of the next 4 weeks vs. the previous 4 weeks, above a noise threshold.</p>
-      <p class="look">big upward steps are consistent with a large new load (like a data-center campus) being energized. They're clues, not confirmations.</p><div class="chart tall" id="steps"></div><div id="steps_t"></div></div>
+    <div class="card wide" data-csv="regimes"><h2>Growth regimes: when did the build-out speed up?</h2><p class="d">Weather-adjusted overnight baseload with a piecewise-linear trend. Breakpoints are chosen statistically (BIC), so a break appears only when the data clearly supports a change in growth rate.</p>
+      <p class="look">the slope of each segment. A steeper segment = always-on load arriving faster.</p><div class="chart tall" id="regimes"></div><div id="regimes_t"></div></div>
+    <div class="card wide" data-csv="steps"><h2>Step-change detector</h2><p class="d">Weekly overnight load with weather, weekday and calendar-season effects removed. Markers show sudden, sustained jumps: the median of the next 8 weeks vs. the previous 8, above a robust noise threshold.</p>
+      <p class="look">steps are rare by design. Data-center growth usually arrives as a ramp (campuses energize in phases), so a quiet detector in an AI hub is expected. In West Texas it catches the April 2020 oil-price crash, when Permian producers shut in wells.</p><div class="chart tall" id="steps"></div><div id="steps_t"></div></div>
     <div class="card" data-csv="tresp"><h2>Same temperature, more power</h2><p class="d">Average overnight load at each temperature (2 °C bins), one line per year. Darker = more recent.</p>
       <p class="look">the whole curve shifting UP year after year: at the same temperature, the grid carries more load. Weather can't explain that.</p><div class="chart" id="tresp"></div></div>
     <div class="card" data-csv="ldc"><h2>Load-duration curves</h2><p class="d">Every hour of the year sorted from highest to lowest load, as % of that year's peak. Load factor = average ÷ peak.</p>
@@ -528,6 +530,14 @@ function renderZone() {
 R.detector = () => {
   initZoneSelects();
   const Z = D.zones[ZONE]; if (!Z) return;
+  const rg = Z.regimes;
+  if (rg && rg.month) {
+    plot('regimes', [{x: Z.norm.month, y: Z.norm.normalized_mw, name: 'Weather-adjusted baseload', type: 'scatter', mode: 'lines', line: {color: C.t3, width: 1.4}, hovertemplate: '%{y:,.0f} MW'},
+      {x: rg.month, y: rg.fitted, name: 'Piecewise trend', type: 'scatter', mode: 'lines', line: {color: zoneColor(ZONE), width: 3.2}, hovertemplate: 'trend %{y:,.0f} MW'}],
+      {yaxis: {title: 'MW'}, shapes: rg.breaks.map(b => ({type: 'line', x0: b, x1: b, yref: 'paper', y0: 0, y1: 1, line: {color: C.t3, width: 1, dash: 'dot'}})),
+       annotations: rg.segments.map(sg => ({x: sg.from, yref: 'paper', y: 0.98, xanchor: 'left', showarrow: false, text: `${sgn(sg.mw_per_year, 0)} MW/yr`, font: {size: 11.5, color: C.t1}}))});
+    $('regimes_t').innerHTML = table(rg.segments, [{h: 'From', k: 'from'}, {h: 'To', k: 'to'}, {h: 'Trend', num: 1, f: x => sgn(x.mw_per_year, 0) + ' MW/yr'}, {h: 'Growth', num: 1, f: x => sgn(x.pct_per_year) + '%/yr'}]);
+  } else { Plotly.purge('regimes'); $('regimes').innerHTML = '<div class="empty">Needs weather-adjusted history.</div>'; $('regimes_t').innerHTML = ''; }
   const w = Z.weekly, ycol = w.deweathered_mw ? 'deweathered_mw' : 'overnight_mw';
   const ups = Z.steps || [];
   plot('steps', [{x: w.date, y: w[ycol], name: w.deweathered_mw ? 'Overnight load, weather & weekday removed' : 'Overnight load', type: 'scatter', mode: 'lines', line: {color: zoneColor(ZONE), width: 1.8}, hovertemplate: '%{y:,.0f} MW'},
