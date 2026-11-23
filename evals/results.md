@@ -1,0 +1,119 @@
+# Agent evaluation: 8/8 passed
+
+Model `claude-sonnet-5-5` · 2026-11-23 10:34 UTC · 51,821 input / 5,272 output tokens
+
+| Case | As of | Result | Missing | Leaked future | Revisions |
+|---|---|---|---|---|---|
+| latest_nvda | today | ✅ |  |  | 0 |
+| latest_capex | today | ✅ |  |  | 0 |
+| time_travel_2025Q1 | 2025-05-27 | ✅ |  |  | 0 |
+| time_travel_2025Q2 | 2025-08-26 | ✅ |  |  | 0 |
+| time_travel_grid | 2025-10-07 | ✅ |  |  | 0 |
+| lead_lag | today | ✅ |  |  | 0 |
+| nowcast_honesty | today | ✅ |  |  | 0 |
+| variance | today | ✅ |  |  | 0 |
+
+## Answers
+
+### latest_nvda
+**Q:** What was NVIDIA's revenue in 2026Q2 and how fast did it grow year over year?
+
+NVIDIA's revenue in calendar 2026Q2 was **$96.22B**. That is **105.9% higher** than in 2025Q2, when revenue was $46.74B. In other words, revenue roughly doubled in a year.
+
+- **Trend:** Year-over-year growth has sped up for three quarters in a row. It was 73.2% in 2025Q4 and 85.2% in 2026Q1, then 105.9% in 2026Q2.
+- **Capex:** Hyperscaler capex (Microsoft, Alphabet, Amazon and Meta combined) was $165.05B in 2026Q2, up 87.0% year over year. That is a big part of what is driving NVIDIA's growth.
+- **2026Q3:** Capex for 2026Q3 is already reported at $201.92B, up 107.6%. NVIDIA's 2026Q3 revenue isn't available yet.
+
+These figures use calendar quarters, so they may not match NVIDIA's own fiscal-quarter labels. Growth rates this high are also partly a result of the low base a year earlier. They shouldn't be read as a steady run rate.
+
+### latest_capex
+**Q:** How much did the four hyperscalers spend on capex in the most recent quarter, and what was the year-over-year growth?
+
+In 2026Q3, the four hyperscalers (Microsoft, Alphabet, Amazon and Meta) spent a combined **$201.92B** on capex. That is **107.6% higher** than in 2026Q3's year-earlier quarter.
+
+For context, 2026Q2 capex was $165.05B, up 87.0% year over year. Growth has sped up for several quarters in a row:
+- 2025Q4: 64.0%
+- 2026Q1: 80.5%
+- 2026Q2: 87.0%
+- 2026Q3: 107.6%
+
+NVIDIA's 2026Q3 revenue isn't available yet. Its latest reported quarter is 2026Q2, at $96.22B, up 105.9% year over year.
+
+This is a single quarter's figure from the data feed. I haven't checked it against the companies' own filings.
+
+### time_travel_2025Q1
+**Q:** What is NVIDIA's most recent quarterly revenue and its year-over-year growth?
+
+NVIDIA's most recent reported quarter in my data is **2024Q4**. Revenue was **$39.33B**, up **77.9% year over year**.
+
+- **2025Q1:** The data has no NVIDIA revenue figure for this quarter, so it hasn't been reported as of 2025-05-27. Hyperscaler capex for 2025Q1 is already public at $71.9B, up 62.3% year over year.
+- **Trend:** Growth has slowed in each of the last three quarters: 122.4% in 2024Q2, 93.6% in 2024Q3 and 77.9% in 2024Q4. Part of that is the larger revenue base. Revenue itself kept rising, from $30.04B in 2024Q2 to $35.08B in 2024Q3 and $39.33B in 2024Q4.
+- **Quarter basis:** These are calendar quarters, as the data tool defines them. They may not line up exactly with NVIDIA's own fiscal quarter labels.
+
+### time_travel_2025Q2
+**Q:** What is NVIDIA's most recent quarterly revenue and its year-over-year growth?
+
+NVIDIA's most recent reported quarter is **2025Q1**. Revenue was **$44.06B**, up **69.2%** from a year earlier.
+
+- **2025Q2:** NVIDIA revenue isn't public as of 2025-08-26, so it's the next number to watch.
+- **Growth trend:** Growth has slowed in each of the last three quarters: 93.6% in 2024Q3, 77.9% in 2024Q4 and 69.2% in 2025Q1. The slowdown comes from tougher year-ago comparisons. Revenue itself has kept rising, from $35.08B in 2024Q3 to $39.33B in 2024Q4 and $44.06B in 2025Q1.
+- **Hyperscaler capex:** Combined capex from Microsoft, Alphabet, Amazon and Meta reached $88.25B in 2025Q2, up 67.0% from a year earlier. That is a supportive signal for NVIDIA's demand. It is not a forecast, and I haven't tested how well it predicts NVIDIA's revenue.
+
+### time_travel_grid
+**Q:** How did Northern Virginia's overnight power baseload change year over year in the latest quarter, and what does that suggest about data centers?
+
+**Latest quarter (2025Q3):** Northern Virginia's overnight baseload was 13,711 MW, up 6.9% from 2025Q3's year-earlier level. That is 884 MW more than the 12,827 MW in 2024Q3.
+
+**What it suggests:**
+- Data centers run around the clock, so a rising overnight floor points to continued data-center growth.
+- Growth has slowed from 13.3% in 2025Q1 and 9.2% in 2025Q2. The 6.9% in 2025Q3 is about the same as the 6.6% in 2024Q3.
+- Flatness was 0.729 in 2025Q3, against 0.707 in 2024Q3. That is a small rise, so load is a bit flatter than a year ago.
+- Virginia commercial electricity sales, the latest of which is 2025Q2, grew 10.2% year over year. That agrees with the grid data, but I don't have 2025Q3 sales yet.
+
+**Caveats:**
+- Weather, population growth and electrification also affect the grid, and one utility zone isn't the whole data-center market.
+- Grid data has not been a reliable forecaster of NVIDIA's revenue. In the backtest, the grid model's average error was 46.2 percentage points, against 40.5 for simply repeating last quarter's growth. The sample is only 13 quarters.
+- So I read this as evidence that demand for power is still growing, but at a slower rate. It is not a forecast of NVIDIA's results.
+
+### lead_lag
+**Q:** Does hyperscaler capex growth lead Northern Virginia's power demand growth? By how many quarters, and is it meaningful?
+
+Yes, but the evidence is modest. Hyperscaler capex growth appears to lead Northern Virginia overnight power growth by about one quarter.
+
+- **Best lag:** capex leads by 1 quarter. The correlation is 0.54, against a noise band of about 0.40, with 25 overlapping quarters. That clears the band.
+- **Neighbouring lags:** the same-quarter correlation is 0.49 and the 1-quarter-lag-behind correlation is 0.42. Both also sit above their noise bands (0.392 each). So I can't separate a 1-quarter lead from simple co-movement. The gap between 0.54 and 0.49 is small.
+- **Longer lags:** at 2 quarters the correlation is 0.35, and at 3–4 quarters it is 0.19 and 0.10. All of these are inside the noise band. The link doesn't hold beyond about a quarter.
+
+**Caveats**
+- Correlation is not causation. Both series are year-over-year growth rates that trend together through the same AI cycle.
+- With about 25 quarters, the sample is small. A 0.54 correlation clears the noise band only narrowly.
+- Capex is the total across four companies. Northern Virginia is only one region, so much of that spending lands elsewhere.
+- Spending is booked well before data centers are built and energized, so a one-quarter lead is shorter than I'd expect. That makes me cautious about reading it as a true causal delay.
+
+**Bottom line:** Capex and Northern Virginia grid demand are meaningfully linked, with a likely lead of 0 to 1 quarters. I wouldn't use the lag as a precise forecasting tool.
+
+### nowcast_honesty
+**Q:** Does the grid data forecast NVIDIA's revenue growth better than a naive forecast?
+
+**No. Over the 16-quarter backtest, the grid model did not beat the naive forecast.**
+
+- **Average error:** The grid model missed NVIDIA's YoY revenue growth by 40.51 percentage points on average. The naive forecast, which repeats last quarter's growth, missed by 35.62. That makes the grid model worse by 4.89 points. The capex model was far worse, at 77.39.
+- **Recent quarters:** The grid model did better in some. For 2026Q2, actual growth was 105.85%. The grid model said 81.81%, a miss of 24.04 points. Naive said 85.23%, a miss of 20.62. In 2025Q1 and 2025Q3 the grid forecasts were closer than naive.
+- **Lead-lag:** Northern Virginia overnight load growth shows no reliable lead over NVIDIA growth. The strongest correlation is 0.36 at a two-quarter lag (n=25). That is inside the noise band of 0.40, so it is not distinguishable from noise.
+
+**Caveats:** The sample is small, at about 16 forecast quarters. Both series trend upward with the AI cycle, so they can move together without one driving the other. Correlation is not causation. The grid signal is also a regional proxy. It probably captures the build-out itself, not NVIDIA's reported revenue.
+
+### variance
+**Q:** Write a short variance note for NVIDIA's 2026Q2: actual YoY growth vs. the naive forecast.
+
+**NVIDIA 2026Q2 variance note**
+
+**Headline:** NVIDIA's 2026Q2 revenue was $96.22B, up 105.85% YoY. The naive forecast was 85.23%, so growth beat it by 20.62 pp. The naive forecast was the closest of the three this quarter, but only just. The grid model was 81.81%, which is 24.04 pp below actual. The capex model was 33.79%, which is 72.06 pp below.
+
+**Drivers:**
+- Hyperscaler capex in 2026Q2 was $165.05B, up 87.0% YoY. That is up from 80.5% in 2026Q1.
+- Northern Virginia overnight baseload in 2026Q2 was up 7.9% YoY, versus 5.1% in 2026Q1. That is a modest pickup.
+
+**Model check:** All three models under-forecast. Naive is also the best over the long run, with a mean absolute error (MAE) of 35.62 pp across 16 quarters. Grid had 40.51 pp and capex had 77.39 pp. This quarter's ranking matches that long-run ordering. The naive forecast simply lags a growth acceleration.
+
+**Caveat:** This covers one quarter, and the backtest has only 16 quarters. Neither capex nor grid has shown it can beat a naive forecast, so don't treat either as a reliable signal.
