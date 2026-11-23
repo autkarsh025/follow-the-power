@@ -2,8 +2,6 @@
 
 # ⚡ Gigawatt Ledger
 
-### Follow the money. Follow the power.
-
 **The AI boom, traced from 26 companies' balance sheets to hourly electricity demand on the grid,
 explained by a Claude analyst agent whose every number is verified.**
 
