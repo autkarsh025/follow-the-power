@@ -98,7 +98,7 @@ def weather_normalize(conn: sqlite3.Connection, zone: str, daily: pd.DataFrame |
     if len(df) < 400:
         return {}
     df["month"] = df["date"].str[:7]
-    df["weekend"] = (pd.to_datetime(df["date"]).dt.dayofweek >= 5).astype(float)
+    df["weekend"] = (pd.to_datetime(df["date"]).dt.day_of_week >= 5).astype(float)
     fe = pd.get_dummies(df["month"]).astype(float).to_numpy()
     X = np.column_stack([fe, _design(df), df["weekend"]])
     y = df["overnight_mw"].to_numpy()
@@ -168,7 +168,7 @@ def deseasonalize(s: pd.Series) -> pd.Series:
     s = s.asfreq("D")
     trend = s.rolling(365, center=True, min_periods=300).mean()
     resid = s - trend
-    doy = np.minimum(resid.index.dayofyear.to_numpy(), 365)
+    doy = np.minimum(resid.index.day_of_year.to_numpy(), 365)
     prof = resid.groupby(doy).mean().reindex(range(1, 366)).interpolate(limit_direction="both")
     prof = pd.concat([prof.iloc[-15:], prof, prof.iloc[:15]]).rolling(31, center=True).mean().iloc[15:-15]
     prof.index = range(1, 366)
