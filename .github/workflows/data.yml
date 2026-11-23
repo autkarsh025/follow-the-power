@@ -15,6 +15,8 @@ jobs:
           EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
         run: python -m ftp.pipeline
       - name: Analysis report
+        if: always()          # report whatever loaded, even if one source failed
         run: python -m ftp.report
       - uses: actions/upload-artifact@v4
+        if: always()
         with: { name: ftp_db, path: data/follow_the_power.db, retention-days: 7 }
