@@ -1,7 +1,7 @@
 {
-  "written_at": "2026-11-23 12:14 UTC",
+  "written_at": "2026-11-23 11:38 UTC",
   "model": "claude-sonnet-5-5",
-  "answer": "Here is the revised memo. The phrase \"four to five times\" is gone. It came from an earlier draft, and it isn't filing text. The only quotations left are copied word for word from the cited filing passages.\n\n### Spending\nHyperscaler capex (Microsoft, Alphabet, Amazon and Meta combined) was $201.92B in 2026Q3, up 107.6% YoY. In 2026Q2 it was $165.05B, so spending grew 22.34% quarter over quarter. Capex intensity (capex as a share of revenue) is high. Microsoft spent $39.37B of capex against $92.28B of revenue in 2026Q3, which is 42.66%. Meta spent $33.94B against $64.6B, which is 52.54%. Capex is growing far faster than revenue at both companies. Microsoft's capex rose 103.0% against revenue growth of 18.8%. Meta's capex rose 80.3% against revenue growth of 26.1%.\n\n### Suppliers\nGrowth is strongest closest to the GPU spend. Examples by layer:\n- **Chips and memory:** Micron revenue rose 379.3% YoY in 2026Q3. Broadcom rose 85.5% in 2026Q2, and NVIDIA rose 105.8% in 2026Q2.\n- **Servers and networking:** Super Micro rose 297.5% YoY in 2026Q3.\n- **Power and cooling gear:** Vertiv rose 61.2% in 2026Q3.\n- **Electricity:** Vistra rose 27.7% in 2026Q3, and Constellation rose 23.0% in 2026Q2.\n\nGrowth fades further down the chain. Equinix revenue rose 11.0% in 2026Q3. Quarters are not aligned across companies, and some growth rates come off small bases. NVIDIA's 2026Q3 revenue isn't public yet.\n\n### Power\nIn Northern Virginia, overnight baseload rose 13.3% YoY in 2026Q3. Weather-adjusted growth was 8.7% over the last 12 months. In recent months it was higher: 12.9% in August, 13.2% in September and 12.0% in October. Weather added only 19 to 216 MW in those months, so heat doesn't explain the strength. The weather model fits well (R\u00b2 0.894). The zone has added 4,937 MW since 2019. The step-change screen found no jump above its 811 MW threshold, so the growth looks like gradual build-up rather than one large new load. Elsewhere, Ohio and central US grew 9.9% on a weather-adjusted 12-month basis. Dallas-Fort Worth grew 4.0%, although its actual 2026Q3 figure was 18.5%, so weather flattered it. These are single-station readings, and they include industry and electrification as well as data centers.\n\n### In their own words\n- NVIDIA attributes growth to Blackwell: \"Revenue from Data Center computing grew 59% driven by demand for our Blackwell computing platform.\" Networking \"grew 142% driven by the introduction and continued ramp of NVLink compute fabric for GB200 and GB300 systems\" [NVDA 10-K filed 2026-02-25, MD&A \u00b619]. These are fiscal-year figures, not the latest quarter.\n- Dominion lists as a risk \"the concentration of data centers primarily in Loudoun County, Virginia and the ability to obtain regulatory approvals, environmental and other permits to construct new facilities in a timely manner\" [D 10-Q filed 2026-10-30, MD&A \u00b68].\n\n### What to watch\n1. **NVIDIA's 2026Q3 report.** Capex growth was 107.6% in 2026Q3 and 87.0% in 2026Q2. NVIDIA's 2026Q2 growth was 105.9%. NVIDIA's revenue should keep pace with buyer spending. A clear shortfall would be a warning sign. I haven't run the backtest tools, so I'm not claiming that capex or grid data predicts NVIDIA's revenue.\n2. **Capex running ahead of revenue.** Microsoft's capex growth was 5.48 times its revenue growth in 2026Q3. Meta's was 3.08 times. If cloud revenue growth slows, capex plans are the exposure.\n3. **Grid momentum and permitting.** Watch whether weather-adjusted Northern Virginia growth holds in the 12.0% to 13.2% range of August to October or falls back toward the 6.0% seen in June. Also watch for any step change above 811 MW. Dominion's filing flags approvals as a constraint.",
+  "answer": "### Spending\nCombined capex at Microsoft, Alphabet, Amazon and Meta was $201.92B in 2026Q3, up 107.6% year over year. That is up from $165.05B in 2026Q2 (+87.0% YoY), a rise of 22.3% in one quarter. Capex is growing much faster than revenue, so intensity (capex \u00f7 revenue) is rising. Microsoft's was 42.7% in 2026Q3, against 39.8% in 2026Q2. Meta's was 52.5% in 2026Q3 ($33.94B capex on $64.6B revenue).\n\n### Suppliers\nGrowth is strongest at the suppliers closest to the chips. In 2026Q3, Micron's revenue was up 379.3% and Super Micro's up 297.5%. Vertiv, in power and cooling gear, was up 61.2% and Arista, in networking, up 58.5%. Broadcom's 2026Q2 revenue was up 85.5%, and NVIDIA's 2026Q2 revenue was up 105.8%. Growth is lower at the electricity end: Vistra was up 27.7% in 2026Q3, and Constellation up 23.0% in 2026Q2. Caveat: Micron and Super Micro are growing from smaller bases, and total revenue doesn't isolate their AI business. Quarters are also not all the same, because fiscal calendars differ.\n\n### Power\nNorthern Virginia overnight baseload was up 13.3% YoY in 2026Q3 (the zone_overview figure). The weather-adjusted figure for 2026-10 was 13.1%, and the model fit is good (R\u00b2 0.894). Weather was a small factor in October (+18 MW), but it added 218 MW in 2026-09. That means the actual 17.0% for September overstates the weather-adjusted 14.0%. Weather-adjusted growth over the last 12 months versus the prior 12 was 8.7%, so the recent pace is faster. No step change was detected (the threshold is 811 MW). The growth looks like many loads building up gradually, not one large load switching on. Caveat: this is one weather station, and overnight load also includes industry and electrification.\n\n### In their own words\nNVIDIA said Data Center revenue was \"$75.2 billion, up 92% from a year ago and up 21% sequentially, driven by the ramp of our Blackwell 300 products\" [NVDA 10-Q filed 2026-05-20, MD&A \u00b613]. This covers the fiscal quarter ended 2026-04-26. In the same filing, hyperscalers were \"approximately 50% of Data Center revenue.\" Dominion lists as a risk \"significant accelerated growth in demand due to new data centers, including the concentration of data centers primarily in Loudoun County, Virginia\" [D 10-Q filed 2026-10-30, MD&A \u00b68]. That language is risk boilerplate, not a demand figure.\n\n### What to watch\n1. **Capex outrunning revenue.** Capex growth of 107.6% is far above the revenue growth of the cloud companies (Microsoft +18.8%, Meta +26.1% in 2026Q3). Any sign that hyperscalers are slowing spending would hit suppliers first. NVIDIA's 2026Q3 revenue isn't reported yet, so we can't see how it tracks capex.\n2. **Grid constraints in Northern Virginia.** Weather-adjusted growth of 13.1% in 2026-10 depends on new power and permits. Watch for a step change above the 811 MW threshold, or for permitting delays, which Dominion flags as a risk. Dominion's 2026Q3 revenue is another signal to watch.",
   "numbers": [
     {
       "text": "$201.92B",
@@ -19,22 +19,27 @@
       "source": "quarterly_financials"
     },
     {
-      "text": "22.34%",
+      "text": "87.0%",
+      "verified": true,
+      "source": "quarterly_financials"
+    },
+    {
+      "text": "22.3%",
       "verified": true,
       "source": "calculate"
     },
     {
-      "text": "$39.37B",
+      "text": "42.7%",
       "verified": true,
-      "source": "company_financials"
+      "source": "calculate"
     },
     {
-      "text": "$92.28B",
+      "text": "39.8%",
       "verified": true,
-      "source": "company_financials"
+      "source": "calculate"
     },
     {
-      "text": "42.66%",
+      "text": "52.5%",
       "verified": true,
       "source": "calculate"
     },
@@ -49,32 +54,22 @@
       "source": "company_financials"
     },
     {
-      "text": "52.54%",
-      "verified": true,
-      "source": "calculate"
-    },
-    {
-      "text": "103.0%",
-      "verified": true,
-      "source": "company_financials"
-    },
-    {
-      "text": "18.8%",
-      "verified": true,
-      "source": "company_financials"
-    },
-    {
-      "text": "80.3%",
-      "verified": true,
-      "source": "quarterly_financials"
-    },
-    {
-      "text": "26.1%",
-      "verified": true,
-      "source": "company_financials"
-    },
-    {
       "text": "379.3%",
+      "verified": true,
+      "source": "supply_chain_snapshot"
+    },
+    {
+      "text": "297.5%",
+      "verified": true,
+      "source": "supply_chain_snapshot"
+    },
+    {
+      "text": "61.2%",
+      "verified": true,
+      "source": "supply_chain_snapshot"
+    },
+    {
+      "text": "58.5%",
       "verified": true,
       "source": "supply_chain_snapshot"
     },
@@ -89,16 +84,6 @@
       "source": "quarterly_financials"
     },
     {
-      "text": "297.5%",
-      "verified": true,
-      "source": "supply_chain_snapshot"
-    },
-    {
-      "text": "61.2%",
-      "verified": true,
-      "source": "supply_chain_snapshot"
-    },
-    {
       "text": "27.7%",
       "verified": true,
       "source": "supply_chain_snapshot"
@@ -109,42 +94,12 @@
       "source": "supply_chain_snapshot"
     },
     {
-      "text": "11.0%",
-      "verified": true,
-      "source": "supply_chain_snapshot"
-    },
-    {
       "text": "13.3%",
       "verified": true,
       "source": "zone_overview"
     },
     {
-      "text": "8.7%",
-      "verified": true,
-      "source": "zone_overview"
-    },
-    {
-      "text": "12.9%",
-      "verified": true,
-      "source": "weather_adjusted"
-    },
-    {
-      "text": "13.2%",
-      "verified": true,
-      "source": "weather_adjusted"
-    },
-    {
-      "text": "12.0%",
-      "verified": true,
-      "source": "weather_adjusted"
-    },
-    {
-      "text": "19",
-      "verified": true,
-      "source": "company_financials"
-    },
-    {
-      "text": "216 MW",
+      "text": "13.1%",
       "verified": true,
       "source": "weather_adjusted"
     },
@@ -154,7 +109,27 @@
       "source": "weather_adjusted"
     },
     {
-      "text": "4,937 MW",
+      "text": "18 MW",
+      "verified": true,
+      "source": "company_financials"
+    },
+    {
+      "text": "218 MW",
+      "verified": true,
+      "source": "weather_adjusted"
+    },
+    {
+      "text": "17.0%",
+      "verified": true,
+      "source": "weather_adjusted"
+    },
+    {
+      "text": "14.0%",
+      "verified": true,
+      "source": "weather_adjusted"
+    },
+    {
+      "text": "8.7%",
       "verified": true,
       "source": "zone_overview"
     },
@@ -164,27 +139,32 @@
       "source": "step_changes"
     },
     {
-      "text": "9.9%",
+      "text": "$75.2 billion",
       "verified": true,
-      "source": "zone_overview"
+      "source": "search_filings"
     },
     {
-      "text": "4.0%",
+      "text": "92%",
       "verified": true,
-      "source": "zone_overview"
+      "source": "company_financials"
     },
     {
-      "text": "18.5%",
-      "verified": true,
-      "source": "zone_overview"
-    },
-    {
-      "text": "59%",
+      "text": "21%",
       "verified": true,
       "source": "supply_chain_snapshot"
     },
     {
-      "text": "142%",
+      "text": "300",
+      "verified": true,
+      "source": "zone_overview"
+    },
+    {
+      "text": "13",
+      "verified": true,
+      "source": "supply_chain_snapshot"
+    },
+    {
+      "text": "50%",
       "verified": true,
       "source": "search_filings"
     },
@@ -194,39 +174,19 @@
       "source": "quarterly_financials"
     },
     {
-      "text": "87.0%",
+      "text": "18.8%",
       "verified": true,
-      "source": "quarterly_financials"
+      "source": "company_financials"
     },
     {
-      "text": "105.9%",
+      "text": "26.1%",
       "verified": true,
-      "source": "quarterly_financials"
+      "source": "company_financials"
     },
     {
-      "text": "5.48",
-      "verified": true,
-      "source": "calculate"
-    },
-    {
-      "text": "3.08",
-      "verified": true,
-      "source": "calculate"
-    },
-    {
-      "text": "12.0%",
+      "text": "13.1%",
       "verified": true,
       "source": "weather_adjusted"
-    },
-    {
-      "text": "13.2%",
-      "verified": true,
-      "source": "weather_adjusted"
-    },
-    {
-      "text": "6.0%",
-      "verified": true,
-      "source": "supply_chain_snapshot"
     },
     {
       "text": "811 MW",
@@ -331,12 +291,12 @@
     {
       "name": "search_filings",
       "input": {
-        "query": "Data Center revenue increase driver",
+        "query": "Data Center revenue increase driven by",
         "ticker": "NVDA",
         "k": 3
       },
       "error": null,
-      "numbers_returned": 31
+      "numbers_returned": 41
     },
     {
       "name": "search_filings",
@@ -367,14 +327,6 @@
     {
       "name": "calculate",
       "input": {
-        "expression": "201.92 / 165.05 - 1"
-      },
-      "error": null,
-      "numbers_returned": 1
-    },
-    {
-      "name": "calculate",
-      "input": {
         "expression": "(201.92 / 165.05 - 1) * 100"
       },
       "error": null,
@@ -383,53 +335,25 @@
     {
       "name": "calculate",
       "input": {
-        "expression": "103.0 / 18.8"
-      },
-      "error": null,
-      "numbers_returned": 1
-    },
-    {
-      "name": "calculate",
-      "input": {
-        "expression": "80.3 / 26.1"
+        "expression": "35.8 / 90.01 * 100"
       },
       "error": null,
       "numbers_returned": 1
     }
   ],
   "verification": {
-    "numbers_checked": 46,
+    "numbers_checked": 38,
     "unverified": [],
-    "ok": false,
-    "bad_quotes": [
-      "four to five times"
-    ]
+    "ok": true,
+    "bad_quotes": []
   },
-  "revisions": 2,
-  "revision_log": [
-    {
-      "draft": 1,
-      "unverified": [
-        "22.3%"
-      ],
-      "bad_quotes": [],
-      "excerpt": "### Spending\nHyperscaler capex (Microsoft, Alphabet, Amazon and Meta combined) was $201.92B in 2026Q3, up 107.6% YoY. In 2026Q2 it was $165.05B, so spending grew 22.3% quarter over quarter. Capex intensity (capex as a share of revenue) is high. Microsoft spent $39.37B of capex against $92.28B of rev"
-    },
-    {
-      "draft": 2,
-      "unverified": [],
-      "bad_quotes": [
-        "four to five times"
-      ],
-      "excerpt": "Here is the revised memo. The quarter-over-quarter figure now comes directly from `calculate`. I also replaced the loose \"four to five times\" and \"three times\" ratios with calculated ones.\n\n### Spending\nHyperscaler capex (Microsoft, Alphabet, Amazon and Meta combined) was $201.92B in 2026Q3, up 107."
-    }
-  ],
+  "revisions": 0,
   "usage": {
-    "input_tokens": 68618,
-    "output_tokens": 7414,
-    "cache_read_tokens": 26106,
+    "input_tokens": 26040,
+    "output_tokens": 2594,
+    "cache_read_tokens": 14544,
     "cache_write_tokens": 872
   },
-  "seconds": 45.6,
+  "seconds": 19.1,
   "error": null
 }

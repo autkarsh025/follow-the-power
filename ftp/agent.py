@@ -104,12 +104,13 @@ class Result:
 
 
 def run(question: str, llm: LLM, as_of: str | None = None, db_path=None, words: int = 200,
-        max_turns: int = MAX_TURNS) -> Result:
+        max_turns: int = MAX_TURNS, max_revisions: int = MAX_REVISIONS) -> Result:
     t0 = time.time()
     tb = Toolbox(db_path, as_of=as_of)
     res = Result(question, as_of)
     system, tools = system_prompt(tb, words), tb.specs()
     messages: list[dict] = [{"role": "user", "content": question}]
+    nudged = False
     for _ in range(max_turns):
         reply = llm(system, tools, messages)
         for k, v in (reply.get("usage") or {}).items():
@@ -128,13 +129,18 @@ def run(question: str, llm: LLM, as_of: str | None = None, db_path=None, words: 
             messages.append({"role": "user", "content": results})
             continue
         answer = "\n".join(b["text"] for b in reply["content"] if b["type"] == "text").strip()
+        if not answer and not nudged:
+            # An empty final message (it happens): ask once for the written answer instead of accepting a blank.
+            nudged = True
+            messages.append({"role": "user", "content": "Please write your final answer now, using the tool results above."})
+            continue
         given = [v for _, v, _, _ in verify.extract(question)]   # numbers the user quoted can be repeated
         rep = verify.verify(answer, tb.evidence + given)
         bad_quotes = verify.check_quotes(answer, tb.passages)
         res.answer, res.verification = answer, {**rep.to_dict(), "bad_quotes": bad_quotes,
                                                 "ok": rep.ok and not bad_quotes}
         res.numbers = verify.provenance(answer, tb.provenance, given)
-        if (rep.ok and not bad_quotes) or res.revisions >= MAX_REVISIONS:
+        if (rep.ok and not bad_quotes) or res.revisions >= max_revisions:
             res.seconds = round(time.time() - t0, 1)
             return res
         res.revisions += 1

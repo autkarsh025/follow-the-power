@@ -31,14 +31,22 @@ Load the supply-chain and weather-adjustment skills first. Every number must com
 
 def main(llm=None, db_path=None) -> dict:
     llm = llm or agent.anthropic_llm(max_tokens=2500)
-    res = agent.run(BRIEF, llm, db_path=db_path, words=450, max_turns=20)
+    res = agent.run(BRIEF, llm, db_path=db_path, words=450, max_turns=20, max_revisions=3)
     now = datetime.now(timezone.utc)
     out = {"written_at": now.strftime("%Y-%m-%d %H:%M UTC"), "model": getattr(llm, "model", agent.MODEL),
            "answer": res.answer, "numbers": res.numbers, "trace": res.tool_calls, "verification": res.verification,
            "revisions": res.revisions, "revision_log": res.revision_log, "usage": res.usage, "seconds": res.seconds, "error": res.error}
     OUT.mkdir(exist_ok=True)
+    ok = bool(res.verification.get("ok")) and not res.error
+    if not ok:
+        # Governance: a memo that fails verification is never published. It's kept for review, and the last
+        # verified memo stays live on the dashboard.
+        (OUT / "rejected").mkdir(exist_ok=True)
+        (OUT / "rejected" / f"{now:%Y-%m-%d}.json").write_text(json.dumps(out, indent=2, default=str))
+        print(f"memo REJECTED (unverified {res.verification.get('unverified')}, bad quotes "
+              f"{res.verification.get('bad_quotes')}); previous memo stays published")
+        return out
     (OUT / "latest.json").write_text(json.dumps(out, indent=2, default=str))
-    ok = res.verification.get("ok")
     (OUT / f"{now:%Y-%m-%d}.md").write_text(
         f"# AI build-out memo · {now:%Y-%m-%d}\n\n*Written by `{out['model']}` with follow-the-power's tools. "
         f"{len(res.numbers)} numbers, {'all verified' if ok else 'NOT all verified'} against tool output; "

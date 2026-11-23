@@ -18,6 +18,7 @@ OUT = config.ROOT / "docs" / "index.html"
 EVALS = config.ROOT / "evals" / "results.json"
 MEMO = config.ROOT / "reports" / "latest.json"
 MANIFEST = config.ROOT / "docs" / "data" / "manifest.json"
+HISTORY = config.ROOT / "docs" / "data" / "history.csv"
 
 
 def clean(v):
@@ -217,6 +218,7 @@ def build() -> None:
         "flags": recs(analytics.variance_flags(fin).head(80)),
         "upcoming": analytics.upcoming_filings(fin),
         "lineage": analytics.lineage(fin),
+        "history": recs(pd.read_csv(HISTORY)) if HISTORY.exists() else [],
         "memo": json.loads(MEMO.read_text()) if MEMO.exists() else None,
         "memo_archive": sorted([f.stem for f in (config.ROOT / "reports").glob("20*.md")], reverse=True)[:20]
         if (config.ROOT / "reports").exists() else [],

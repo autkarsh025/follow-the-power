@@ -189,3 +189,20 @@ def test_unit_conversion_tolerance_scales():
     assert verify.matches(4.9, "gw", 1, [4937.0])        # ±0.05 GW = ±50 MW
     assert not verify.matches(4.8, "gw", 1, [4937.0])
     assert verify.matches(41096, "million", 0, [41.096])
+
+
+def test_empty_answer_gets_one_nudge_and_conversion_constants_pass(dbp):
+    llm = scripted([("tool", "quarterly_financials", {"last_n": 1}),
+                    ("text", lambda r: ""),
+                    ("text", lambda r: f"Capex was ${r[0]['rows'][-1]['hyperscaler_capex_usd_b']}B (divide by 1000 for trillions).")])
+    res = agent.run("capex?", llm, db_path=dbp)
+    assert res.answer.startswith("Capex was") and res.verification["ok"]
+    assert verify.check_quotes('They said "four-to-five times higher".', ["it was four to five times higher than"]) == []
+
+
+def test_unverified_memo_is_not_published(dbp, tmp_path, monkeypatch):
+    from ftp import memo
+    monkeypatch.setattr(memo, "OUT", tmp_path / "reports")
+    llm = scripted([("tool", "quarterly_financials", {"last_n": 1}), ("text", lambda r: "Capex grew 999.9%.")])
+    memo.main(llm=llm, db_path=dbp)
+    assert not (tmp_path / "reports" / "latest.json").exists() and list((tmp_path / "reports" / "rejected").glob("*.json"))

@@ -53,8 +53,14 @@ def extract(text: str) -> list[tuple[str, float, str, int]]:
             continue                                       # a year
         if not unit and not dec and 0 <= abs(value) <= 12:
             continue                                       # a count / list number
+        if not unit and not dec and abs(value) in CONVERSION_CONSTANTS:
+            continue                                       # a unit-conversion factor
         out.append((m.group(0).strip(), value, unit, decimals))
     return out
+
+
+# Pure conversion factors ("4,937 MW / 1000 = 4.9 GW") are arithmetic, not claims about data.
+CONVERSION_CONSTANTS = {100.0, 1000.0, 1_000_000.0, 1_000_000_000.0, 365.0, 8760.0}
 
 
 def _candidates(value: float, unit: str) -> list[tuple[float, float]]:
@@ -102,7 +108,10 @@ QUOTE_RE = re.compile(r"\"([^\"]*)\"|“([^”]*)”")   # pair quotes left to r
 
 
 def _norm(t: str) -> str:
-    return re.sub(r"\s+", " ", re.sub(r"[’‘]", "'", t)).strip().lower()
+    """Compare quotes modulo whitespace, curly apostrophes and hyphen/dash style ("four-to-five" = "four to five")."""
+    t = re.sub(r"[’‘]", "'", t)
+    t = re.sub(r"[-‐‑‒–—]", " ", t)
+    return re.sub(r"\s+", " ", t).strip().lower()
 
 
 def check_quotes(text: str, passages: list[str]) -> list[str]:

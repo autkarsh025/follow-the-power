@@ -99,3 +99,14 @@ def test_mcp_server_in_process():
     assert srv.handle({"jsonrpc": "2.0", "id": 8, "method": "prompts/list"})["result"]["prompts"]
     tt = Server(config.DB_PATH, as_of="2021-01-01").handle({"jsonrpc": "2.0", "id": 9, "method": "tools/list"})
     assert "sql" not in {t["name"] for t in tt["result"]["tools"]}     # time-travel mode hides raw SQL
+
+
+def test_data_contract_and_history(tmp_path):
+    bad = pd.DataFrame({"ticker": ["X"], "metric": ["revenue"]})
+    assert any("missing column" in p for p in export.validate("fin_quarterly.csv", bad))
+    good = pd.DataFrame({"state": ["VA"], "sector": ["COM"], "month": ["2025-01"], "sales_gwh": [1.0]})
+    assert export.validate("state_sales.csv", good) == []
+    p = tmp_path / "history.csv"
+    export.append_history({"a": 1.0}, p)
+    h = export.append_history({"a": 2.0, "b": None}, p)            # same day: replaced, None skipped
+    assert h["value"].tolist() == [2.0]
