@@ -30,7 +30,7 @@ YEAR_DAYS = (350, 380)
 
 def fetch_companyfacts(cik: int, session: requests.Session | None = None) -> dict:
     s = session or requests.Session()
-    resp = s.get(config.SEC_FACTS_URL.format(cik=cik), headers={"User-Agent": config.SEC_USER_AGENT},
+    resp = s.get(config.SEC_FACTS_URL.format(cik=cik), headers={"User-Agent": config.SEC_USER_AGENT, "Accept-Encoding": "gzip, deflate"},
                  timeout=config.REQUEST_TIMEOUT_S)
     resp.raise_for_status()
     return resp.json()

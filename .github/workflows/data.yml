@@ -13,6 +13,7 @@ jobs:
       - name: Load data
         env:
           EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
+          SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}   # SEC fair-access policy: name + contact email
         run: python -m ftp.pipeline
       - name: Analysis report
         if: always()          # report whatever loaded, even if one source failed

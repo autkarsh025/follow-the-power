@@ -19,8 +19,12 @@ def main() -> None:
                             "FROM zone_hourly GROUP BY 1", conn).to_string(index=False))
     print(pd.read_sql_query("SELECT state, COUNT(*) AS months, MIN(month), MAX(month) FROM state_monthly_sales "
                             "GROUP BY 1", conn).to_string(index=False))
+    fin = leadlag.fin_versions(conn)
+    if fin.empty:
+        print("\nNo financial data loaded yet; skipping analysis.")
+        return
     print("\n== Series (latest values)")
-    s = leadlag.series(leadlag.fin_versions(conn))
+    s = leadlag.series(fin)
     print(s.tail(12).round(1).to_string(index=False))
     for zone in [z[1] for z in config.GRID_ZONES]:
         q = power.zone_quarterly(conn, zone)

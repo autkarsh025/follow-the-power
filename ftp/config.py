@@ -20,7 +20,7 @@ REQUEST_TIMEOUT_S = 60
 
 # ------------------------------------------------------------------ SEC EDGAR
 # SEC's fair-access policy requires a descriptive User-Agent with contact info.
-SEC_USER_AGENT = os.getenv("SEC_USER_AGENT", "follow-the-power research autkarsh025@users.noreply.github.com")
+SEC_USER_AGENT = os.getenv("SEC_USER_AGENT") or "follow-the-power research autkarsh025@users.noreply.github.com"
 SEC_FACTS_URL = "https://data.sec.gov/api/xbrl/companyfacts/CIK{cik:010d}.json"
 
 # The money trail: hyperscalers buy GPUs (capex) -> NVIDIA books revenue.
