@@ -1,0 +1,1545 @@
+{
+ "MSFT revenue": {
+  "candidates": {
+   "Revenues": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 100,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-28"
+   },
+   "SalesRevenueNet": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {},
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2027",
+   "fiscal_q": "1",
+   "period_end": "2026-09-30",
+   "concept": "RevenueFromContractWithCustomerExcludingAssessedTax"
+  },
+  "bad_rows": []
+ },
+ "MSFT capex": {
+  "candidates": {
+   "PaymentsToAcquirePropertyPlantAndEquipment": {
+    "facts": 92,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-28"
+   },
+   "PaymentsToAcquireProductiveAssets": {},
+   "PaymentsForCapitalImprovements": {},
+   "PaymentsToAcquireAndDevelopRealEstate": {},
+   "PaymentsToDevelopRealEstateAssets": {}
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2027",
+   "fiscal_q": "1",
+   "period_end": "2026-09-30",
+   "concept": "PaymentsToAcquirePropertyPlantAndEquipment"
+  },
+  "bad_rows": []
+ },
+ "GOOGL revenue": {
+  "candidates": {
+   "Revenues": {
+    "facts": 33,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-29"
+   },
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 67,
+    "first_end": "2019-03-31",
+    "last_end": "2025-03-31",
+    "last_filed": "2025-04-25"
+   },
+   "SalesRevenueNet": {},
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {},
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {
+   "CostOfRevenue": {
+    "facts": 93,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-29"
+   },
+   "ContractWithCustomerLiabilityRevenueRecognized": {
+    "facts": 31,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-29"
+   },
+   "RevenueNotFromContractWithCustomer": {
+    "facts": 21,
+    "first_end": "2023-12-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-29"
+   }
+  },
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-09-30",
+   "concept": "Revenues"
+  },
+  "bad_rows": []
+ },
+ "GOOGL capex": {
+  "candidates": {
+   "PaymentsToAcquirePropertyPlantAndEquipment": {
+    "facts": 69,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-29"
+   },
+   "PaymentsToAcquireProductiveAssets": {},
+   "PaymentsForCapitalImprovements": {},
+   "PaymentsToAcquireAndDevelopRealEstate": {},
+   "PaymentsToDevelopRealEstateAssets": {}
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-09-30",
+   "concept": "PaymentsToAcquirePropertyPlantAndEquipment"
+  },
+  "bad_rows": []
+ },
+ "AMZN revenue": {
+  "candidates": {
+   "Revenues": {},
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 105,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-30"
+   },
+   "SalesRevenueNet": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {},
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {
+   "ContractWithCustomerLiabilityRevenueRecognized": {
+    "facts": 31,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-30"
+   }
+  },
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-09-30",
+   "concept": "RevenueFromContractWithCustomerExcludingAssessedTax"
+  },
+  "bad_rows": []
+ },
+ "AMZN capex": {
+  "candidates": {
+   "PaymentsToAcquirePropertyPlantAndEquipment": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "PaymentsToAcquireProductiveAssets": {
+    "facts": 138,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-30"
+   },
+   "PaymentsForCapitalImprovements": {},
+   "PaymentsToAcquireAndDevelopRealEstate": {},
+   "PaymentsToDevelopRealEstateAssets": {}
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-09-30",
+   "concept": "PaymentsToAcquireProductiveAssets"
+  },
+  "bad_rows": []
+ },
+ "META revenue": {
+  "candidates": {
+   "Revenues": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 93,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-22"
+   },
+   "SalesRevenueNet": {},
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {},
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {
+   "CostOfRevenue": {
+    "facts": 93,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-22"
+   }
+  },
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-09-30",
+   "concept": "RevenueFromContractWithCustomerExcludingAssessedTax"
+  },
+  "bad_rows": []
+ },
+ "META capex": {
+  "candidates": {
+   "PaymentsToAcquirePropertyPlantAndEquipment": {
+    "facts": 63,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-22"
+   },
+   "PaymentsToAcquireProductiveAssets": {},
+   "PaymentsForCapitalImprovements": {},
+   "PaymentsToAcquireAndDevelopRealEstate": {},
+   "PaymentsToDevelopRealEstateAssets": {}
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-09-30",
+   "concept": "PaymentsToAcquirePropertyPlantAndEquipment"
+  },
+  "bad_rows": []
+ },
+ "ORCL revenue": {
+  "candidates": {
+   "Revenues": {
+    "facts": 21,
+    "first_end": "2019-05-31",
+    "last_end": "2026-05-31",
+    "last_filed": "2026-06-22"
+   },
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 92,
+    "first_end": "2019-02-28",
+    "last_end": "2026-08-31",
+    "last_filed": "2026-09-11"
+   },
+   "SalesRevenueNet": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {},
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {
+   "ContractWithCustomerLiabilityRevenueRecognized": {
+    "facts": 58,
+    "first_end": "2019-02-28",
+    "last_end": "2026-08-31",
+    "last_filed": "2026-09-11"
+   }
+  },
+  "latest_quarter": {
+   "fiscal_year": "2027",
+   "fiscal_q": "1",
+   "period_end": "2026-08-31",
+   "concept": "RevenueFromContractWithCustomerExcludingAssessedTax"
+  },
+  "bad_rows": []
+ },
+ "ORCL capex": {
+  "candidates": {
+   "PaymentsToAcquirePropertyPlantAndEquipment": {
+    "facts": 64,
+    "first_end": "2019-02-28",
+    "last_end": "2026-08-31",
+    "last_filed": "2026-09-11"
+   },
+   "PaymentsToAcquireProductiveAssets": {},
+   "PaymentsForCapitalImprovements": {},
+   "PaymentsToAcquireAndDevelopRealEstate": {},
+   "PaymentsToDevelopRealEstateAssets": {}
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2027",
+   "fiscal_q": "1",
+   "period_end": "2026-08-31",
+   "concept": "PaymentsToAcquirePropertyPlantAndEquipment"
+  },
+  "bad_rows": []
+ },
+ "CRWV revenue": {
+  "candidates": {
+   "Revenues": {},
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 23,
+    "first_end": "2023-12-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-11-12"
+   },
+   "SalesRevenueNet": {},
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {},
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {
+   "ContractWithCustomerLiabilityRevenueRecognized": {
+    "facts": 15,
+    "first_end": "2024-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-11-12"
+   }
+  },
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-09-30",
+   "concept": "RevenueFromContractWithCustomerExcludingAssessedTax"
+  },
+  "bad_rows": []
+ },
+ "CRWV capex": {
+  "candidates": {
+   "PaymentsToAcquirePropertyPlantAndEquipment": {
+    "facts": 15,
+    "first_end": "2023-12-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-11-12"
+   },
+   "PaymentsToAcquireProductiveAssets": {},
+   "PaymentsForCapitalImprovements": {},
+   "PaymentsToAcquireAndDevelopRealEstate": {},
+   "PaymentsToDevelopRealEstateAssets": {}
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-09-30",
+   "concept": "PaymentsToAcquirePropertyPlantAndEquipment"
+  },
+  "bad_rows": []
+ },
+ "NVDA revenue": {
+  "candidates": {
+   "Revenues": {
+    "facts": 86,
+    "first_end": "2019-04-28",
+    "last_end": "2026-07-26",
+    "last_filed": "2026-08-26"
+   },
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 15,
+    "first_end": "2019-01-27",
+    "last_end": "2022-01-30",
+    "last_filed": "2022-03-18"
+   },
+   "SalesRevenueNet": {},
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {},
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {
+   "CostOfRevenue": {
+    "facts": 86,
+    "first_end": "2019-04-28",
+    "last_end": "2026-07-26",
+    "last_filed": "2026-08-26"
+   },
+   "ContractWithCustomerLiabilityRevenueRecognized": {
+    "facts": 32,
+    "first_end": "2019-01-27",
+    "last_end": "2026-07-26",
+    "last_filed": "2026-08-26"
+   }
+  },
+  "latest_quarter": {
+   "fiscal_year": "2027",
+   "fiscal_q": "2",
+   "period_end": "2026-07-26",
+   "concept": "Revenues"
+  },
+  "bad_rows": []
+ },
+ "NVDA gross_profit": {
+  "candidates": {
+   "GrossProfit": {
+    "facts": 98,
+    "first_end": "2019-01-27",
+    "last_end": "2026-07-26",
+    "last_filed": "2026-08-26"
+   }
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2027",
+   "fiscal_q": "2",
+   "period_end": "2026-07-26",
+   "concept": "GrossProfit"
+  },
+  "bad_rows": []
+ },
+ "AMD revenue": {
+  "candidates": {
+   "Revenues": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 105,
+    "first_end": "2019-03-30",
+    "last_end": "2026-09-26",
+    "last_filed": "2026-11-04"
+   },
+   "SalesRevenueNet": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {},
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-09-26",
+   "concept": "RevenueFromContractWithCustomerExcludingAssessedTax"
+  },
+  "bad_rows": []
+ },
+ "AMD gross_profit": {
+  "candidates": {
+   "GrossProfit": {
+    "facts": 105,
+    "first_end": "2019-03-30",
+    "last_end": "2026-09-26",
+    "last_filed": "2026-11-04"
+   }
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-09-26",
+   "concept": "GrossProfit"
+  },
+  "bad_rows": []
+ },
+ "AVGO revenue": {
+  "candidates": {
+   "Revenues": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 105,
+    "first_end": "2019-02-03",
+    "last_end": "2026-08-02",
+    "last_filed": "2026-09-10"
+   },
+   "SalesRevenueNet": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {},
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {
+   "CostOfRevenue": {
+    "facts": 93,
+    "first_end": "2019-02-03",
+    "last_end": "2026-08-02",
+    "last_filed": "2026-09-10"
+   },
+   "ContractWithCustomerLiabilityRevenueRecognized": {
+    "facts": 58,
+    "first_end": "2019-02-03",
+    "last_end": "2026-08-02",
+    "last_filed": "2026-09-10"
+   },
+   "DisposalGroupIncludingDiscontinuedOperationRevenue": {
+    "facts": 11,
+    "first_end": "2024-02-04",
+    "last_end": "2025-11-02",
+    "last_filed": "2025-12-18"
+   }
+  },
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-08-02",
+   "concept": "RevenueFromContractWithCustomerExcludingAssessedTax"
+  },
+  "bad_rows": []
+ },
+ "AVGO gross_profit": {
+  "candidates": {
+   "GrossProfit": {
+    "facts": 105,
+    "first_end": "2019-02-03",
+    "last_end": "2026-08-02",
+    "last_filed": "2026-09-10"
+   }
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-08-02",
+   "concept": "GrossProfit"
+  },
+  "bad_rows": []
+ },
+ "MRVL revenue": {
+  "candidates": {
+   "Revenues": {},
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 71,
+    "first_end": "2020-02-01",
+    "last_end": "2026-08-01",
+    "last_filed": "2026-08-28"
+   },
+   "SalesRevenueNet": {},
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {},
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2027",
+   "fiscal_q": "2",
+   "period_end": "2026-08-01",
+   "concept": "RevenueFromContractWithCustomerExcludingAssessedTax"
+  },
+  "bad_rows": []
+ },
+ "MRVL gross_profit": {
+  "candidates": {
+   "GrossProfit": {
+    "facts": 71,
+    "first_end": "2020-02-01",
+    "last_end": "2026-08-01",
+    "last_filed": "2026-08-28"
+   }
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2027",
+   "fiscal_q": "2",
+   "period_end": "2026-08-01",
+   "concept": "GrossProfit"
+  },
+  "bad_rows": []
+ },
+ "MU revenue": {
+  "candidates": {
+   "Revenues": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 104,
+    "first_end": "2019-02-28",
+    "last_end": "2026-09-03",
+    "last_filed": "2026-10-09"
+   },
+   "SalesRevenueNet": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {},
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {
+   "ContractWithCustomerLiabilityRevenueRecognized": {
+    "facts": 18,
+    "first_end": "2019-02-28",
+    "last_end": "2025-08-28",
+    "last_filed": "2025-10-03"
+   }
+  },
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "4",
+   "period_end": "2026-09-03",
+   "concept": "RevenueFromContractWithCustomerExcludingAssessedTax"
+  },
+  "bad_rows": []
+ },
+ "MU gross_profit": {
+  "candidates": {
+   "GrossProfit": {
+    "facts": 104,
+    "first_end": "2019-02-28",
+    "last_end": "2026-09-03",
+    "last_filed": "2026-10-09"
+   }
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "4",
+   "period_end": "2026-09-03",
+   "concept": "GrossProfit"
+  },
+  "bad_rows": [
+   {
+    "fiscal_year": "2023",
+    "fiscal_q": "2",
+    "period_start": "2022-12-02",
+    "period_end": "2023-03-02",
+    "value_usd": "-1206000000.0",
+    "concept": "GrossProfit",
+    "derived": "0"
+   },
+   {
+    "fiscal_year": "2023",
+    "fiscal_q": "3",
+    "period_start": "2023-03-03",
+    "period_end": "2023-06-01",
+    "value_usd": "-668000000.0",
+    "concept": "GrossProfit",
+    "derived": "0"
+   },
+   {
+    "fiscal_year": "2023",
+    "fiscal_q": "4",
+    "period_start": "2023-06-02",
+    "period_end": "2023-08-31",
+    "value_usd": "-435000000.0",
+    "concept": "GrossProfit",
+    "derived": "1"
+   },
+   {
+    "fiscal_year": "2024",
+    "fiscal_q": "1",
+    "period_start": "2023-09-01",
+    "period_end": "2023-11-30",
+    "value_usd": "-35000000.0",
+    "concept": "GrossProfit",
+    "derived": "0"
+   }
+  ]
+ },
+ "INTC revenue": {
+  "candidates": {
+   "Revenues": {},
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 94,
+    "first_end": "2019-03-30",
+    "last_end": "2026-09-26",
+    "last_filed": "2026-10-30"
+   },
+   "SalesRevenueNet": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {},
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-09-26",
+   "concept": "RevenueFromContractWithCustomerExcludingAssessedTax"
+  },
+  "bad_rows": []
+ },
+ "INTC gross_profit": {
+  "candidates": {
+   "GrossProfit": {
+    "facts": 93,
+    "first_end": "2019-03-30",
+    "last_end": "2026-09-26",
+    "last_filed": "2026-10-30"
+   }
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-09-26",
+   "concept": "GrossProfit"
+  },
+  "bad_rows": []
+ },
+ "SMCI revenue": {
+  "candidates": {
+   "Revenues": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 100,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-11-06"
+   },
+   "SalesRevenueNet": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {},
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {
+   "CostOfRevenue": {
+    "facts": 92,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-11-06"
+   },
+   "ContractWithCustomerLiabilityRevenueRecognized": {
+    "facts": 60,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-11-06"
+   }
+  },
+  "latest_quarter": {
+   "fiscal_year": "2027",
+   "fiscal_q": "1",
+   "period_end": "2026-09-30",
+   "concept": "RevenueFromContractWithCustomerExcludingAssessedTax"
+  },
+  "bad_rows": []
+ },
+ "SMCI gross_profit": {
+  "candidates": {
+   "GrossProfit": {
+    "facts": 100,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-11-06"
+   }
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2027",
+   "fiscal_q": "1",
+   "period_end": "2026-09-30",
+   "concept": "GrossProfit"
+  },
+  "bad_rows": []
+ },
+ "DELL revenue": {
+  "candidates": {
+   "Revenues": {
+    "facts": 114,
+    "first_end": "2019-02-01",
+    "last_end": "2026-07-31",
+    "last_filed": "2026-09-08"
+   },
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {},
+   "SalesRevenueNet": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {},
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {
+   "CostOfRevenue": {
+    "facts": 99,
+    "first_end": "2019-02-01",
+    "last_end": "2026-07-31",
+    "last_filed": "2026-09-08"
+   },
+   "SalesTypeLeaseRevenue": {
+    "facts": 89,
+    "first_end": "2019-05-03",
+    "last_end": "2026-07-31",
+    "last_filed": "2026-09-08"
+   },
+   "ContractWithCustomerLiabilityRevenueRecognized": {
+    "facts": 86,
+    "first_end": "2019-02-01",
+    "last_end": "2026-07-31",
+    "last_filed": "2026-09-08"
+   }
+  },
+  "latest_quarter": {
+   "fiscal_year": "2027",
+   "fiscal_q": "2",
+   "period_end": "2026-07-31",
+   "concept": "Revenues"
+  },
+  "bad_rows": []
+ },
+ "DELL gross_profit": {
+  "candidates": {
+   "GrossProfit": {
+    "facts": 114,
+    "first_end": "2019-02-01",
+    "last_end": "2026-07-31",
+    "last_filed": "2026-09-08"
+   }
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2027",
+   "fiscal_q": "2",
+   "period_end": "2026-07-31",
+   "concept": "GrossProfit"
+  },
+  "bad_rows": []
+ },
+ "ANET revenue": {
+  "candidates": {
+   "Revenues": {},
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 105,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-11-04"
+   },
+   "SalesRevenueNet": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {
+   "ContractWithCustomerLiabilityRevenueRecognized": {
+    "facts": 87,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-11-04"
+   }
+  },
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-09-30",
+   "concept": "RevenueFromContractWithCustomerExcludingAssessedTax"
+  },
+  "bad_rows": []
+ },
+ "ANET gross_profit": {
+  "candidates": {
+   "GrossProfit": {
+    "facts": 105,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-11-04"
+   }
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-09-30",
+   "concept": "GrossProfit"
+  },
+  "bad_rows": []
+ },
+ "VRT revenue": {
+  "candidates": {
+   "Revenues": {
+    "facts": 6,
+    "first_end": "2019-03-31",
+    "last_end": "2019-12-31",
+    "last_filed": "2020-03-12"
+   },
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 105,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-28"
+   },
+   "SalesRevenueNet": {},
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {},
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {
+   "ContractWithCustomerLiabilityRevenueRecognized": {
+    "facts": 9,
+    "first_end": "2025-06-30",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-28"
+   }
+  },
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-09-30",
+   "concept": "RevenueFromContractWithCustomerExcludingAssessedTax"
+  },
+  "bad_rows": [
+   {
+    "fiscal_year": "2019",
+    "fiscal_q": "1",
+    "period_start": "2019-01-01",
+    "period_end": "2019-03-31",
+    "value_usd": "0.0",
+    "concept": "Revenues",
+    "derived": "0"
+   },
+   {
+    "fiscal_year": "2019",
+    "fiscal_q": "2",
+    "period_start": "2019-04-01",
+    "period_end": "2019-06-30",
+    "value_usd": "0.0",
+    "concept": "Revenues",
+    "derived": "0"
+   },
+   {
+    "fiscal_year": "2019",
+    "fiscal_q": "3",
+    "period_start": "2019-07-01",
+    "period_end": "2019-09-30",
+    "value_usd": "0.0",
+    "concept": "Revenues",
+    "derived": "0"
+   },
+   {
+    "fiscal_year": "2019",
+    "fiscal_q": "4",
+    "period_start": "2019-10-01",
+    "period_end": "2019-12-31",
+    "value_usd": "0.0",
+    "concept": "Revenues",
+    "derived": "1"
+   }
+  ]
+ },
+ "ETN revenue": {
+  "candidates": {
+   "Revenues": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 93,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-11-03"
+   },
+   "SalesRevenueNet": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {},
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {
+   "CostOfRevenue": {
+    "facts": 93,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-11-03"
+   },
+   "ContractWithCustomerLiabilityRevenueRecognized": {
+    "facts": 41,
+    "first_end": "2019-09-30",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-11-03"
+   }
+  },
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-09-30",
+   "concept": "RevenueFromContractWithCustomerExcludingAssessedTax"
+  },
+  "bad_rows": []
+ },
+ "GEV revenue": {
+  "candidates": {
+   "Revenues": {},
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 36,
+    "first_end": "2022-12-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-28"
+   },
+   "SalesRevenueNet": {},
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {},
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {
+   "ContractWithCustomerLiabilityRevenueRecognized": {
+    "facts": 22,
+    "first_end": "2023-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-28"
+   },
+   "ContractWithCustomerAssetCumulativeCatchUpAdjustmentToRevenueChangeInMeasureOfProgress": {
+    "facts": 11,
+    "first_end": "2024-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-28"
+   },
+   "ContractWithCustomerLiabilityCumulativeCatchUpAdjustmentToRevenueChangeInEstimateOfTransactionPrice": {
+    "facts": 10,
+    "first_end": "2023-12-31",
+    "last_end": "2025-12-31",
+    "last_filed": "2026-01-29"
+   }
+  },
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-09-30",
+   "concept": "RevenueFromContractWithCustomerExcludingAssessedTax"
+  },
+  "bad_rows": []
+ },
+ "EQIX revenue": {
+  "candidates": {
+   "Revenues": {
+    "facts": 20,
+    "first_end": "2019-03-31",
+    "last_end": "2020-12-31",
+    "last_filed": "2021-02-19"
+   },
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 86,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-28"
+   },
+   "SalesRevenueNet": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {},
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {
+   "CostOfRevenue": {
+    "facts": 93,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-28"
+   },
+   "ContractWithCustomerLiabilityRevenueRecognized": {
+    "facts": 47,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-28"
+   }
+  },
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-09-30",
+   "concept": "RevenueFromContractWithCustomerExcludingAssessedTax"
+  },
+  "bad_rows": []
+ },
+ "EQIX capex": {
+  "candidates": {
+   "PaymentsToAcquirePropertyPlantAndEquipment": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "PaymentsToAcquireProductiveAssets": {
+    "facts": 82,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-04-29"
+   },
+   "PaymentsForCapitalImprovements": {},
+   "PaymentsToAcquireAndDevelopRealEstate": {},
+   "PaymentsToDevelopRealEstateAssets": {}
+  },
+  "lookalikes": {
+   "PaymentsToAcquireOtherPropertyPlantAndEquipment": {
+    "facts": 63,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-28"
+   },
+   "PaymentsToAcquireRealEstate": {
+    "facts": 63,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-10-28"
+   }
+  },
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "1",
+   "period_end": "2026-03-31",
+   "concept": "PaymentsToAcquireProductiveAssets"
+  },
+  "bad_rows": []
+ },
+ "DLR revenue": {
+  "candidates": {
+   "Revenues": {
+    "facts": 97,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-01"
+   },
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {},
+   "SalesRevenueNet": {},
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {},
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "1",
+   "period_end": "2026-03-31",
+   "concept": "Revenues"
+  },
+  "bad_rows": []
+ },
+ "DLR capex": {
+  "candidates": {
+   "PaymentsToAcquirePropertyPlantAndEquipment": {},
+   "PaymentsToAcquireProductiveAssets": {},
+   "PaymentsForCapitalImprovements": {},
+   "PaymentsToAcquireAndDevelopRealEstate": {},
+   "PaymentsToDevelopRealEstateAssets": {
+    "facts": 59,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-01"
+   }
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "1",
+   "period_end": "2026-03-31",
+   "concept": "PaymentsToDevelopRealEstateAssets"
+  },
+  "bad_rows": []
+ },
+ "D revenue": {
+  "candidates": {
+   "Revenues": {
+    "facts": 121,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-01"
+   },
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 79,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-01"
+   },
+   "SalesRevenueNet": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {
+    "facts": 5,
+    "first_end": "2019-03-31",
+    "last_end": "2019-09-30",
+    "last_filed": "2019-11-01"
+   },
+   "RegulatedAndUnregulatedOperatingRevenue": {
+    "facts": 79,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-01"
+   }
+  },
+  "lookalikes": {
+   "ContractWithCustomerLiabilityRevenueRecognized": {
+    "facts": 54,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-01"
+   }
+  },
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "1",
+   "period_end": "2026-03-31",
+   "concept": "Revenues"
+  },
+  "bad_rows": []
+ },
+ "D capex": {
+  "candidates": {
+   "PaymentsToAcquirePropertyPlantAndEquipment": {
+    "facts": 6,
+    "first_end": "2019-03-31",
+    "last_end": "2020-03-31",
+    "last_filed": "2020-05-05"
+   },
+   "PaymentsToAcquireProductiveAssets": {
+    "facts": 1,
+    "first_end": "2019-12-31",
+    "last_end": "2019-12-31",
+    "last_filed": "2020-02-28"
+   },
+   "PaymentsForCapitalImprovements": {},
+   "PaymentsToAcquireAndDevelopRealEstate": {},
+   "PaymentsToDevelopRealEstateAssets": {}
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2020",
+   "fiscal_q": "1",
+   "period_end": "2020-03-31",
+   "concept": "PaymentsToAcquirePropertyPlantAndEquipment"
+  },
+  "bad_rows": []
+ },
+ "AEP revenue": {
+  "candidates": {
+   "Revenues": {
+    "facts": 89,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-05"
+   },
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 18,
+    "first_end": "2022-12-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-05"
+   },
+   "SalesRevenueNet": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {
+    "facts": 67,
+    "first_end": "2019-03-31",
+    "last_end": "2024-09-30",
+    "last_filed": "2024-11-06"
+   },
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "1",
+   "period_end": "2026-03-31",
+   "concept": "Revenues"
+  },
+  "bad_rows": []
+ },
+ "AEP capex": {
+  "candidates": {
+   "PaymentsToAcquirePropertyPlantAndEquipment": {
+    "facts": 11,
+    "first_end": "2019-06-30",
+    "last_end": "2021-03-31",
+    "last_filed": "2021-04-22"
+   },
+   "PaymentsToAcquireProductiveAssets": {
+    "facts": 9,
+    "first_end": "2023-12-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-05-05"
+   },
+   "PaymentsForCapitalImprovements": {},
+   "PaymentsToAcquireAndDevelopRealEstate": {},
+   "PaymentsToDevelopRealEstateAssets": {}
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "1",
+   "period_end": "2026-03-31",
+   "concept": "PaymentsToAcquireProductiveAssets"
+  },
+  "bad_rows": [
+   {
+    "fiscal_year": "2019",
+    "fiscal_q": "4",
+    "period_start": "2019-10-01",
+    "period_end": "2019-12-31",
+    "value_usd": "-2900000.0",
+    "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "derived": "1"
+   },
+   {
+    "fiscal_year": "2020",
+    "fiscal_q": "3",
+    "period_start": "2020-07-01",
+    "period_end": "2020-09-30",
+    "value_usd": "0.0",
+    "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "derived": "1"
+   },
+   {
+    "fiscal_year": "2020",
+    "fiscal_q": "4",
+    "period_start": "2020-10-01",
+    "period_end": "2020-12-31",
+    "value_usd": "0.0",
+    "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "derived": "1"
+   },
+   {
+    "fiscal_year": "2020",
+    "fiscal_q": "1",
+    "period_start": "2020-01-01",
+    "period_end": "2020-03-31",
+    "value_usd": "0.0",
+    "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "derived": "0"
+   },
+   {
+    "fiscal_year": "2024",
+    "fiscal_q": "3",
+    "period_start": "2024-07-01",
+    "period_end": "2024-09-30",
+    "value_usd": "0.0",
+    "concept": "PaymentsToAcquireProductiveAssets",
+    "derived": "1"
+   },
+   {
+    "fiscal_year": "2025",
+    "fiscal_q": "1",
+    "period_start": "2025-01-01",
+    "period_end": "2025-03-31",
+    "value_usd": "0.0",
+    "concept": "PaymentsToAcquireProductiveAssets",
+    "derived": "0"
+   }
+  ]
+ },
+ "SO revenue": {
+  "candidates": {
+   "Revenues": {
+    "facts": 88,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-04-30"
+   },
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {},
+   "SalesRevenueNet": {},
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {
+    "facts": 80,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-04-30"
+   },
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {
+   "ContractWithCustomerLiabilityRevenueRecognized": {
+    "facts": 42,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-04-30"
+   }
+  },
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "1",
+   "period_end": "2026-03-31",
+   "concept": "Revenues"
+  },
+  "bad_rows": []
+ },
+ "SO capex": {
+  "candidates": {
+   "PaymentsToAcquirePropertyPlantAndEquipment": {
+    "facts": 59,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-04-30"
+   },
+   "PaymentsToAcquireProductiveAssets": {
+    "facts": 1,
+    "first_end": "2019-12-31",
+    "last_end": "2019-12-31",
+    "last_filed": "2020-02-20"
+   },
+   "PaymentsForCapitalImprovements": {},
+   "PaymentsToAcquireAndDevelopRealEstate": {},
+   "PaymentsToDevelopRealEstateAssets": {}
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "1",
+   "period_end": "2026-03-31",
+   "concept": "PaymentsToAcquirePropertyPlantAndEquipment"
+  },
+  "bad_rows": []
+ },
+ "NEE revenue": {
+  "candidates": {
+   "Revenues": {
+    "facts": 0,
+    "first_end": null,
+    "last_end": null,
+    "last_filed": null
+   },
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {},
+   "SalesRevenueNet": {},
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {
+    "facts": 85,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-04-23"
+   },
+   "RegulatedAndUnregulatedOperatingRevenue": {
+    "facts": 89,
+    "first_end": "2019-03-31",
+    "last_end": "2026-03-31",
+    "last_filed": "2026-04-23"
+   }
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "1",
+   "period_end": "2026-03-31",
+   "concept": "RevenueFromContractWithCustomerIncludingAssessedTax"
+  },
+  "bad_rows": []
+ },
+ "NEE capex": {
+  "candidates": {
+   "PaymentsToAcquirePropertyPlantAndEquipment": {},
+   "PaymentsToAcquireProductiveAssets": {},
+   "PaymentsForCapitalImprovements": {},
+   "PaymentsToAcquireAndDevelopRealEstate": {},
+   "PaymentsToDevelopRealEstateAssets": {}
+  },
+  "lookalikes": {},
+  "latest_quarter": null,
+  "bad_rows": []
+ },
+ "CEG revenue": {
+  "candidates": {
+   "Revenues": {
+    "facts": 58,
+    "first_end": "2020-12-31",
+    "last_end": "2026-06-30",
+    "last_filed": "2026-08-06"
+   },
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 35,
+    "first_end": "2021-12-31",
+    "last_end": "2026-06-30",
+    "last_filed": "2026-08-06"
+   },
+   "SalesRevenueNet": {},
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {
+    "facts": 18,
+    "first_end": "2020-12-31",
+    "last_end": "2025-12-31",
+    "last_filed": "2026-02-24"
+   },
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {
+   "RevenueNotFromContractWithCustomer": {
+    "facts": 35,
+    "first_end": "2021-12-31",
+    "last_end": "2026-06-30",
+    "last_filed": "2026-08-06"
+   }
+  },
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "2",
+   "period_end": "2026-06-30",
+   "concept": "Revenues"
+  },
+  "bad_rows": []
+ },
+ "VST revenue": {
+  "candidates": {
+   "Revenues": {
+    "facts": 97,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-11-09"
+   },
+   "RevenueFromContractWithCustomerExcludingAssessedTax": {
+    "facts": 93,
+    "first_end": "2019-03-31",
+    "last_end": "2026-09-30",
+    "last_filed": "2026-11-09"
+   },
+   "SalesRevenueNet": {},
+   "RevenueFromContractWithCustomerIncludingAssessedTax": {},
+   "RegulatedAndUnregulatedOperatingRevenue": {}
+  },
+  "lookalikes": {},
+  "latest_quarter": {
+   "fiscal_year": "2026",
+   "fiscal_q": "3",
+   "period_end": "2026-09-30",
+   "concept": "Revenues"
+  },
+  "bad_rows": []
+ }
+}

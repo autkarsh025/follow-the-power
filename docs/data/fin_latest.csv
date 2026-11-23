@@ -1,0 +1,1317 @@
+ticker,name,layer,metric,quarter,value_b,yoy
+AEP,American Electric Power,6 · Electricity,capex,2019Q3,0.34,
+AEP,American Electric Power,6 · Electricity,capex,2019Q4,-0.003,
+AEP,American Electric Power,6 · Electricity,capex,2020Q1,0.0,
+AEP,American Electric Power,6 · Electricity,capex,2020Q3,0.0,
+AEP,American Electric Power,6 · Electricity,capex,2020Q4,0.0,-100.0
+AEP,American Electric Power,6 · Electricity,capex,2021Q1,0.103,-3648.28
+AEP,American Electric Power,6 · Electricity,capex,2024Q3,0.0,
+AEP,American Electric Power,6 · Electricity,capex,2024Q4,0.399,inf
+AEP,American Electric Power,6 · Electricity,capex,2025Q1,0.0,
+AEP,American Electric Power,6 · Electricity,capex,2025Q3,0.298,189.6
+AEP,American Electric Power,6 · Electricity,capex,2025Q4,1.796,inf
+AEP,American Electric Power,6 · Electricity,capex,2026Q1,0.965,141.85
+AEP,American Electric Power,6 · Electricity,revenue,2019Q1,4.057,
+AEP,American Electric Power,6 · Electricity,revenue,2019Q2,3.574,
+AEP,American Electric Power,6 · Electricity,revenue,2019Q3,4.315,
+AEP,American Electric Power,6 · Electricity,revenue,2019Q4,3.616,
+AEP,American Electric Power,6 · Electricity,revenue,2020Q1,3.748,-7.62
+AEP,American Electric Power,6 · Electricity,revenue,2020Q2,3.494,-2.23
+AEP,American Electric Power,6 · Electricity,revenue,2020Q3,4.066,-5.76
+AEP,American Electric Power,6 · Electricity,revenue,2020Q4,3.611,-0.15
+AEP,American Electric Power,6 · Electricity,revenue,2021Q1,4.281,14.24
+AEP,American Electric Power,6 · Electricity,revenue,2021Q2,3.826,9.52
+AEP,American Electric Power,6 · Electricity,revenue,2021Q3,4.623,13.69
+AEP,American Electric Power,6 · Electricity,revenue,2021Q4,4.061,12.49
+AEP,American Electric Power,6 · Electricity,revenue,2022Q1,4.593,7.28
+AEP,American Electric Power,6 · Electricity,revenue,2022Q2,4.64,21.25
+AEP,American Electric Power,6 · Electricity,revenue,2022Q3,5.526,19.53
+AEP,American Electric Power,6 · Electricity,revenue,2022Q4,4.881,20.18
+AEP,American Electric Power,6 · Electricity,revenue,2023Q1,4.691,2.14
+AEP,American Electric Power,6 · Electricity,revenue,2023Q2,4.372,-5.76
+AEP,American Electric Power,6 · Electricity,revenue,2023Q3,5.342,-3.34
+AEP,American Electric Power,6 · Electricity,revenue,2023Q4,4.577,-6.23
+AEP,American Electric Power,6 · Electricity,revenue,2024Q1,5.026,7.14
+AEP,American Electric Power,6 · Electricity,revenue,2024Q2,4.579,4.73
+AEP,American Electric Power,6 · Electricity,revenue,2024Q3,5.42,1.47
+AEP,American Electric Power,6 · Electricity,revenue,2024Q4,4.696,2.6
+AEP,American Electric Power,6 · Electricity,revenue,2025Q1,5.463,8.7
+AEP,American Electric Power,6 · Electricity,revenue,2025Q2,5.087,11.09
+AEP,American Electric Power,6 · Electricity,revenue,2025Q3,6.01,10.89
+AEP,American Electric Power,6 · Electricity,revenue,2025Q4,5.315,13.19
+AEP,American Electric Power,6 · Electricity,revenue,2026Q1,6.02,10.2
+AMD,AMD,2 · Chips & memory,gross_profit,2019Q1,0.521,
+AMD,AMD,2 · Chips & memory,gross_profit,2019Q2,0.621,
+AMD,AMD,2 · Chips & memory,gross_profit,2019Q3,0.777,
+AMD,AMD,2 · Chips & memory,gross_profit,2019Q4,0.949,
+AMD,AMD,2 · Chips & memory,gross_profit,2020Q1,0.818,57.01
+AMD,AMD,2 · Chips & memory,gross_profit,2020Q2,0.848,36.55
+AMD,AMD,2 · Chips & memory,gross_profit,2020Q3,1.23,58.3
+AMD,AMD,2 · Chips & memory,gross_profit,2020Q4,1.451,52.9
+AMD,AMD,2 · Chips & memory,gross_profit,2021Q1,1.587,94.01
+AMD,AMD,2 · Chips & memory,gross_profit,2021Q2,1.83,115.8
+AMD,AMD,2 · Chips & memory,gross_profit,2021Q3,2.086,69.59
+AMD,AMD,2 · Chips & memory,gross_profit,2021Q4,2.426,67.2
+AMD,AMD,2 · Chips & memory,gross_profit,2022Q1,2.818,77.57
+AMD,AMD,2 · Chips & memory,gross_profit,2022Q2,3.028,65.46
+AMD,AMD,2 · Chips & memory,gross_profit,2022Q3,2.354,12.85
+AMD,AMD,2 · Chips & memory,gross_profit,2022Q4,2.403,-0.95
+AMD,AMD,2 · Chips & memory,gross_profit,2023Q1,2.359,-16.29
+AMD,AMD,2 · Chips & memory,gross_profit,2023Q2,2.443,-19.32
+AMD,AMD,2 · Chips & memory,gross_profit,2023Q3,2.747,16.69
+AMD,AMD,2 · Chips & memory,gross_profit,2023Q4,2.911,21.14
+AMD,AMD,2 · Chips & memory,gross_profit,2024Q1,2.56,8.52
+AMD,AMD,2 · Chips & memory,gross_profit,2024Q2,2.864,17.23
+AMD,AMD,2 · Chips & memory,gross_profit,2024Q3,3.419,24.46
+AMD,AMD,2 · Chips & memory,gross_profit,2024Q4,3.882,33.36
+AMD,AMD,2 · Chips & memory,gross_profit,2025Q1,3.736,45.94
+AMD,AMD,2 · Chips & memory,gross_profit,2025Q2,3.059,6.81
+AMD,AMD,2 · Chips & memory,gross_profit,2025Q3,4.78,39.81
+AMD,AMD,2 · Chips & memory,gross_profit,2025Q4,5.577,43.66
+AMD,AMD,2 · Chips & memory,gross_profit,2026Q1,5.416,44.97
+AMD,AMD,2 · Chips & memory,gross_profit,2026Q2,6.203,102.78
+AMD,AMD,2 · Chips & memory,gross_profit,2026Q3,7.21,50.84
+AMD,AMD,2 · Chips & memory,revenue,2019Q1,1.272,
+AMD,AMD,2 · Chips & memory,revenue,2019Q2,1.531,
+AMD,AMD,2 · Chips & memory,revenue,2019Q3,1.801,
+AMD,AMD,2 · Chips & memory,revenue,2019Q4,2.127,
+AMD,AMD,2 · Chips & memory,revenue,2020Q1,1.786,40.41
+AMD,AMD,2 · Chips & memory,revenue,2020Q2,1.932,26.19
+AMD,AMD,2 · Chips & memory,revenue,2020Q3,2.801,55.52
+AMD,AMD,2 · Chips & memory,revenue,2020Q4,3.244,52.52
+AMD,AMD,2 · Chips & memory,revenue,2021Q1,3.445,92.89
+AMD,AMD,2 · Chips & memory,revenue,2021Q2,3.85,99.28
+AMD,AMD,2 · Chips & memory,revenue,2021Q3,4.313,53.98
+AMD,AMD,2 · Chips & memory,revenue,2021Q4,4.826,48.77
+AMD,AMD,2 · Chips & memory,revenue,2022Q1,5.887,70.89
+AMD,AMD,2 · Chips & memory,revenue,2022Q2,6.55,70.13
+AMD,AMD,2 · Chips & memory,revenue,2022Q3,5.565,29.03
+AMD,AMD,2 · Chips & memory,revenue,2022Q4,5.599,16.02
+AMD,AMD,2 · Chips & memory,revenue,2023Q1,5.353,-9.07
+AMD,AMD,2 · Chips & memory,revenue,2023Q2,5.359,-18.18
+AMD,AMD,2 · Chips & memory,revenue,2023Q3,5.8,4.22
+AMD,AMD,2 · Chips & memory,revenue,2023Q4,6.168,10.16
+AMD,AMD,2 · Chips & memory,revenue,2024Q1,5.473,2.24
+AMD,AMD,2 · Chips & memory,revenue,2024Q2,5.835,8.88
+AMD,AMD,2 · Chips & memory,revenue,2024Q3,6.819,17.57
+AMD,AMD,2 · Chips & memory,revenue,2024Q4,7.658,24.16
+AMD,AMD,2 · Chips & memory,revenue,2025Q1,7.438,35.9
+AMD,AMD,2 · Chips & memory,revenue,2025Q2,7.685,31.71
+AMD,AMD,2 · Chips & memory,revenue,2025Q3,9.246,35.59
+AMD,AMD,2 · Chips & memory,revenue,2025Q4,10.27,34.11
+AMD,AMD,2 · Chips & memory,revenue,2026Q1,10.253,37.85
+AMD,AMD,2 · Chips & memory,revenue,2026Q2,11.536,50.11
+AMD,AMD,2 · Chips & memory,revenue,2026Q3,13.377,44.68
+AMZN,Amazon,1 · Cloud buyers,capex,2019Q1,3.29,
+AMZN,Amazon,1 · Cloud buyers,capex,2019Q2,3.562,
+AMZN,Amazon,1 · Cloud buyers,capex,2019Q3,4.697,
+AMZN,Amazon,1 · Cloud buyers,capex,2019Q4,5.312,
+AMZN,Amazon,1 · Cloud buyers,capex,2020Q1,6.795,106.53
+AMZN,Amazon,1 · Cloud buyers,capex,2020Q2,7.459,109.4
+AMZN,Amazon,1 · Cloud buyers,capex,2020Q3,11.063,135.53
+AMZN,Amazon,1 · Cloud buyers,capex,2020Q4,14.823,179.05
+AMZN,Amazon,1 · Cloud buyers,capex,2021Q1,12.082,77.81
+AMZN,Amazon,1 · Cloud buyers,capex,2021Q2,14.288,91.55
+AMZN,Amazon,1 · Cloud buyers,capex,2021Q3,15.748,42.35
+AMZN,Amazon,1 · Cloud buyers,capex,2021Q4,18.935,27.74
+AMZN,Amazon,1 · Cloud buyers,capex,2022Q1,14.951,23.75
+AMZN,Amazon,1 · Cloud buyers,capex,2022Q2,15.724,10.05
+AMZN,Amazon,1 · Cloud buyers,capex,2022Q3,16.378,4.0
+AMZN,Amazon,1 · Cloud buyers,capex,2022Q4,16.592,-12.37
+AMZN,Amazon,1 · Cloud buyers,capex,2023Q1,14.207,-4.98
+AMZN,Amazon,1 · Cloud buyers,capex,2023Q2,11.455,-27.15
+AMZN,Amazon,1 · Cloud buyers,capex,2023Q3,12.479,-23.81
+AMZN,Amazon,1 · Cloud buyers,capex,2023Q4,14.588,-12.08
+AMZN,Amazon,1 · Cloud buyers,capex,2024Q1,14.925,5.05
+AMZN,Amazon,1 · Cloud buyers,capex,2024Q2,17.62,53.82
+AMZN,Amazon,1 · Cloud buyers,capex,2024Q3,22.62,81.26
+AMZN,Amazon,1 · Cloud buyers,capex,2024Q4,27.834,90.8
+AMZN,Amazon,1 · Cloud buyers,capex,2025Q1,25.019,67.63
+AMZN,Amazon,1 · Cloud buyers,capex,2025Q2,32.183,82.65
+AMZN,Amazon,1 · Cloud buyers,capex,2025Q3,35.095,55.15
+AMZN,Amazon,1 · Cloud buyers,capex,2025Q4,39.522,41.99
+AMZN,Amazon,1 · Cloud buyers,capex,2026Q1,44.203,76.68
+AMZN,Amazon,1 · Cloud buyers,capex,2026Q2,54.208,68.44
+AMZN,Amazon,1 · Cloud buyers,capex,2026Q3,77.259,120.14
+AMZN,Amazon,1 · Cloud buyers,revenue,2019Q1,59.7,
+AMZN,Amazon,1 · Cloud buyers,revenue,2019Q2,63.404,
+AMZN,Amazon,1 · Cloud buyers,revenue,2019Q3,69.981,
+AMZN,Amazon,1 · Cloud buyers,revenue,2019Q4,87.437,
+AMZN,Amazon,1 · Cloud buyers,revenue,2020Q1,75.452,26.39
+AMZN,Amazon,1 · Cloud buyers,revenue,2020Q2,88.912,40.23
+AMZN,Amazon,1 · Cloud buyers,revenue,2020Q3,96.145,37.39
+AMZN,Amazon,1 · Cloud buyers,revenue,2020Q4,125.555,43.59
+AMZN,Amazon,1 · Cloud buyers,revenue,2021Q1,108.518,43.82
+AMZN,Amazon,1 · Cloud buyers,revenue,2021Q2,113.08,27.18
+AMZN,Amazon,1 · Cloud buyers,revenue,2021Q3,110.812,15.26
+AMZN,Amazon,1 · Cloud buyers,revenue,2021Q4,137.412,9.44
+AMZN,Amazon,1 · Cloud buyers,revenue,2022Q1,116.444,7.3
+AMZN,Amazon,1 · Cloud buyers,revenue,2022Q2,121.234,7.21
+AMZN,Amazon,1 · Cloud buyers,revenue,2022Q3,127.101,14.7
+AMZN,Amazon,1 · Cloud buyers,revenue,2022Q4,149.204,8.58
+AMZN,Amazon,1 · Cloud buyers,revenue,2023Q1,127.358,9.37
+AMZN,Amazon,1 · Cloud buyers,revenue,2023Q2,134.383,10.85
+AMZN,Amazon,1 · Cloud buyers,revenue,2023Q3,143.083,12.57
+AMZN,Amazon,1 · Cloud buyers,revenue,2023Q4,169.961,13.91
+AMZN,Amazon,1 · Cloud buyers,revenue,2024Q1,143.313,12.53
+AMZN,Amazon,1 · Cloud buyers,revenue,2024Q2,147.977,10.12
+AMZN,Amazon,1 · Cloud buyers,revenue,2024Q3,158.877,11.04
+AMZN,Amazon,1 · Cloud buyers,revenue,2024Q4,187.792,10.49
+AMZN,Amazon,1 · Cloud buyers,revenue,2025Q1,155.667,8.62
+AMZN,Amazon,1 · Cloud buyers,revenue,2025Q2,167.702,13.33
+AMZN,Amazon,1 · Cloud buyers,revenue,2025Q3,180.169,13.4
+AMZN,Amazon,1 · Cloud buyers,revenue,2025Q4,213.386,13.63
+AMZN,Amazon,1 · Cloud buyers,revenue,2026Q1,181.519,16.61
+AMZN,Amazon,1 · Cloud buyers,revenue,2026Q2,200.606,19.62
+AMZN,Amazon,1 · Cloud buyers,revenue,2026Q3,201.944,12.09
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2019Q1,0.381,
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2019Q2,0.39,
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2019Q3,0.417,
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2019Q4,0.356,
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2020Q1,0.338,-11.12
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2020Q2,0.344,-11.82
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2020Q3,0.385,-7.74
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2020Q4,0.415,16.36
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2021Q1,0.425,25.73
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2021Q2,0.454,31.99
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2021Q3,0.479,24.33
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2021Q4,0.523,26.08
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2022Q1,0.554,30.23
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2022Q2,0.643,41.63
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2022Q3,0.71,48.34
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2022Q4,0.769,47.04
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2023Q1,0.805,45.26
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2023Q2,0.884,37.44
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2023Q3,0.942,32.74
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2023Q4,0.999,30.01
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2024Q1,1.001,24.47
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2024Q2,1.097,24.1
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2024Q3,1.162,23.27
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2024Q4,1.231,23.19
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2025Q1,1.276,27.43
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2025Q2,1.439,31.12
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2025Q3,1.49,28.28
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2025Q4,1.564,27.03
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2026Q1,1.677,31.4
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2026Q2,1.91,32.79
+ANET,Arista Networks,3 · Servers & networking,gross_profit,2026Q3,2.326,56.07
+ANET,Arista Networks,3 · Servers & networking,revenue,2019Q1,0.595,
+ANET,Arista Networks,3 · Servers & networking,revenue,2019Q2,0.608,
+ANET,Arista Networks,3 · Servers & networking,revenue,2019Q3,0.654,
+ANET,Arista Networks,3 · Servers & networking,revenue,2019Q4,0.553,
+ANET,Arista Networks,3 · Servers & networking,revenue,2020Q1,0.523,-12.16
+ANET,Arista Networks,3 · Servers & networking,revenue,2020Q2,0.541,-11.14
+ANET,Arista Networks,3 · Servers & networking,revenue,2020Q3,0.605,-7.49
+ANET,Arista Networks,3 · Servers & networking,revenue,2020Q4,0.648,17.36
+ANET,Arista Networks,3 · Servers & networking,revenue,2021Q1,0.668,27.63
+ANET,Arista Networks,3 · Servers & networking,revenue,2021Q2,0.707,30.85
+ANET,Arista Networks,3 · Servers & networking,revenue,2021Q3,0.749,23.66
+ANET,Arista Networks,3 · Servers & networking,revenue,2021Q4,0.824,27.14
+ANET,Arista Networks,3 · Servers & networking,revenue,2022Q1,0.877,31.38
+ANET,Arista Networks,3 · Servers & networking,revenue,2022Q2,1.052,48.72
+ANET,Arista Networks,3 · Servers & networking,revenue,2022Q3,1.177,57.18
+ANET,Arista Networks,3 · Servers & networking,revenue,2022Q4,1.276,54.71
+ANET,Arista Networks,3 · Servers & networking,revenue,2023Q1,1.351,54.08
+ANET,Arista Networks,3 · Servers & networking,revenue,2023Q2,1.459,38.7
+ANET,Arista Networks,3 · Servers & networking,revenue,2023Q3,1.509,28.27
+ANET,Arista Networks,3 · Servers & networking,revenue,2023Q4,1.54,20.77
+ANET,Arista Networks,3 · Servers & networking,revenue,2024Q1,1.571,16.28
+ANET,Arista Networks,3 · Servers & networking,revenue,2024Q2,1.69,15.87
+ANET,Arista Networks,3 · Servers & networking,revenue,2024Q3,1.811,19.97
+ANET,Arista Networks,3 · Servers & networking,revenue,2024Q4,1.93,25.31
+ANET,Arista Networks,3 · Servers & networking,revenue,2025Q1,2.005,27.58
+ANET,Arista Networks,3 · Servers & networking,revenue,2025Q2,2.205,30.43
+ANET,Arista Networks,3 · Servers & networking,revenue,2025Q3,2.308,27.47
+ANET,Arista Networks,3 · Servers & networking,revenue,2025Q4,2.488,28.87
+ANET,Arista Networks,3 · Servers & networking,revenue,2026Q1,2.709,35.13
+ANET,Arista Networks,3 · Servers & networking,revenue,2026Q2,3.036,37.69
+ANET,Arista Networks,3 · Servers & networking,revenue,2026Q3,3.658,58.45
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2018Q4,3.208,
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2019Q1,3.089,
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2019Q2,3.034,
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2019Q3,3.152,
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2019Q4,3.264,1.75
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2020Q1,3.189,3.24
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2020Q2,3.316,9.29
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2020Q3,3.747,18.88
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2020Q4,3.952,21.08
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2021Q1,4.057,27.22
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2021Q2,4.197,26.57
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2021Q3,4.638,23.78
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2021Q4,5.049,27.76
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2022Q1,5.439,34.06
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2022Q2,5.681,35.36
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2022Q3,5.926,27.77
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2022Q4,6.004,18.91
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2023Q1,6.115,12.43
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2023Q2,6.164,8.5
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2023Q3,6.407,8.12
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2023Q4,7.375,22.83
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2024Q1,7.776,27.16
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2024Q2,8.356,35.56
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2024Q3,9.002,40.5
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2024Q4,10.145,37.56
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2025Q1,10.197,31.13
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2025Q2,10.703,28.09
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2025Q3,12.249,36.07
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2025Q4,13.157,29.69
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2026Q1,15.415,51.17
+AVGO,Broadcom,2 · Chips & memory,gross_profit,2026Q2,20.456,91.12
+AVGO,Broadcom,2 · Chips & memory,revenue,2018Q4,5.789,
+AVGO,Broadcom,2 · Chips & memory,revenue,2019Q1,5.517,
+AVGO,Broadcom,2 · Chips & memory,revenue,2019Q2,5.515,
+AVGO,Broadcom,2 · Chips & memory,revenue,2019Q3,5.776,
+AVGO,Broadcom,2 · Chips & memory,revenue,2019Q4,5.858,1.19
+AVGO,Broadcom,2 · Chips & memory,revenue,2020Q1,5.742,4.08
+AVGO,Broadcom,2 · Chips & memory,revenue,2020Q2,5.821,5.55
+AVGO,Broadcom,2 · Chips & memory,revenue,2020Q3,6.467,11.96
+AVGO,Broadcom,2 · Chips & memory,revenue,2020Q4,6.655,13.61
+AVGO,Broadcom,2 · Chips & memory,revenue,2021Q1,6.61,15.12
+AVGO,Broadcom,2 · Chips & memory,revenue,2021Q2,6.778,16.44
+AVGO,Broadcom,2 · Chips & memory,revenue,2021Q3,7.407,14.54
+AVGO,Broadcom,2 · Chips & memory,revenue,2021Q4,7.706,15.79
+AVGO,Broadcom,2 · Chips & memory,revenue,2022Q1,8.103,22.59
+AVGO,Broadcom,2 · Chips & memory,revenue,2022Q2,8.464,24.87
+AVGO,Broadcom,2 · Chips & memory,revenue,2022Q3,8.93,20.56
+AVGO,Broadcom,2 · Chips & memory,revenue,2022Q4,8.915,15.69
+AVGO,Broadcom,2 · Chips & memory,revenue,2023Q1,8.733,7.77
+AVGO,Broadcom,2 · Chips & memory,revenue,2023Q2,8.876,4.87
+AVGO,Broadcom,2 · Chips & memory,revenue,2023Q3,9.295,4.09
+AVGO,Broadcom,2 · Chips & memory,revenue,2023Q4,11.961,34.17
+AVGO,Broadcom,2 · Chips & memory,revenue,2024Q1,12.487,42.99
+AVGO,Broadcom,2 · Chips & memory,revenue,2024Q2,13.072,47.27
+AVGO,Broadcom,2 · Chips & memory,revenue,2024Q3,14.054,51.2
+AVGO,Broadcom,2 · Chips & memory,revenue,2024Q4,14.916,24.71
+AVGO,Broadcom,2 · Chips & memory,revenue,2025Q1,15.004,20.16
+AVGO,Broadcom,2 · Chips & memory,revenue,2025Q2,15.952,22.03
+AVGO,Broadcom,2 · Chips & memory,revenue,2025Q3,18.015,28.18
+AVGO,Broadcom,2 · Chips & memory,revenue,2025Q4,19.311,29.47
+AVGO,Broadcom,2 · Chips & memory,revenue,2026Q1,22.187,47.87
+AVGO,Broadcom,2 · Chips & memory,revenue,2026Q2,29.591,85.5
+CEG,Constellation,6 · Electricity,revenue,2021Q1,5.559,
+CEG,Constellation,6 · Electricity,revenue,2021Q2,4.153,
+CEG,Constellation,6 · Electricity,revenue,2021Q3,4.406,
+CEG,Constellation,6 · Electricity,revenue,2021Q4,5.532,
+CEG,Constellation,6 · Electricity,revenue,2022Q1,5.591,0.58
+CEG,Constellation,6 · Electricity,revenue,2022Q2,5.465,31.59
+CEG,Constellation,6 · Electricity,revenue,2022Q3,6.051,37.34
+CEG,Constellation,6 · Electricity,revenue,2022Q4,7.333,32.56
+CEG,Constellation,6 · Electricity,revenue,2023Q1,7.565,35.31
+CEG,Constellation,6 · Electricity,revenue,2023Q2,5.446,-0.35
+CEG,Constellation,6 · Electricity,revenue,2023Q3,6.111,0.99
+CEG,Constellation,6 · Electricity,revenue,2023Q4,5.796,-20.96
+CEG,Constellation,6 · Electricity,revenue,2024Q1,6.161,-18.56
+CEG,Constellation,6 · Electricity,revenue,2024Q2,5.475,0.53
+CEG,Constellation,6 · Electricity,revenue,2024Q3,6.55,7.18
+CEG,Constellation,6 · Electricity,revenue,2024Q4,5.382,-7.14
+CEG,Constellation,6 · Electricity,revenue,2025Q1,6.788,10.18
+CEG,Constellation,6 · Electricity,revenue,2025Q2,6.101,11.43
+CEG,Constellation,6 · Electricity,revenue,2025Q3,6.57,0.31
+CEG,Constellation,6 · Electricity,revenue,2025Q4,6.074,12.86
+CEG,Constellation,6 · Electricity,revenue,2026Q1,11.122,63.85
+CEG,Constellation,6 · Electricity,revenue,2026Q2,7.504,23.0
+CRWV,CoreWeave,1 · Cloud buyers,capex,2024Q1,1.742,
+CRWV,CoreWeave,1 · Cloud buyers,capex,2024Q2,2.247,
+CRWV,CoreWeave,1 · Cloud buyers,capex,2024Q3,1.215,
+CRWV,CoreWeave,1 · Cloud buyers,capex,2024Q4,3.498,
+CRWV,CoreWeave,1 · Cloud buyers,capex,2025Q1,1.407,-19.23
+CRWV,CoreWeave,1 · Cloud buyers,capex,2025Q2,2.453,9.16
+CRWV,CoreWeave,1 · Cloud buyers,capex,2025Q3,2.389,96.6
+CRWV,CoreWeave,1 · Cloud buyers,capex,2025Q4,4.06,16.07
+CRWV,CoreWeave,1 · Cloud buyers,capex,2026Q1,7.695,446.91
+CRWV,CoreWeave,1 · Cloud buyers,capex,2026Q2,6.422,161.8
+CRWV,CoreWeave,1 · Cloud buyers,capex,2026Q3,9.441,295.19
+CRWV,CoreWeave,1 · Cloud buyers,revenue,2024Q1,0.189,
+CRWV,CoreWeave,1 · Cloud buyers,revenue,2024Q2,0.395,
+CRWV,CoreWeave,1 · Cloud buyers,revenue,2024Q3,0.584,
+CRWV,CoreWeave,1 · Cloud buyers,revenue,2024Q4,0.747,
+CRWV,CoreWeave,1 · Cloud buyers,revenue,2025Q1,0.982,420.45
+CRWV,CoreWeave,1 · Cloud buyers,revenue,2025Q2,1.212,206.55
+CRWV,CoreWeave,1 · Cloud buyers,revenue,2025Q3,1.365,133.76
+CRWV,CoreWeave,1 · Cloud buyers,revenue,2025Q4,1.572,110.43
+CRWV,CoreWeave,1 · Cloud buyers,revenue,2026Q1,2.078,111.61
+CRWV,CoreWeave,1 · Cloud buyers,revenue,2026Q2,2.575,112.46
+CRWV,CoreWeave,1 · Cloud buyers,revenue,2026Q3,3.661,168.21
+D,Dominion Energy,6 · Electricity,capex,2019Q1,1.002,
+D,Dominion Energy,6 · Electricity,capex,2019Q2,1.11,
+D,Dominion Energy,6 · Electricity,capex,2019Q3,1.295,
+D,Dominion Energy,6 · Electricity,capex,2019Q4,1.573,
+D,Dominion Energy,6 · Electricity,capex,2020Q1,1.462,45.91
+D,Dominion Energy,6 · Electricity,revenue,2019Q1,3.281,
+D,Dominion Energy,6 · Electricity,revenue,2019Q2,3.443,
+D,Dominion Energy,6 · Electricity,revenue,2019Q3,3.782,
+D,Dominion Energy,6 · Electricity,revenue,2019Q4,3.895,
+D,Dominion Energy,6 · Electricity,revenue,2020Q1,3.938,20.02
+D,Dominion Energy,6 · Electricity,revenue,2020Q2,3.106,-9.79
+D,Dominion Energy,6 · Electricity,revenue,2020Q3,3.607,-4.63
+D,Dominion Energy,6 · Electricity,revenue,2020Q4,3.521,-9.6
+D,Dominion Energy,6 · Electricity,revenue,2021Q1,3.87,-1.73
+D,Dominion Energy,6 · Electricity,revenue,2021Q2,3.038,-2.19
+D,Dominion Energy,6 · Electricity,revenue,2021Q3,3.176,-11.95
+D,Dominion Energy,6 · Electricity,revenue,2021Q4,1.335,-62.08
+D,Dominion Energy,6 · Electricity,revenue,2022Q1,3.112,-19.59
+D,Dominion Energy,6 · Electricity,revenue,2022Q2,3.058,0.66
+D,Dominion Energy,6 · Electricity,revenue,2022Q3,3.961,24.72
+D,Dominion Energy,6 · Electricity,revenue,2022Q4,3.807,185.17
+D,Dominion Energy,6 · Electricity,revenue,2023Q1,3.883,24.78
+D,Dominion Energy,6 · Electricity,revenue,2023Q2,3.166,3.53
+D,Dominion Energy,6 · Electricity,revenue,2023Q3,3.81,-3.81
+D,Dominion Energy,6 · Electricity,revenue,2023Q4,3.534,-7.17
+D,Dominion Energy,6 · Electricity,revenue,2024Q1,3.632,-6.46
+D,Dominion Energy,6 · Electricity,revenue,2024Q2,3.486,10.11
+D,Dominion Energy,6 · Electricity,revenue,2024Q3,3.941,3.44
+D,Dominion Energy,6 · Electricity,revenue,2024Q4,3.4,-3.79
+D,Dominion Energy,6 · Electricity,revenue,2025Q1,4.076,12.22
+D,Dominion Energy,6 · Electricity,revenue,2025Q2,3.81,9.29
+D,Dominion Energy,6 · Electricity,revenue,2025Q3,4.527,14.87
+D,Dominion Energy,6 · Electricity,revenue,2025Q4,4.093,20.38
+D,Dominion Energy,6 · Electricity,revenue,2026Q1,5.019,23.14
+DELL,Dell,3 · Servers & networking,gross_profit,2018Q1,5.878,
+DELL,Dell,3 · Servers & networking,gross_profit,2018Q2,6.123,
+DELL,Dell,3 · Servers & networking,gross_profit,2018Q3,5.943,
+DELL,Dell,3 · Servers & networking,gross_profit,2018Q4,7.109,
+DELL,Dell,3 · Servers & networking,gross_profit,2019Q1,6.797,15.63
+DELL,Dell,3 · Servers & networking,gross_profit,2019Q2,7.326,19.65
+DELL,Dell,3 · Servers & networking,gross_profit,2019Q3,7.126,19.91
+DELL,Dell,3 · Servers & networking,gross_profit,2019Q4,7.684,8.09
+DELL,Dell,3 · Servers & networking,gross_profit,2020Q1,4.715,-30.63
+DELL,Dell,3 · Servers & networking,gross_profit,2020Q2,4.877,-33.43
+DELL,Dell,3 · Servers & networking,gross_profit,2020Q3,5.024,-29.5
+DELL,Dell,3 · Servers & networking,gross_profit,2020Q4,5.524,-28.11
+DELL,Dell,3 · Servers & networking,gross_profit,2021Q1,5.264,11.64
+DELL,Dell,3 · Servers & networking,gross_profit,2021Q2,5.475,12.26
+DELL,Dell,3 · Servers & networking,gross_profit,2021Q3,5.534,10.15
+DELL,Dell,3 · Servers & networking,gross_profit,2021Q4,5.618,1.7
+DELL,Dell,3 · Servers & networking,gross_profit,2022Q1,5.784,9.88
+DELL,Dell,3 · Servers & networking,gross_profit,2022Q2,5.439,-0.66
+DELL,Dell,3 · Servers & networking,gross_profit,2022Q3,5.707,3.13
+DELL,Dell,3 · Servers & networking,gross_profit,2022Q4,5.756,2.46
+DELL,Dell,3 · Servers & networking,gross_profit,2023Q1,5.08,-12.17
+DELL,Dell,3 · Servers & networking,gross_profit,2023Q2,5.416,-0.42
+DELL,Dell,3 · Servers & networking,gross_profit,2023Q3,5.201,-8.87
+DELL,Dell,3 · Servers & networking,gross_profit,2023Q4,5.372,-6.67
+DELL,Dell,3 · Servers & networking,gross_profit,2024Q1,4.851,-4.51
+DELL,Dell,3 · Servers & networking,gross_profit,2024Q2,5.361,-1.02
+DELL,Dell,3 · Servers & networking,gross_profit,2024Q3,5.36,3.06
+DELL,Dell,3 · Servers & networking,gross_profit,2024Q4,5.678,5.7
+DELL,Dell,3 · Servers & networking,gross_profit,2025Q1,4.937,1.77
+DELL,Dell,3 · Servers & networking,gross_profit,2025Q2,5.447,1.6
+DELL,Dell,3 · Servers & networking,gross_profit,2025Q3,5.593,4.35
+DELL,Dell,3 · Servers & networking,gross_profit,2025Q4,6.73,18.53
+DELL,Dell,3 · Servers & networking,gross_profit,2026Q1,7.782,57.63
+DELL,Dell,3 · Servers & networking,gross_profit,2026Q2,9.83,80.47
+DELL,Dell,3 · Servers & networking,revenue,2018Q1,21.356,
+DELL,Dell,3 · Servers & networking,revenue,2018Q2,22.942,
+DELL,Dell,3 · Servers & networking,revenue,2018Q3,22.482,
+DELL,Dell,3 · Servers & networking,revenue,2018Q4,23.841,
+DELL,Dell,3 · Servers & networking,revenue,2019Q1,21.908,2.58
+DELL,Dell,3 · Servers & networking,revenue,2019Q2,23.37,1.87
+DELL,Dell,3 · Servers & networking,revenue,2019Q3,22.844,1.61
+DELL,Dell,3 · Servers & networking,revenue,2019Q4,24.032,0.8
+DELL,Dell,3 · Servers & networking,revenue,2020Q1,20.078,-8.35
+DELL,Dell,3 · Servers & networking,revenue,2020Q2,20.853,-10.77
+DELL,Dell,3 · Servers & networking,revenue,2020Q3,21.589,-5.49
+DELL,Dell,3 · Servers & networking,revenue,2020Q4,24.15,0.49
+DELL,Dell,3 · Servers & networking,revenue,2021Q1,22.59,12.51
+DELL,Dell,3 · Servers & networking,revenue,2021Q2,24.191,16.01
+DELL,Dell,3 · Servers & networking,revenue,2021Q3,26.424,22.4
+DELL,Dell,3 · Servers & networking,revenue,2021Q4,27.992,15.91
+DELL,Dell,3 · Servers & networking,revenue,2022Q1,26.116,15.61
+DELL,Dell,3 · Servers & networking,revenue,2022Q2,26.425,9.23
+DELL,Dell,3 · Servers & networking,revenue,2022Q3,24.721,-6.44
+DELL,Dell,3 · Servers & networking,revenue,2022Q4,25.039,-10.55
+DELL,Dell,3 · Servers & networking,revenue,2023Q1,20.922,-19.89
+DELL,Dell,3 · Servers & networking,revenue,2023Q2,22.934,-13.21
+DELL,Dell,3 · Servers & networking,revenue,2023Q3,22.251,-9.99
+DELL,Dell,3 · Servers & networking,revenue,2023Q4,22.318,-10.87
+DELL,Dell,3 · Servers & networking,revenue,2024Q1,22.244,6.32
+DELL,Dell,3 · Servers & networking,revenue,2024Q2,25.026,9.12
+DELL,Dell,3 · Servers & networking,revenue,2024Q3,24.366,9.51
+DELL,Dell,3 · Servers & networking,revenue,2024Q4,23.931,7.23
+DELL,Dell,3 · Servers & networking,revenue,2025Q1,23.378,5.1
+DELL,Dell,3 · Servers & networking,revenue,2025Q2,29.776,18.98
+DELL,Dell,3 · Servers & networking,revenue,2025Q3,27.005,10.83
+DELL,Dell,3 · Servers & networking,revenue,2025Q4,33.379,39.48
+DELL,Dell,3 · Servers & networking,revenue,2026Q1,43.842,87.54
+DELL,Dell,3 · Servers & networking,revenue,2026Q2,46.971,57.75
+DLR,Digital Realty,5 · Data-center landlords,capex,2019Q1,0.389,
+DLR,Digital Realty,5 · Data-center landlords,capex,2019Q2,0.391,
+DLR,Digital Realty,5 · Data-center landlords,capex,2019Q3,0.345,
+DLR,Digital Realty,5 · Data-center landlords,capex,2019Q4,0.311,
+DLR,Digital Realty,5 · Data-center landlords,capex,2020Q1,0.377,-3.08
+DLR,Digital Realty,5 · Data-center landlords,capex,2020Q2,0.478,22.05
+DLR,Digital Realty,5 · Data-center landlords,capex,2020Q3,0.522,51.19
+DLR,Digital Realty,5 · Data-center landlords,capex,2020Q4,0.687,120.9
+DLR,Digital Realty,5 · Data-center landlords,capex,2021Q1,0.509,34.78
+DLR,Digital Realty,5 · Data-center landlords,capex,2021Q2,0.573,19.96
+DLR,Digital Realty,5 · Data-center landlords,capex,2021Q3,0.667,27.73
+DLR,Digital Realty,5 · Data-center landlords,capex,2021Q4,0.773,12.43
+DLR,Digital Realty,5 · Data-center landlords,capex,2022Q1,0.519,2.01
+DLR,Digital Realty,5 · Data-center landlords,capex,2022Q2,0.548,-4.3
+DLR,Digital Realty,5 · Data-center landlords,capex,2022Q3,0.686,2.98
+DLR,Digital Realty,5 · Data-center landlords,capex,2022Q4,0.89,15.13
+DLR,Digital Realty,5 · Data-center landlords,capex,2023Q1,0.739,42.4
+DLR,Digital Realty,5 · Data-center landlords,capex,2023Q2,0.63,14.9
+DLR,Digital Realty,5 · Data-center landlords,capex,2023Q3,1.098,59.91
+DLR,Digital Realty,5 · Data-center landlords,capex,2023Q4,1.059,19.06
+DLR,Digital Realty,5 · Data-center landlords,capex,2024Q1,0.659,-10.74
+DLR,Digital Realty,5 · Data-center landlords,capex,2024Q2,0.655,4.05
+DLR,Digital Realty,5 · Data-center landlords,capex,2024Q3,0.782,-28.81
+DLR,Digital Realty,5 · Data-center landlords,capex,2024Q4,0.735,-30.57
+DLR,Digital Realty,5 · Data-center landlords,capex,2025Q1,0.787,19.41
+DLR,Digital Realty,5 · Data-center landlords,capex,2025Q2,0.704,7.45
+DLR,Digital Realty,5 · Data-center landlords,capex,2025Q3,0.687,-12.05
+DLR,Digital Realty,5 · Data-center landlords,capex,2025Q4,1.002,36.27
+DLR,Digital Realty,5 · Data-center landlords,capex,2026Q1,0.87,10.51
+DLR,Digital Realty,5 · Data-center landlords,revenue,2019Q1,0.815,
+DLR,Digital Realty,5 · Data-center landlords,revenue,2019Q2,0.801,
+DLR,Digital Realty,5 · Data-center landlords,revenue,2019Q3,0.806,
+DLR,Digital Realty,5 · Data-center landlords,revenue,2019Q4,0.787,
+DLR,Digital Realty,5 · Data-center landlords,revenue,2020Q1,0.823,1.08
+DLR,Digital Realty,5 · Data-center landlords,revenue,2020Q2,0.993,24.0
+DLR,Digital Realty,5 · Data-center landlords,revenue,2020Q3,1.025,27.06
+DLR,Digital Realty,5 · Data-center landlords,revenue,2020Q4,1.063,34.94
+DLR,Digital Realty,5 · Data-center landlords,revenue,2021Q1,1.09,32.44
+DLR,Digital Realty,5 · Data-center landlords,revenue,2021Q2,1.093,10.09
+DLR,Digital Realty,5 · Data-center landlords,revenue,2021Q3,1.133,10.59
+DLR,Digital Realty,5 · Data-center landlords,revenue,2021Q4,1.111,4.57
+DLR,Digital Realty,5 · Data-center landlords,revenue,2022Q1,1.127,3.39
+DLR,Digital Realty,5 · Data-center landlords,revenue,2022Q2,1.139,4.22
+DLR,Digital Realty,5 · Data-center landlords,revenue,2022Q3,1.192,5.2
+DLR,Digital Realty,5 · Data-center landlords,revenue,2022Q4,1.233,10.97
+DLR,Digital Realty,5 · Data-center landlords,revenue,2023Q1,1.339,18.75
+DLR,Digital Realty,5 · Data-center landlords,revenue,2023Q2,1.366,19.92
+DLR,Digital Realty,5 · Data-center landlords,revenue,2023Q3,1.402,17.65
+DLR,Digital Realty,5 · Data-center landlords,revenue,2023Q4,1.37,11.07
+DLR,Digital Realty,5 · Data-center landlords,revenue,2024Q1,1.331,-0.57
+DLR,Digital Realty,5 · Data-center landlords,revenue,2024Q2,1.357,-0.7
+DLR,Digital Realty,5 · Data-center landlords,revenue,2024Q3,1.431,2.05
+DLR,Digital Realty,5 · Data-center landlords,revenue,2024Q4,1.436,4.84
+DLR,Digital Realty,5 · Data-center landlords,revenue,2025Q1,1.408,5.75
+DLR,Digital Realty,5 · Data-center landlords,revenue,2025Q2,1.493,10.05
+DLR,Digital Realty,5 · Data-center landlords,revenue,2025Q3,1.577,10.2
+DLR,Digital Realty,5 · Data-center landlords,revenue,2025Q4,1.635,13.85
+DLR,Digital Realty,5 · Data-center landlords,revenue,2026Q1,1.635,16.16
+EQIX,Equinix,5 · Data-center landlords,capex,2019Q1,0.364,
+EQIX,Equinix,5 · Data-center landlords,capex,2019Q2,0.444,
+EQIX,Equinix,5 · Data-center landlords,capex,2019Q3,0.557,
+EQIX,Equinix,5 · Data-center landlords,capex,2019Q4,0.715,
+EQIX,Equinix,5 · Data-center landlords,capex,2020Q1,0.401,10.16
+EQIX,Equinix,5 · Data-center landlords,capex,2020Q2,0.482,8.51
+EQIX,Equinix,5 · Data-center landlords,capex,2020Q3,0.565,1.52
+EQIX,Equinix,5 · Data-center landlords,capex,2020Q4,0.834,16.76
+EQIX,Equinix,5 · Data-center landlords,capex,2021Q1,0.564,40.57
+EQIX,Equinix,5 · Data-center landlords,capex,2021Q2,0.692,43.63
+EQIX,Equinix,5 · Data-center landlords,capex,2021Q3,0.678,19.99
+EQIX,Equinix,5 · Data-center landlords,capex,2021Q4,0.817,-2.03
+EQIX,Equinix,5 · Data-center landlords,capex,2022Q1,0.413,-26.81
+EQIX,Equinix,5 · Data-center landlords,capex,2022Q2,0.485,-29.96
+EQIX,Equinix,5 · Data-center landlords,capex,2022Q3,0.553,-18.51
+EQIX,Equinix,5 · Data-center landlords,capex,2022Q4,0.828,1.29
+EQIX,Equinix,5 · Data-center landlords,capex,2023Q1,0.53,28.48
+EQIX,Equinix,5 · Data-center landlords,capex,2023Q2,0.638,31.59
+EQIX,Equinix,5 · Data-center landlords,capex,2023Q3,0.617,11.63
+EQIX,Equinix,5 · Data-center landlords,capex,2023Q4,0.996,20.3
+EQIX,Equinix,5 · Data-center landlords,capex,2024Q1,0.707,33.4
+EQIX,Equinix,5 · Data-center landlords,capex,2024Q2,0.648,1.57
+EQIX,Equinix,5 · Data-center landlords,capex,2024Q3,0.724,17.34
+EQIX,Equinix,5 · Data-center landlords,capex,2024Q4,0.987,-0.9
+EQIX,Equinix,5 · Data-center landlords,capex,2025Q1,0.75,6.08
+EQIX,Equinix,5 · Data-center landlords,capex,2025Q2,0.989,52.62
+EQIX,Equinix,5 · Data-center landlords,capex,2025Q3,1.136,56.91
+EQIX,Equinix,5 · Data-center landlords,capex,2025Q4,1.436,45.49
+EQIX,Equinix,5 · Data-center landlords,capex,2026Q1,1.256,67.47
+EQIX,Equinix,5 · Data-center landlords,revenue,2019Q1,1.363,
+EQIX,Equinix,5 · Data-center landlords,revenue,2019Q2,1.385,
+EQIX,Equinix,5 · Data-center landlords,revenue,2019Q3,1.397,
+EQIX,Equinix,5 · Data-center landlords,revenue,2019Q4,1.417,
+EQIX,Equinix,5 · Data-center landlords,revenue,2020Q1,1.445,5.97
+EQIX,Equinix,5 · Data-center landlords,revenue,2020Q2,1.47,6.15
+EQIX,Equinix,5 · Data-center landlords,revenue,2020Q3,1.52,8.8
+EQIX,Equinix,5 · Data-center landlords,revenue,2020Q4,1.564,10.37
+EQIX,Equinix,5 · Data-center landlords,revenue,2021Q1,1.596,10.49
+EQIX,Equinix,5 · Data-center landlords,revenue,2021Q2,1.658,12.77
+EQIX,Equinix,5 · Data-center landlords,revenue,2021Q3,1.675,10.23
+EQIX,Equinix,5 · Data-center landlords,revenue,2021Q4,1.706,9.1
+EQIX,Equinix,5 · Data-center landlords,revenue,2022Q1,1.734,8.67
+EQIX,Equinix,5 · Data-center landlords,revenue,2022Q2,1.817,9.6
+EQIX,Equinix,5 · Data-center landlords,revenue,2022Q3,1.841,9.88
+EQIX,Equinix,5 · Data-center landlords,revenue,2022Q4,1.871,9.63
+EQIX,Equinix,5 · Data-center landlords,revenue,2023Q1,2.225,28.28
+EQIX,Equinix,5 · Data-center landlords,revenue,2023Q2,2.019,11.11
+EQIX,Equinix,5 · Data-center landlords,revenue,2023Q3,2.061,11.97
+EQIX,Equinix,5 · Data-center landlords,revenue,2023Q4,2.11,12.79
+EQIX,Equinix,5 · Data-center landlords,revenue,2024Q1,2.127,-4.4
+EQIX,Equinix,5 · Data-center landlords,revenue,2024Q2,2.159,6.93
+EQIX,Equinix,5 · Data-center landlords,revenue,2024Q3,2.201,6.79
+EQIX,Equinix,5 · Data-center landlords,revenue,2024Q4,2.261,7.16
+EQIX,Equinix,5 · Data-center landlords,revenue,2025Q1,2.225,4.61
+EQIX,Equinix,5 · Data-center landlords,revenue,2025Q2,2.256,4.49
+EQIX,Equinix,5 · Data-center landlords,revenue,2025Q3,2.316,5.22
+EQIX,Equinix,5 · Data-center landlords,revenue,2025Q4,2.42,7.03
+EQIX,Equinix,5 · Data-center landlords,revenue,2026Q1,2.444,9.84
+EQIX,Equinix,5 · Data-center landlords,revenue,2026Q2,2.625,16.36
+EQIX,Equinix,5 · Data-center landlords,revenue,2026Q3,2.571,11.01
+ETN,Eaton,4 · Power & cooling gear,revenue,2019Q1,5.305,
+ETN,Eaton,4 · Power & cooling gear,revenue,2019Q2,5.533,
+ETN,Eaton,4 · Power & cooling gear,revenue,2019Q3,5.314,
+ETN,Eaton,4 · Power & cooling gear,revenue,2019Q4,5.238,
+ETN,Eaton,4 · Power & cooling gear,revenue,2020Q1,4.789,-9.73
+ETN,Eaton,4 · Power & cooling gear,revenue,2020Q2,3.856,-30.31
+ETN,Eaton,4 · Power & cooling gear,revenue,2020Q3,4.526,-14.83
+ETN,Eaton,4 · Power & cooling gear,revenue,2020Q4,4.687,-10.52
+ETN,Eaton,4 · Power & cooling gear,revenue,2021Q1,4.692,-2.03
+ETN,Eaton,4 · Power & cooling gear,revenue,2021Q2,5.215,35.24
+ETN,Eaton,4 · Power & cooling gear,revenue,2021Q3,4.923,8.77
+ETN,Eaton,4 · Power & cooling gear,revenue,2021Q4,4.798,2.37
+ETN,Eaton,4 · Power & cooling gear,revenue,2022Q1,4.843,3.22
+ETN,Eaton,4 · Power & cooling gear,revenue,2022Q2,5.212,-0.06
+ETN,Eaton,4 · Power & cooling gear,revenue,2022Q3,5.313,7.92
+ETN,Eaton,4 · Power & cooling gear,revenue,2022Q4,5.384,12.21
+ETN,Eaton,4 · Power & cooling gear,revenue,2023Q1,5.483,13.21
+ETN,Eaton,4 · Power & cooling gear,revenue,2023Q2,5.866,12.55
+ETN,Eaton,4 · Power & cooling gear,revenue,2023Q3,5.88,10.67
+ETN,Eaton,4 · Power & cooling gear,revenue,2023Q4,5.967,10.83
+ETN,Eaton,4 · Power & cooling gear,revenue,2024Q1,5.943,8.39
+ETN,Eaton,4 · Power & cooling gear,revenue,2024Q2,6.35,8.25
+ETN,Eaton,4 · Power & cooling gear,revenue,2024Q3,6.345,7.91
+ETN,Eaton,4 · Power & cooling gear,revenue,2024Q4,6.24,4.58
+ETN,Eaton,4 · Power & cooling gear,revenue,2025Q1,6.377,7.3
+ETN,Eaton,4 · Power & cooling gear,revenue,2025Q2,7.028,10.68
+ETN,Eaton,4 · Power & cooling gear,revenue,2025Q3,6.988,10.13
+ETN,Eaton,4 · Power & cooling gear,revenue,2025Q4,7.055,13.06
+ETN,Eaton,4 · Power & cooling gear,revenue,2026Q1,7.451,16.84
+ETN,Eaton,4 · Power & cooling gear,revenue,2026Q2,8.531,21.39
+ETN,Eaton,4 · Power & cooling gear,revenue,2026Q3,8.947,28.03
+GEV,GE Vernova,4 · Power & cooling gear,revenue,2023Q1,6.822,
+GEV,GE Vernova,4 · Power & cooling gear,revenue,2023Q2,8.119,
+GEV,GE Vernova,4 · Power & cooling gear,revenue,2023Q3,8.253,
+GEV,GE Vernova,4 · Power & cooling gear,revenue,2023Q4,10.045,
+GEV,GE Vernova,4 · Power & cooling gear,revenue,2024Q1,7.26,6.42
+GEV,GE Vernova,4 · Power & cooling gear,revenue,2024Q2,8.204,1.05
+GEV,GE Vernova,4 · Power & cooling gear,revenue,2024Q3,8.913,8.0
+GEV,GE Vernova,4 · Power & cooling gear,revenue,2024Q4,10.559,5.12
+GEV,GE Vernova,4 · Power & cooling gear,revenue,2025Q1,8.032,10.63
+GEV,GE Vernova,4 · Power & cooling gear,revenue,2025Q2,9.111,11.06
+GEV,GE Vernova,4 · Power & cooling gear,revenue,2025Q3,9.969,11.85
+GEV,GE Vernova,4 · Power & cooling gear,revenue,2025Q4,10.956,3.76
+GEV,GE Vernova,4 · Power & cooling gear,revenue,2026Q1,9.339,16.27
+GEV,GE Vernova,4 · Power & cooling gear,revenue,2026Q2,11.104,21.87
+GEV,GE Vernova,4 · Power & cooling gear,revenue,2026Q3,12.642,26.81
+GOOGL,Alphabet,1 · Cloud buyers,capex,2019Q1,4.638,
+GOOGL,Alphabet,1 · Cloud buyers,capex,2019Q2,6.126,
+GOOGL,Alphabet,1 · Cloud buyers,capex,2019Q3,6.732,
+GOOGL,Alphabet,1 · Cloud buyers,capex,2019Q4,6.052,
+GOOGL,Alphabet,1 · Cloud buyers,capex,2020Q1,6.005,29.47
+GOOGL,Alphabet,1 · Cloud buyers,capex,2020Q2,5.391,-12.0
+GOOGL,Alphabet,1 · Cloud buyers,capex,2020Q3,5.406,-19.7
+GOOGL,Alphabet,1 · Cloud buyers,capex,2020Q4,5.479,-9.47
+GOOGL,Alphabet,1 · Cloud buyers,capex,2021Q1,5.942,-1.05
+GOOGL,Alphabet,1 · Cloud buyers,capex,2021Q2,5.496,1.95
+GOOGL,Alphabet,1 · Cloud buyers,capex,2021Q3,6.819,26.14
+GOOGL,Alphabet,1 · Cloud buyers,capex,2021Q4,6.383,16.5
+GOOGL,Alphabet,1 · Cloud buyers,capex,2022Q1,9.786,64.69
+GOOGL,Alphabet,1 · Cloud buyers,capex,2022Q2,6.828,24.24
+GOOGL,Alphabet,1 · Cloud buyers,capex,2022Q3,7.276,6.7
+GOOGL,Alphabet,1 · Cloud buyers,capex,2022Q4,7.595,18.99
+GOOGL,Alphabet,1 · Cloud buyers,capex,2023Q1,6.289,-35.73
+GOOGL,Alphabet,1 · Cloud buyers,capex,2023Q2,6.888,0.88
+GOOGL,Alphabet,1 · Cloud buyers,capex,2023Q3,8.055,10.71
+GOOGL,Alphabet,1 · Cloud buyers,capex,2023Q4,11.019,45.08
+GOOGL,Alphabet,1 · Cloud buyers,capex,2024Q1,12.012,91.0
+GOOGL,Alphabet,1 · Cloud buyers,capex,2024Q2,13.186,91.43
+GOOGL,Alphabet,1 · Cloud buyers,capex,2024Q3,13.061,62.15
+GOOGL,Alphabet,1 · Cloud buyers,capex,2024Q4,14.276,29.56
+GOOGL,Alphabet,1 · Cloud buyers,capex,2025Q1,17.197,43.17
+GOOGL,Alphabet,1 · Cloud buyers,capex,2025Q2,22.446,70.23
+GOOGL,Alphabet,1 · Cloud buyers,capex,2025Q3,23.953,83.39
+GOOGL,Alphabet,1 · Cloud buyers,capex,2025Q4,27.851,95.09
+GOOGL,Alphabet,1 · Cloud buyers,capex,2026Q1,35.674,107.44
+GOOGL,Alphabet,1 · Cloud buyers,capex,2026Q2,44.924,100.14
+GOOGL,Alphabet,1 · Cloud buyers,capex,2026Q3,51.355,114.4
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2019Q1,36.339,
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2019Q2,38.944,
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2019Q3,40.499,
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2019Q4,46.075,
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2020Q1,41.159,13.26
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2020Q2,38.297,-1.66
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2020Q3,46.173,14.01
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2020Q4,56.898,23.49
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2021Q1,55.314,34.39
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2021Q2,61.88,61.58
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2021Q3,65.118,41.03
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2021Q4,75.325,32.39
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2022Q1,68.011,22.95
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2022Q2,69.685,12.61
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2022Q3,69.092,6.1
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2022Q4,76.048,0.96
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2023Q1,69.787,2.61
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2023Q2,74.604,7.06
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2023Q3,76.693,11.0
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2023Q4,86.31,13.49
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2024Q1,80.539,15.41
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2024Q2,84.742,13.59
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2024Q3,88.268,15.09
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2024Q4,96.469,11.77
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2025Q1,90.234,12.04
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2025Q2,96.428,13.79
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2025Q3,102.346,15.95
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2025Q4,113.829,18.0
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2026Q1,109.896,21.79
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2026Q2,119.796,24.23
+GOOGL,Alphabet,1 · Cloud buyers,revenue,2026Q3,127.577,24.65
+INTC,Intel,2 · Chips & memory,gross_profit,2019Q1,9.089,
+INTC,Intel,2 · Chips & memory,gross_profit,2019Q2,9.878,
+INTC,Intel,2 · Chips & memory,gross_profit,2019Q3,11.295,
+INTC,Intel,2 · Chips & memory,gross_profit,2019Q4,11.878,
+INTC,Intel,2 · Chips & memory,gross_profit,2020Q1,12.016,32.2
+INTC,Intel,2 · Chips & memory,gross_profit,2020Q2,10.507,6.37
+INTC,Intel,2 · Chips & memory,gross_profit,2020Q3,9.741,-13.76
+INTC,Intel,2 · Chips & memory,gross_profit,2020Q4,11.348,-4.46
+INTC,Intel,2 · Chips & memory,gross_profit,2021Q1,10.854,-9.67
+INTC,Intel,2 · Chips & memory,gross_profit,2021Q2,11.206,6.65
+INTC,Intel,2 · Chips & memory,gross_profit,2021Q3,10.746,10.32
+INTC,Intel,2 · Chips & memory,gross_profit,2021Q4,11.009,-2.99
+INTC,Intel,2 · Chips & memory,gross_profit,2022Q1,9.244,-14.83
+INTC,Intel,2 · Chips & memory,gross_profit,2022Q2,5.587,-50.14
+INTC,Intel,2 · Chips & memory,gross_profit,2022Q3,6.535,-39.19
+INTC,Intel,2 · Chips & memory,gross_profit,2022Q4,5.5,-50.04
+INTC,Intel,2 · Chips & memory,gross_profit,2023Q1,4.008,-56.64
+INTC,Intel,2 · Chips & memory,gross_profit,2023Q2,4.638,-16.99
+INTC,Intel,2 · Chips & memory,gross_profit,2023Q3,6.018,-7.91
+INTC,Intel,2 · Chips & memory,gross_profit,2023Q4,7.047,28.13
+INTC,Intel,2 · Chips & memory,gross_profit,2024Q1,5.217,30.16
+INTC,Intel,2 · Chips & memory,gross_profit,2024Q2,4.547,-1.96
+INTC,Intel,2 · Chips & memory,gross_profit,2024Q3,1.997,-66.82
+INTC,Intel,2 · Chips & memory,gross_profit,2024Q4,5.584,-20.76
+INTC,Intel,2 · Chips & memory,gross_profit,2025Q1,4.672,-10.45
+INTC,Intel,2 · Chips & memory,gross_profit,2025Q2,3.542,-22.1
+INTC,Intel,2 · Chips & memory,gross_profit,2025Q3,5.218,161.29
+INTC,Intel,2 · Chips & memory,gross_profit,2025Q4,4.943,-11.48
+INTC,Intel,2 · Chips & memory,gross_profit,2026Q1,5.347,14.45
+INTC,Intel,2 · Chips & memory,gross_profit,2026Q2,6.509,83.77
+INTC,Intel,2 · Chips & memory,gross_profit,2026Q3,7.096,35.99
+INTC,Intel,2 · Chips & memory,revenue,2019Q1,16.061,
+INTC,Intel,2 · Chips & memory,revenue,2019Q2,16.505,
+INTC,Intel,2 · Chips & memory,revenue,2019Q3,19.19,
+INTC,Intel,2 · Chips & memory,revenue,2019Q4,20.209,
+INTC,Intel,2 · Chips & memory,revenue,2020Q1,19.828,23.45
+INTC,Intel,2 · Chips & memory,revenue,2020Q2,19.728,19.53
+INTC,Intel,2 · Chips & memory,revenue,2020Q3,18.333,-4.47
+INTC,Intel,2 · Chips & memory,revenue,2020Q4,19.978,-1.14
+INTC,Intel,2 · Chips & memory,revenue,2021Q1,19.673,-0.78
+INTC,Intel,2 · Chips & memory,revenue,2021Q2,19.631,-0.49
+INTC,Intel,2 · Chips & memory,revenue,2021Q3,19.192,4.69
+INTC,Intel,2 · Chips & memory,revenue,2021Q4,20.528,2.75
+INTC,Intel,2 · Chips & memory,revenue,2022Q1,18.353,-6.71
+INTC,Intel,2 · Chips & memory,revenue,2022Q2,15.321,-21.96
+INTC,Intel,2 · Chips & memory,revenue,2022Q3,15.338,-20.08
+INTC,Intel,2 · Chips & memory,revenue,2022Q4,14.042,-31.6
+INTC,Intel,2 · Chips & memory,revenue,2023Q1,11.715,-36.17
+INTC,Intel,2 · Chips & memory,revenue,2023Q2,12.949,-15.48
+INTC,Intel,2 · Chips & memory,revenue,2023Q3,14.158,-7.69
+INTC,Intel,2 · Chips & memory,revenue,2023Q4,15.406,9.71
+INTC,Intel,2 · Chips & memory,revenue,2024Q1,12.724,8.61
+INTC,Intel,2 · Chips & memory,revenue,2024Q2,12.833,-0.9
+INTC,Intel,2 · Chips & memory,revenue,2024Q3,13.284,-6.17
+INTC,Intel,2 · Chips & memory,revenue,2024Q4,14.26,-7.44
+INTC,Intel,2 · Chips & memory,revenue,2025Q1,12.667,-0.45
+INTC,Intel,2 · Chips & memory,revenue,2025Q2,12.859,0.2
+INTC,Intel,2 · Chips & memory,revenue,2025Q3,13.653,2.78
+INTC,Intel,2 · Chips & memory,revenue,2025Q4,13.674,-4.11
+INTC,Intel,2 · Chips & memory,revenue,2026Q1,13.577,7.18
+INTC,Intel,2 · Chips & memory,revenue,2026Q2,16.128,25.42
+INTC,Intel,2 · Chips & memory,revenue,2026Q3,16.513,20.95
+META,Meta,1 · Cloud buyers,capex,2019Q1,3.837,
+META,Meta,1 · Cloud buyers,capex,2019Q2,3.633,
+META,Meta,1 · Cloud buyers,capex,2019Q3,3.532,
+META,Meta,1 · Cloud buyers,capex,2019Q4,4.1,
+META,Meta,1 · Cloud buyers,capex,2020Q1,3.558,-7.27
+META,Meta,1 · Cloud buyers,capex,2020Q2,3.255,-10.4
+META,Meta,1 · Cloud buyers,capex,2020Q3,3.689,4.45
+META,Meta,1 · Cloud buyers,capex,2020Q4,4.661,13.68
+META,Meta,1 · Cloud buyers,capex,2021Q1,4.303,20.94
+META,Meta,1 · Cloud buyers,capex,2021Q2,4.641,42.58
+META,Meta,1 · Cloud buyers,capex,2021Q3,4.346,17.81
+META,Meta,1 · Cloud buyers,capex,2021Q4,5.4,15.85
+META,Meta,1 · Cloud buyers,capex,2022Q1,5.441,26.45
+META,Meta,1 · Cloud buyers,capex,2022Q2,7.572,63.15
+META,Meta,1 · Cloud buyers,capex,2022Q3,9.375,115.72
+META,Meta,1 · Cloud buyers,capex,2022Q4,8.798,62.93
+META,Meta,1 · Cloud buyers,capex,2023Q1,6.823,25.4
+META,Meta,1 · Cloud buyers,capex,2023Q2,6.134,-18.99
+META,Meta,1 · Cloud buyers,capex,2023Q3,6.496,-30.71
+META,Meta,1 · Cloud buyers,capex,2023Q4,7.592,-13.71
+META,Meta,1 · Cloud buyers,capex,2024Q1,6.4,-6.2
+META,Meta,1 · Cloud buyers,capex,2024Q2,8.173,33.24
+META,Meta,1 · Cloud buyers,capex,2024Q3,8.258,27.12
+META,Meta,1 · Cloud buyers,capex,2024Q4,14.425,90.0
+META,Meta,1 · Cloud buyers,capex,2025Q1,12.941,102.2
+META,Meta,1 · Cloud buyers,capex,2025Q2,16.538,102.35
+META,Meta,1 · Cloud buyers,capex,2025Q3,18.829,128.01
+META,Meta,1 · Cloud buyers,capex,2025Q4,21.383,48.24
+META,Meta,1 · Cloud buyers,capex,2026Q1,18.997,46.8
+META,Meta,1 · Cloud buyers,capex,2026Q2,30.116,82.1
+META,Meta,1 · Cloud buyers,capex,2026Q3,33.942,80.26
+META,Meta,1 · Cloud buyers,revenue,2019Q1,15.077,
+META,Meta,1 · Cloud buyers,revenue,2019Q2,16.886,
+META,Meta,1 · Cloud buyers,revenue,2019Q3,17.652,
+META,Meta,1 · Cloud buyers,revenue,2019Q4,21.082,
+META,Meta,1 · Cloud buyers,revenue,2020Q1,17.737,17.64
+META,Meta,1 · Cloud buyers,revenue,2020Q2,18.687,10.67
+META,Meta,1 · Cloud buyers,revenue,2020Q3,21.47,21.63
+META,Meta,1 · Cloud buyers,revenue,2020Q4,28.072,33.16
+META,Meta,1 · Cloud buyers,revenue,2021Q1,26.171,47.55
+META,Meta,1 · Cloud buyers,revenue,2021Q2,29.077,55.6
+META,Meta,1 · Cloud buyers,revenue,2021Q3,29.01,35.12
+META,Meta,1 · Cloud buyers,revenue,2021Q4,33.671,19.95
+META,Meta,1 · Cloud buyers,revenue,2022Q1,27.908,6.64
+META,Meta,1 · Cloud buyers,revenue,2022Q2,28.822,-0.88
+META,Meta,1 · Cloud buyers,revenue,2022Q3,27.714,-4.47
+META,Meta,1 · Cloud buyers,revenue,2022Q4,32.165,-4.47
+META,Meta,1 · Cloud buyers,revenue,2023Q1,28.645,2.64
+META,Meta,1 · Cloud buyers,revenue,2023Q2,31.999,11.02
+META,Meta,1 · Cloud buyers,revenue,2023Q3,34.146,23.21
+META,Meta,1 · Cloud buyers,revenue,2023Q4,40.111,24.7
+META,Meta,1 · Cloud buyers,revenue,2024Q1,36.455,27.26
+META,Meta,1 · Cloud buyers,revenue,2024Q2,39.071,22.1
+META,Meta,1 · Cloud buyers,revenue,2024Q3,40.589,18.87
+META,Meta,1 · Cloud buyers,revenue,2024Q4,48.385,20.63
+META,Meta,1 · Cloud buyers,revenue,2025Q1,42.314,16.07
+META,Meta,1 · Cloud buyers,revenue,2025Q2,47.516,21.61
+META,Meta,1 · Cloud buyers,revenue,2025Q3,51.242,26.25
+META,Meta,1 · Cloud buyers,revenue,2025Q4,59.893,23.78
+META,Meta,1 · Cloud buyers,revenue,2026Q1,56.311,33.08
+META,Meta,1 · Cloud buyers,revenue,2026Q2,60.801,27.96
+META,Meta,1 · Cloud buyers,revenue,2026Q3,64.601,26.07
+MRVL,Marvell,2 · Chips & memory,gross_profit,2020Q1,0.327,
+MRVL,Marvell,2 · Chips & memory,gross_profit,2020Q2,0.359,
+MRVL,Marvell,2 · Chips & memory,gross_profit,2020Q3,0.381,
+MRVL,Marvell,2 · Chips & memory,gross_profit,2020Q4,0.421,
+MRVL,Marvell,2 · Chips & memory,gross_profit,2021Q1,0.418,27.93
+MRVL,Marvell,2 · Chips & memory,gross_profit,2021Q2,0.372,3.49
+MRVL,Marvell,2 · Chips & memory,gross_profit,2021Q3,0.588,54.25
+MRVL,Marvell,2 · Chips & memory,gross_profit,2021Q4,0.686,63.01
+MRVL,Marvell,2 · Chips & memory,gross_profit,2022Q1,0.751,79.56
+MRVL,Marvell,2 · Chips & memory,gross_profit,2022Q2,0.786,111.4
+MRVL,Marvell,2 · Chips & memory,gross_profit,2022Q3,0.777,32.24
+MRVL,Marvell,2 · Chips & memory,gross_profit,2022Q4,0.673,-1.91
+MRVL,Marvell,2 · Chips & memory,gross_profit,2023Q1,0.557,-25.8
+MRVL,Marvell,2 · Chips & memory,gross_profit,2023Q2,0.521,-33.7
+MRVL,Marvell,2 · Chips & memory,gross_profit,2023Q3,0.551,-29.09
+MRVL,Marvell,2 · Chips & memory,gross_profit,2023Q4,0.664,-1.37
+MRVL,Marvell,2 · Chips & memory,gross_profit,2024Q1,0.528,-5.28
+MRVL,Marvell,2 · Chips & memory,gross_profit,2024Q2,0.588,12.76
+MRVL,Marvell,2 · Chips & memory,gross_profit,2024Q3,0.349,-36.61
+MRVL,Marvell,2 · Chips & memory,gross_profit,2024Q4,0.917,38.14
+MRVL,Marvell,2 · Chips & memory,gross_profit,2025Q1,0.952,80.45
+MRVL,Marvell,2 · Chips & memory,gross_profit,2025Q2,1.011,71.99
+MRVL,Marvell,2 · Chips & memory,gross_profit,2025Q3,1.07,206.18
+MRVL,Marvell,2 · Chips & memory,gross_profit,2025Q4,1.148,25.13
+MRVL,Marvell,2 · Chips & memory,gross_profit,2026Q1,1.261,32.38
+MRVL,Marvell,2 · Chips & memory,gross_profit,2026Q2,1.456,44.03
+MRVL,Marvell,2 · Chips & memory,revenue,2020Q1,0.694,
+MRVL,Marvell,2 · Chips & memory,revenue,2020Q2,0.727,
+MRVL,Marvell,2 · Chips & memory,revenue,2020Q3,0.75,
+MRVL,Marvell,2 · Chips & memory,revenue,2020Q4,0.798,
+MRVL,Marvell,2 · Chips & memory,revenue,2021Q1,0.832,19.99
+MRVL,Marvell,2 · Chips & memory,revenue,2021Q2,1.076,47.93
+MRVL,Marvell,2 · Chips & memory,revenue,2021Q3,1.211,61.46
+MRVL,Marvell,2 · Chips & memory,revenue,2021Q4,1.343,68.33
+MRVL,Marvell,2 · Chips & memory,revenue,2022Q1,1.447,73.84
+MRVL,Marvell,2 · Chips & memory,revenue,2022Q2,1.517,40.99
+MRVL,Marvell,2 · Chips & memory,revenue,2022Q3,1.537,26.92
+MRVL,Marvell,2 · Chips & memory,revenue,2022Q4,1.419,5.62
+MRVL,Marvell,2 · Chips & memory,revenue,2023Q1,1.322,-8.65
+MRVL,Marvell,2 · Chips & memory,revenue,2023Q2,1.341,-11.6
+MRVL,Marvell,2 · Chips & memory,revenue,2023Q3,1.419,-7.72
+MRVL,Marvell,2 · Chips & memory,revenue,2023Q4,1.427,0.56
+MRVL,Marvell,2 · Chips & memory,revenue,2024Q1,1.161,-12.17
+MRVL,Marvell,2 · Chips & memory,revenue,2024Q2,1.273,-5.07
+MRVL,Marvell,2 · Chips & memory,revenue,2024Q3,1.516,6.87
+MRVL,Marvell,2 · Chips & memory,revenue,2024Q4,1.817,27.4
+MRVL,Marvell,2 · Chips & memory,revenue,2025Q1,1.895,63.26
+MRVL,Marvell,2 · Chips & memory,revenue,2025Q2,2.006,57.6
+MRVL,Marvell,2 · Chips & memory,revenue,2025Q3,2.075,36.83
+MRVL,Marvell,2 · Chips & memory,revenue,2025Q4,2.219,22.08
+MRVL,Marvell,2 · Chips & memory,revenue,2026Q1,2.418,27.57
+MRVL,Marvell,2 · Chips & memory,revenue,2026Q2,2.739,36.55
+MSFT,Microsoft,1 · Cloud buyers,capex,2018Q3,3.602,
+MSFT,Microsoft,1 · Cloud buyers,capex,2018Q4,3.707,
+MSFT,Microsoft,1 · Cloud buyers,capex,2019Q1,2.565,
+MSFT,Microsoft,1 · Cloud buyers,capex,2019Q2,4.051,
+MSFT,Microsoft,1 · Cloud buyers,capex,2019Q3,3.385,-6.02
+MSFT,Microsoft,1 · Cloud buyers,capex,2019Q4,3.545,-4.37
+MSFT,Microsoft,1 · Cloud buyers,capex,2020Q1,3.767,46.86
+MSFT,Microsoft,1 · Cloud buyers,capex,2020Q2,4.744,17.11
+MSFT,Microsoft,1 · Cloud buyers,capex,2020Q3,4.907,44.96
+MSFT,Microsoft,1 · Cloud buyers,capex,2020Q4,4.174,17.74
+MSFT,Microsoft,1 · Cloud buyers,capex,2021Q1,5.089,35.09
+MSFT,Microsoft,1 · Cloud buyers,capex,2021Q2,6.452,36.0
+MSFT,Microsoft,1 · Cloud buyers,capex,2021Q3,5.81,18.4
+MSFT,Microsoft,1 · Cloud buyers,capex,2021Q4,5.865,40.51
+MSFT,Microsoft,1 · Cloud buyers,capex,2022Q1,5.34,4.93
+MSFT,Microsoft,1 · Cloud buyers,capex,2022Q2,6.871,6.49
+MSFT,Microsoft,1 · Cloud buyers,capex,2022Q3,6.283,8.14
+MSFT,Microsoft,1 · Cloud buyers,capex,2022Q4,6.274,6.97
+MSFT,Microsoft,1 · Cloud buyers,capex,2023Q1,6.607,23.73
+MSFT,Microsoft,1 · Cloud buyers,capex,2023Q2,8.943,30.16
+MSFT,Microsoft,1 · Cloud buyers,capex,2023Q3,9.917,57.84
+MSFT,Microsoft,1 · Cloud buyers,capex,2023Q4,9.735,55.16
+MSFT,Microsoft,1 · Cloud buyers,capex,2024Q1,10.952,65.76
+MSFT,Microsoft,1 · Cloud buyers,capex,2024Q2,13.873,55.13
+MSFT,Microsoft,1 · Cloud buyers,capex,2024Q3,14.923,50.48
+MSFT,Microsoft,1 · Cloud buyers,capex,2024Q4,15.804,62.34
+MSFT,Microsoft,1 · Cloud buyers,capex,2025Q1,16.745,52.89
+MSFT,Microsoft,1 · Cloud buyers,capex,2025Q2,17.079,23.11
+MSFT,Microsoft,1 · Cloud buyers,capex,2025Q3,19.394,29.96
+MSFT,Microsoft,1 · Cloud buyers,capex,2025Q4,29.876,89.04
+MSFT,Microsoft,1 · Cloud buyers,capex,2026Q1,30.876,84.39
+MSFT,Microsoft,1 · Cloud buyers,capex,2026Q2,35.802,109.63
+MSFT,Microsoft,1 · Cloud buyers,capex,2026Q3,39.367,102.99
+MSFT,Microsoft,1 · Cloud buyers,revenue,2018Q3,29.084,
+MSFT,Microsoft,1 · Cloud buyers,revenue,2018Q4,32.471,
+MSFT,Microsoft,1 · Cloud buyers,revenue,2019Q1,30.571,
+MSFT,Microsoft,1 · Cloud buyers,revenue,2019Q2,33.717,
+MSFT,Microsoft,1 · Cloud buyers,revenue,2019Q3,33.055,13.65
+MSFT,Microsoft,1 · Cloud buyers,revenue,2019Q4,36.906,13.66
+MSFT,Microsoft,1 · Cloud buyers,revenue,2020Q1,35.021,14.56
+MSFT,Microsoft,1 · Cloud buyers,revenue,2020Q2,38.033,12.8
+MSFT,Microsoft,1 · Cloud buyers,revenue,2020Q3,37.154,12.4
+MSFT,Microsoft,1 · Cloud buyers,revenue,2020Q4,43.076,16.72
+MSFT,Microsoft,1 · Cloud buyers,revenue,2021Q1,41.706,19.09
+MSFT,Microsoft,1 · Cloud buyers,revenue,2021Q2,46.152,21.35
+MSFT,Microsoft,1 · Cloud buyers,revenue,2021Q3,45.317,21.97
+MSFT,Microsoft,1 · Cloud buyers,revenue,2021Q4,51.728,20.09
+MSFT,Microsoft,1 · Cloud buyers,revenue,2022Q1,49.36,18.35
+MSFT,Microsoft,1 · Cloud buyers,revenue,2022Q2,51.865,12.38
+MSFT,Microsoft,1 · Cloud buyers,revenue,2022Q3,50.122,10.6
+MSFT,Microsoft,1 · Cloud buyers,revenue,2022Q4,52.747,1.97
+MSFT,Microsoft,1 · Cloud buyers,revenue,2023Q1,52.857,7.08
+MSFT,Microsoft,1 · Cloud buyers,revenue,2023Q2,56.189,8.34
+MSFT,Microsoft,1 · Cloud buyers,revenue,2023Q3,56.517,12.76
+MSFT,Microsoft,1 · Cloud buyers,revenue,2023Q4,62.02,17.58
+MSFT,Microsoft,1 · Cloud buyers,revenue,2024Q1,61.858,17.03
+MSFT,Microsoft,1 · Cloud buyers,revenue,2024Q2,64.727,15.2
+MSFT,Microsoft,1 · Cloud buyers,revenue,2024Q3,65.585,16.04
+MSFT,Microsoft,1 · Cloud buyers,revenue,2024Q4,69.632,12.27
+MSFT,Microsoft,1 · Cloud buyers,revenue,2025Q1,70.066,13.27
+MSFT,Microsoft,1 · Cloud buyers,revenue,2025Q2,76.441,18.1
+MSFT,Microsoft,1 · Cloud buyers,revenue,2025Q3,77.673,18.43
+MSFT,Microsoft,1 · Cloud buyers,revenue,2025Q4,81.273,16.72
+MSFT,Microsoft,1 · Cloud buyers,revenue,2026Q1,82.886,18.3
+MSFT,Microsoft,1 · Cloud buyers,revenue,2026Q2,90.007,17.75
+MSFT,Microsoft,1 · Cloud buyers,revenue,2026Q3,92.279,18.8
+MU,Micron,2 · Chips & memory,gross_profit,2018Q4,4.615,
+MU,Micron,2 · Chips & memory,gross_profit,2019Q1,2.864,
+MU,Micron,2 · Chips & memory,gross_profit,2019Q2,1.828,
+MU,Micron,2 · Chips & memory,gross_profit,2019Q3,1.395,
+MU,Micron,2 · Chips & memory,gross_profit,2019Q4,1.366,-70.4
+MU,Micron,2 · Chips & memory,gross_profit,2020Q1,1.355,-52.69
+MU,Micron,2 · Chips & memory,gross_profit,2020Q2,1.763,-3.56
+MU,Micron,2 · Chips & memory,gross_profit,2020Q3,2.068,48.24
+MU,Micron,2 · Chips & memory,gross_profit,2020Q4,1.736,27.09
+MU,Micron,2 · Chips & memory,gross_profit,2021Q1,1.649,21.7
+MU,Micron,2 · Chips & memory,gross_profit,2021Q2,3.126,77.31
+MU,Micron,2 · Chips & memory,gross_profit,2021Q3,3.912,89.17
+MU,Micron,2 · Chips & memory,gross_profit,2021Q4,3.565,105.36
+MU,Micron,2 · Chips & memory,gross_profit,2022Q1,3.676,122.92
+MU,Micron,2 · Chips & memory,gross_profit,2022Q2,4.035,29.08
+MU,Micron,2 · Chips & memory,gross_profit,2022Q3,2.622,-32.98
+MU,Micron,2 · Chips & memory,gross_profit,2022Q4,0.893,-74.95
+MU,Micron,2 · Chips & memory,gross_profit,2023Q1,-1.206,-132.81
+MU,Micron,2 · Chips & memory,gross_profit,2023Q2,-0.668,-116.56
+MU,Micron,2 · Chips & memory,gross_profit,2023Q3,-0.435,-116.59
+MU,Micron,2 · Chips & memory,gross_profit,2023Q4,-0.035,-103.92
+MU,Micron,2 · Chips & memory,gross_profit,2024Q1,1.079,-189.47
+MU,Micron,2 · Chips & memory,gross_profit,2024Q2,1.832,-374.25
+MU,Micron,2 · Chips & memory,gross_profit,2024Q3,2.737,-729.2
+MU,Micron,2 · Chips & memory,gross_profit,2024Q4,3.348,-9665.71
+MU,Micron,2 · Chips & memory,gross_profit,2025Q1,2.963,174.61
+MU,Micron,2 · Chips & memory,gross_profit,2025Q2,3.508,91.48
+MU,Micron,2 · Chips & memory,gross_profit,2025Q3,5.054,84.65
+MU,Micron,2 · Chips & memory,gross_profit,2025Q4,7.646,128.38
+MU,Micron,2 · Chips & memory,gross_profit,2026Q1,17.755,499.22
+MU,Micron,2 · Chips & memory,gross_profit,2026Q2,35.056,899.32
+MU,Micron,2 · Chips & memory,gross_profit,2026Q3,47.047,830.89
+MU,Micron,2 · Chips & memory,revenue,2018Q4,7.913,
+MU,Micron,2 · Chips & memory,revenue,2019Q1,5.835,
+MU,Micron,2 · Chips & memory,revenue,2019Q2,4.788,
+MU,Micron,2 · Chips & memory,revenue,2019Q3,4.87,
+MU,Micron,2 · Chips & memory,revenue,2019Q4,5.144,-34.99
+MU,Micron,2 · Chips & memory,revenue,2020Q1,4.797,-17.79
+MU,Micron,2 · Chips & memory,revenue,2020Q2,5.438,13.58
+MU,Micron,2 · Chips & memory,revenue,2020Q3,6.056,24.35
+MU,Micron,2 · Chips & memory,revenue,2020Q4,5.773,12.23
+MU,Micron,2 · Chips & memory,revenue,2021Q1,6.236,30.0
+MU,Micron,2 · Chips & memory,revenue,2021Q2,7.422,36.48
+MU,Micron,2 · Chips & memory,revenue,2021Q3,8.274,36.62
+MU,Micron,2 · Chips & memory,revenue,2021Q4,7.687,33.15
+MU,Micron,2 · Chips & memory,revenue,2022Q1,7.786,24.86
+MU,Micron,2 · Chips & memory,revenue,2022Q2,8.642,16.44
+MU,Micron,2 · Chips & memory,revenue,2022Q3,6.643,-19.71
+MU,Micron,2 · Chips & memory,revenue,2022Q4,4.085,-46.86
+MU,Micron,2 · Chips & memory,revenue,2023Q1,3.693,-52.57
+MU,Micron,2 · Chips & memory,revenue,2023Q2,3.752,-56.58
+MU,Micron,2 · Chips & memory,revenue,2023Q3,4.01,-39.64
+MU,Micron,2 · Chips & memory,revenue,2023Q4,4.726,15.69
+MU,Micron,2 · Chips & memory,revenue,2024Q1,5.824,57.7
+MU,Micron,2 · Chips & memory,revenue,2024Q2,6.811,81.53
+MU,Micron,2 · Chips & memory,revenue,2024Q3,7.75,93.27
+MU,Micron,2 · Chips & memory,revenue,2024Q4,8.709,84.28
+MU,Micron,2 · Chips & memory,revenue,2025Q1,8.053,38.27
+MU,Micron,2 · Chips & memory,revenue,2025Q2,9.301,36.56
+MU,Micron,2 · Chips & memory,revenue,2025Q3,11.315,46.0
+MU,Micron,2 · Chips & memory,revenue,2025Q4,13.643,56.65
+MU,Micron,2 · Chips & memory,revenue,2026Q1,23.86,196.29
+MU,Micron,2 · Chips & memory,revenue,2026Q2,41.456,345.72
+MU,Micron,2 · Chips & memory,revenue,2026Q3,54.229,379.27
+NEE,NextEra Energy,6 · Electricity,revenue,2019Q1,3.8,
+NEE,NextEra Energy,6 · Electricity,revenue,2019Q2,4.5,
+NEE,NextEra Energy,6 · Electricity,revenue,2019Q3,4.9,
+NEE,NextEra Energy,6 · Electricity,revenue,2019Q4,4.3,
+NEE,NextEra Energy,6 · Electricity,revenue,2020Q1,3.9,2.63
+NEE,NextEra Energy,6 · Electricity,revenue,2020Q2,4.1,-8.89
+NEE,NextEra Energy,6 · Electricity,revenue,2020Q3,4.9,0.0
+NEE,NextEra Energy,6 · Electricity,revenue,2020Q4,4.1,-4.65
+NEE,NextEra Energy,6 · Electricity,revenue,2021Q1,4.0,2.56
+NEE,NextEra Energy,6 · Electricity,revenue,2021Q2,4.7,14.63
+NEE,NextEra Energy,6 · Electricity,revenue,2021Q3,5.4,10.2
+NEE,NextEra Energy,6 · Electricity,revenue,2021Q4,4.7,14.63
+NEE,NextEra Energy,6 · Electricity,revenue,2022Q1,5.0,25.0
+NEE,NextEra Energy,6 · Electricity,revenue,2022Q2,5.9,25.53
+NEE,NextEra Energy,6 · Electricity,revenue,2022Q3,6.4,18.52
+NEE,NextEra Energy,6 · Electricity,revenue,2022Q4,5.6,19.15
+NEE,NextEra Energy,6 · Electricity,revenue,2023Q1,5.7,14.0
+NEE,NextEra Energy,6 · Electricity,revenue,2023Q2,6.3,6.78
+NEE,NextEra Energy,6 · Electricity,revenue,2023Q3,7.2,12.5
+NEE,NextEra Energy,6 · Electricity,revenue,2023Q4,5.6,0.0
+NEE,NextEra Energy,6 · Electricity,revenue,2024Q1,5.4,-5.26
+NEE,NextEra Energy,6 · Electricity,revenue,2024Q2,6.0,-4.76
+NEE,NextEra Energy,6 · Electricity,revenue,2024Q3,6.7,-6.94
+NEE,NextEra Energy,6 · Electricity,revenue,2024Q4,5.3,-5.36
+NEE,NextEra Energy,6 · Electricity,revenue,2025Q1,6.0,11.11
+NEE,NextEra Energy,6 · Electricity,revenue,2025Q2,6.4,6.67
+NEE,NextEra Energy,6 · Electricity,revenue,2025Q3,7.4,10.45
+NEE,NextEra Energy,6 · Electricity,revenue,2025Q4,6.1,15.09
+NEE,NextEra Energy,6 · Electricity,revenue,2026Q1,6.1,1.67
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2018Q1,2.068,
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2018Q2,1.975,
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2018Q3,1.921,
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2018Q4,1.207,
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2019Q1,1.296,-37.33
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2019Q2,1.541,-21.97
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2019Q3,1.916,-0.26
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2019Q4,2.015,66.94
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2020Q1,2.004,54.63
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2020Q2,2.275,47.63
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2020Q3,2.96,54.49
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2020Q4,3.156,56.63
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2021Q1,3.629,81.09
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2021Q2,4.215,85.27
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2021Q3,4.631,56.45
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2021Q4,4.999,58.4
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2022Q1,5.431,49.66
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2022Q2,2.915,-30.84
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2022Q3,3.177,-31.4
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2022Q4,3.833,-23.32
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2023Q1,4.648,-14.42
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2023Q2,9.462,224.6
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2023Q3,13.4,321.78
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2023Q4,16.791,338.06
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2024Q1,20.406,339.03
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2024Q2,22.574,138.58
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2024Q3,26.156,95.19
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2024Q4,28.723,71.06
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2025Q1,26.668,30.69
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2025Q2,33.853,49.96
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2025Q3,41.849,60.0
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2025Q4,51.093,77.88
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2026Q1,61.157,129.33
+NVDA,NVIDIA,2 · Chips & memory,gross_profit,2026Q2,72.142,113.1
+NVDA,NVIDIA,2 · Chips & memory,revenue,2018Q1,3.207,
+NVDA,NVIDIA,2 · Chips & memory,revenue,2018Q2,3.123,
+NVDA,NVIDIA,2 · Chips & memory,revenue,2018Q3,3.181,
+NVDA,NVIDIA,2 · Chips & memory,revenue,2018Q4,2.205,
+NVDA,NVIDIA,2 · Chips & memory,revenue,2019Q1,2.22,-30.78
+NVDA,NVIDIA,2 · Chips & memory,revenue,2019Q2,2.579,-17.42
+NVDA,NVIDIA,2 · Chips & memory,revenue,2019Q3,3.014,-5.25
+NVDA,NVIDIA,2 · Chips & memory,revenue,2019Q4,3.105,40.82
+NVDA,NVIDIA,2 · Chips & memory,revenue,2020Q1,3.08,38.74
+NVDA,NVIDIA,2 · Chips & memory,revenue,2020Q2,3.866,49.9
+NVDA,NVIDIA,2 · Chips & memory,revenue,2020Q3,4.726,56.8
+NVDA,NVIDIA,2 · Chips & memory,revenue,2020Q4,5.003,61.13
+NVDA,NVIDIA,2 · Chips & memory,revenue,2021Q1,5.661,83.8
+NVDA,NVIDIA,2 · Chips & memory,revenue,2021Q2,6.507,68.31
+NVDA,NVIDIA,2 · Chips & memory,revenue,2021Q3,7.103,50.3
+NVDA,NVIDIA,2 · Chips & memory,revenue,2021Q4,7.643,52.77
+NVDA,NVIDIA,2 · Chips & memory,revenue,2022Q1,8.288,46.41
+NVDA,NVIDIA,2 · Chips & memory,revenue,2022Q2,6.704,3.03
+NVDA,NVIDIA,2 · Chips & memory,revenue,2022Q3,5.931,-16.5
+NVDA,NVIDIA,2 · Chips & memory,revenue,2022Q4,6.051,-20.83
+NVDA,NVIDIA,2 · Chips & memory,revenue,2023Q1,7.192,-13.22
+NVDA,NVIDIA,2 · Chips & memory,revenue,2023Q2,13.507,101.48
+NVDA,NVIDIA,2 · Chips & memory,revenue,2023Q3,18.12,205.51
+NVDA,NVIDIA,2 · Chips & memory,revenue,2023Q4,22.103,265.28
+NVDA,NVIDIA,2 · Chips & memory,revenue,2024Q1,26.044,262.12
+NVDA,NVIDIA,2 · Chips & memory,revenue,2024Q2,30.04,122.4
+NVDA,NVIDIA,2 · Chips & memory,revenue,2024Q3,35.082,93.61
+NVDA,NVIDIA,2 · Chips & memory,revenue,2024Q4,39.331,77.94
+NVDA,NVIDIA,2 · Chips & memory,revenue,2025Q1,44.062,69.18
+NVDA,NVIDIA,2 · Chips & memory,revenue,2025Q2,46.743,55.6
+NVDA,NVIDIA,2 · Chips & memory,revenue,2025Q3,57.006,62.49
+NVDA,NVIDIA,2 · Chips & memory,revenue,2025Q4,68.127,73.21
+NVDA,NVIDIA,2 · Chips & memory,revenue,2026Q1,81.615,85.23
+NVDA,NVIDIA,2 · Chips & memory,revenue,2026Q2,96.221,105.85
+ORCL,Oracle,1 · Cloud buyers,capex,2018Q3,0.383,
+ORCL,Oracle,1 · Cloud buyers,capex,2018Q4,0.421,
+ORCL,Oracle,1 · Cloud buyers,capex,2019Q1,0.443,
+ORCL,Oracle,1 · Cloud buyers,capex,2019Q2,0.413,
+ORCL,Oracle,1 · Cloud buyers,capex,2019Q3,0.386,0.78
+ORCL,Oracle,1 · Cloud buyers,capex,2019Q4,0.349,-17.1
+ORCL,Oracle,1 · Cloud buyers,capex,2020Q1,0.396,-10.61
+ORCL,Oracle,1 · Cloud buyers,capex,2020Q2,0.433,4.84
+ORCL,Oracle,1 · Cloud buyers,capex,2020Q3,0.436,12.95
+ORCL,Oracle,1 · Cloud buyers,capex,2020Q4,0.568,62.75
+ORCL,Oracle,1 · Cloud buyers,capex,2021Q1,0.414,4.55
+ORCL,Oracle,1 · Cloud buyers,capex,2021Q2,0.717,65.59
+ORCL,Oracle,1 · Cloud buyers,capex,2021Q3,1.062,143.58
+ORCL,Oracle,1 · Cloud buyers,capex,2021Q4,0.925,62.85
+ORCL,Oracle,1 · Cloud buyers,capex,2022Q1,1.101,165.94
+ORCL,Oracle,1 · Cloud buyers,capex,2022Q2,1.423,98.47
+ORCL,Oracle,1 · Cloud buyers,capex,2022Q3,1.719,61.86
+ORCL,Oracle,1 · Cloud buyers,capex,2022Q4,2.435,163.24
+ORCL,Oracle,1 · Cloud buyers,capex,2023Q1,2.628,138.69
+ORCL,Oracle,1 · Cloud buyers,capex,2023Q2,1.913,34.43
+ORCL,Oracle,1 · Cloud buyers,capex,2023Q3,1.314,-23.56
+ORCL,Oracle,1 · Cloud buyers,capex,2023Q4,1.08,-55.65
+ORCL,Oracle,1 · Cloud buyers,capex,2024Q1,1.674,-36.3
+ORCL,Oracle,1 · Cloud buyers,capex,2024Q2,2.798,46.26
+ORCL,Oracle,1 · Cloud buyers,capex,2024Q3,2.303,75.27
+ORCL,Oracle,1 · Cloud buyers,capex,2024Q4,3.97,267.59
+ORCL,Oracle,1 · Cloud buyers,capex,2025Q1,5.862,250.18
+ORCL,Oracle,1 · Cloud buyers,capex,2025Q2,9.08,224.52
+ORCL,Oracle,1 · Cloud buyers,capex,2025Q3,8.502,269.17
+ORCL,Oracle,1 · Cloud buyers,capex,2025Q4,12.033,203.1
+ORCL,Oracle,1 · Cloud buyers,capex,2026Q1,18.635,217.89
+ORCL,Oracle,1 · Cloud buyers,capex,2026Q2,16.493,81.64
+ORCL,Oracle,1 · Cloud buyers,capex,2026Q3,28.499,235.2
+ORCL,Oracle,1 · Cloud buyers,revenue,2018Q3,9.193,
+ORCL,Oracle,1 · Cloud buyers,revenue,2018Q4,9.562,
+ORCL,Oracle,1 · Cloud buyers,revenue,2019Q1,9.614,
+ORCL,Oracle,1 · Cloud buyers,revenue,2019Q2,39.506,
+ORCL,Oracle,1 · Cloud buyers,revenue,2019Q3,9.218,0.27
+ORCL,Oracle,1 · Cloud buyers,revenue,2019Q4,9.614,0.54
+ORCL,Oracle,1 · Cloud buyers,revenue,2020Q1,9.796,1.89
+ORCL,Oracle,1 · Cloud buyers,revenue,2020Q2,10.439,-73.58
+ORCL,Oracle,1 · Cloud buyers,revenue,2020Q3,9.367,1.62
+ORCL,Oracle,1 · Cloud buyers,revenue,2020Q4,9.8,1.93
+ORCL,Oracle,1 · Cloud buyers,revenue,2021Q1,10.085,2.95
+ORCL,Oracle,1 · Cloud buyers,revenue,2021Q2,40.479,287.77
+ORCL,Oracle,1 · Cloud buyers,revenue,2021Q3,9.728,3.85
+ORCL,Oracle,1 · Cloud buyers,revenue,2021Q4,10.36,5.71
+ORCL,Oracle,1 · Cloud buyers,revenue,2022Q1,10.513,4.24
+ORCL,Oracle,1 · Cloud buyers,revenue,2022Q2,42.44,4.84
+ORCL,Oracle,1 · Cloud buyers,revenue,2022Q3,11.445,17.65
+ORCL,Oracle,1 · Cloud buyers,revenue,2022Q4,12.275,18.48
+ORCL,Oracle,1 · Cloud buyers,revenue,2023Q1,12.398,17.93
+ORCL,Oracle,1 · Cloud buyers,revenue,2023Q2,13.836,-67.4
+ORCL,Oracle,1 · Cloud buyers,revenue,2023Q3,12.453,8.81
+ORCL,Oracle,1 · Cloud buyers,revenue,2023Q4,12.941,5.43
+ORCL,Oracle,1 · Cloud buyers,revenue,2024Q1,13.28,7.11
+ORCL,Oracle,1 · Cloud buyers,revenue,2024Q2,14.287,3.26
+ORCL,Oracle,1 · Cloud buyers,revenue,2024Q3,13.307,6.86
+ORCL,Oracle,1 · Cloud buyers,revenue,2024Q4,14.059,8.64
+ORCL,Oracle,1 · Cloud buyers,revenue,2025Q1,14.13,6.4
+ORCL,Oracle,1 · Cloud buyers,revenue,2025Q2,15.903,11.31
+ORCL,Oracle,1 · Cloud buyers,revenue,2025Q3,14.926,12.17
+ORCL,Oracle,1 · Cloud buyers,revenue,2025Q4,16.058,14.22
+ORCL,Oracle,1 · Cloud buyers,revenue,2026Q1,17.19,21.66
+ORCL,Oracle,1 · Cloud buyers,revenue,2026Q2,19.184,20.63
+ORCL,Oracle,1 · Cloud buyers,revenue,2026Q3,19.345,29.61
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2018Q3,0.123,
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2018Q4,0.128,
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2019Q1,0.112,
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2019Q2,0.132,
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2019Q3,0.131,6.24
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2019Q4,0.138,8.19
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2020Q1,0.133,18.72
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2020Q2,0.124,-6.45
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2020Q3,0.13,-0.77
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2020Q4,0.136,-1.67
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2021Q1,0.123,-7.76
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2021Q2,0.146,17.81
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2021Q3,0.138,6.33
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2021Q4,0.164,20.32
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2022Q1,0.211,71.34
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2022Q2,0.287,97.47
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2022Q3,0.348,151.58
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2022Q4,0.337,106.07
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2023Q1,0.226,7.39
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2023Q2,0.372,29.36
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2023Q3,0.354,1.77
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2023Q4,0.564,67.25
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2024Q1,0.597,163.9
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2024Q2,0.546,46.9
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2024Q3,0.776,119.28
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2024Q4,0.67,18.73
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2025Q1,0.44,-26.31
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2025Q2,0.544,-0.35
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2025Q3,0.467,-39.74
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2025Q4,0.799,19.19
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2026Q1,1.019,131.4
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2026Q2,1.943,257.03
+SMCI,Super Micro,3 · Servers & networking,gross_profit,2026Q3,2.541,443.69
+SMCI,Super Micro,3 · Servers & networking,revenue,2018Q3,0.971,
+SMCI,Super Micro,3 · Servers & networking,revenue,2018Q4,0.932,
+SMCI,Super Micro,3 · Servers & networking,revenue,2019Q1,0.743,
+SMCI,Super Micro,3 · Servers & networking,revenue,2019Q2,0.854,
+SMCI,Super Micro,3 · Servers & networking,revenue,2019Q3,0.8,-17.64
+SMCI,Super Micro,3 · Servers & networking,revenue,2019Q4,0.871,-6.5
+SMCI,Super Micro,3 · Servers & networking,revenue,2020Q1,0.772,3.89
+SMCI,Super Micro,3 · Servers & networking,revenue,2020Q2,0.896,4.9
+SMCI,Super Micro,3 · Servers & networking,revenue,2020Q3,0.762,-4.7
+SMCI,Super Micro,3 · Servers & networking,revenue,2020Q4,0.83,-4.67
+SMCI,Super Micro,3 · Servers & networking,revenue,2021Q1,0.896,15.99
+SMCI,Super Micro,3 · Servers & networking,revenue,2021Q2,1.069,19.29
+SMCI,Super Micro,3 · Servers & networking,revenue,2021Q3,1.033,35.48
+SMCI,Super Micro,3 · Servers & networking,revenue,2021Q4,1.172,41.2
+SMCI,Super Micro,3 · Servers & networking,revenue,2022Q1,1.355,51.3
+SMCI,Super Micro,3 · Servers & networking,revenue,2022Q2,1.635,52.99
+SMCI,Super Micro,3 · Servers & networking,revenue,2022Q3,1.852,79.34
+SMCI,Super Micro,3 · Servers & networking,revenue,2022Q4,1.803,53.8
+SMCI,Super Micro,3 · Servers & networking,revenue,2023Q1,1.283,-5.33
+SMCI,Super Micro,3 · Servers & networking,revenue,2023Q2,2.185,33.59
+SMCI,Super Micro,3 · Servers & networking,revenue,2023Q3,2.12,14.45
+SMCI,Super Micro,3 · Servers & networking,revenue,2023Q4,3.665,103.25
+SMCI,Super Micro,3 · Servers & networking,revenue,2024Q1,3.85,200.01
+SMCI,Super Micro,3 · Servers & networking,revenue,2024Q2,5.355,145.08
+SMCI,Super Micro,3 · Servers & networking,revenue,2024Q3,5.937,180.1
+SMCI,Super Micro,3 · Servers & networking,revenue,2024Q4,5.678,54.93
+SMCI,Super Micro,3 · Servers & networking,revenue,2025Q1,4.6,19.48
+SMCI,Super Micro,3 · Servers & networking,revenue,2025Q2,5.757,7.51
+SMCI,Super Micro,3 · Servers & networking,revenue,2025Q3,5.018,-15.49
+SMCI,Super Micro,3 · Servers & networking,revenue,2025Q4,12.682,123.36
+SMCI,Super Micro,3 · Servers & networking,revenue,2026Q1,10.243,122.68
+SMCI,Super Micro,3 · Servers & networking,revenue,2026Q2,11.12,93.16
+SMCI,Super Micro,3 · Servers & networking,revenue,2026Q3,19.946,297.5
+SO,Southern Company,6 · Electricity,capex,2019Q1,1.678,
+SO,Southern Company,6 · Electricity,capex,2019Q2,1.806,
+SO,Southern Company,6 · Electricity,capex,2019Q3,1.933,
+SO,Southern Company,6 · Electricity,capex,2019Q4,2.138,
+SO,Southern Company,6 · Electricity,capex,2020Q1,1.56,-7.03
+SO,Southern Company,6 · Electricity,capex,2020Q2,1.642,-9.08
+SO,Southern Company,6 · Electricity,capex,2020Q3,2.163,11.9
+SO,Southern Company,6 · Electricity,capex,2020Q4,2.157,0.89
+SO,Southern Company,6 · Electricity,capex,2021Q1,1.678,7.56
+SO,Southern Company,6 · Electricity,capex,2021Q2,1.706,3.9
+SO,Southern Company,6 · Electricity,capex,2021Q3,1.838,-15.03
+SO,Southern Company,6 · Electricity,capex,2021Q4,2.364,9.6
+SO,Southern Company,6 · Electricity,capex,2022Q1,1.419,-15.44
+SO,Southern Company,6 · Electricity,capex,2022Q2,1.794,5.16
+SO,Southern Company,6 · Electricity,capex,2022Q3,2.289,24.54
+SO,Southern Company,6 · Electricity,capex,2022Q4,2.421,2.41
+SO,Southern Company,6 · Electricity,capex,2023Q1,1.85,30.37
+SO,Southern Company,6 · Electricity,capex,2023Q2,2.048,14.16
+SO,Southern Company,6 · Electricity,capex,2023Q3,2.663,16.34
+SO,Southern Company,6 · Electricity,capex,2023Q4,2.534,4.67
+SO,Southern Company,6 · Electricity,capex,2024Q1,1.77,-4.32
+SO,Southern Company,6 · Electricity,capex,2024Q2,2.125,3.76
+SO,Southern Company,6 · Electricity,capex,2024Q3,2.311,-13.22
+SO,Southern Company,6 · Electricity,capex,2024Q4,2.749,8.48
+SO,Southern Company,6 · Electricity,capex,2025Q1,2.437,37.68
+SO,Southern Company,6 · Electricity,capex,2025Q2,2.8,31.76
+SO,Southern Company,6 · Electricity,capex,2025Q3,3.215,39.12
+SO,Southern Company,6 · Electricity,capex,2025Q4,4.285,55.87
+SO,Southern Company,6 · Electricity,capex,2026Q1,2.944,20.8
+SO,Southern Company,6 · Electricity,revenue,2019Q1,5.412,
+SO,Southern Company,6 · Electricity,revenue,2019Q2,5.098,
+SO,Southern Company,6 · Electricity,revenue,2019Q3,5.995,
+SO,Southern Company,6 · Electricity,revenue,2019Q4,4.914,
+SO,Southern Company,6 · Electricity,revenue,2020Q1,5.018,-7.28
+SO,Southern Company,6 · Electricity,revenue,2020Q2,4.62,-9.38
+SO,Southern Company,6 · Electricity,revenue,2020Q3,5.62,-6.26
+SO,Southern Company,6 · Electricity,revenue,2020Q4,5.117,4.13
+SO,Southern Company,6 · Electricity,revenue,2021Q1,5.91,17.78
+SO,Southern Company,6 · Electricity,revenue,2021Q2,5.198,12.51
+SO,Southern Company,6 · Electricity,revenue,2021Q3,6.238,11.0
+SO,Southern Company,6 · Electricity,revenue,2021Q4,5.767,12.7
+SO,Southern Company,6 · Electricity,revenue,2022Q1,6.648,12.49
+SO,Southern Company,6 · Electricity,revenue,2022Q2,7.206,38.63
+SO,Southern Company,6 · Electricity,revenue,2022Q3,8.378,34.31
+SO,Southern Company,6 · Electricity,revenue,2022Q4,7.047,22.2
+SO,Southern Company,6 · Electricity,revenue,2023Q1,6.48,-2.53
+SO,Southern Company,6 · Electricity,revenue,2023Q2,5.748,-20.23
+SO,Southern Company,6 · Electricity,revenue,2023Q3,6.98,-16.69
+SO,Southern Company,6 · Electricity,revenue,2023Q4,6.045,-14.22
+SO,Southern Company,6 · Electricity,revenue,2024Q1,6.646,2.56
+SO,Southern Company,6 · Electricity,revenue,2024Q2,6.463,12.44
+SO,Southern Company,6 · Electricity,revenue,2024Q3,7.274,4.21
+SO,Southern Company,6 · Electricity,revenue,2024Q4,6.341,4.9
+SO,Southern Company,6 · Electricity,revenue,2025Q1,7.775,16.99
+SO,Southern Company,6 · Electricity,revenue,2025Q2,6.973,7.89
+SO,Southern Company,6 · Electricity,revenue,2025Q3,7.823,7.55
+SO,Southern Company,6 · Electricity,revenue,2025Q4,6.981,10.09
+SO,Southern Company,6 · Electricity,revenue,2026Q1,8.397,8.0
+VRT,Vertiv,4 · Power & cooling gear,revenue,2019Q1,0.0,
+VRT,Vertiv,4 · Power & cooling gear,revenue,2019Q2,0.0,
+VRT,Vertiv,4 · Power & cooling gear,revenue,2019Q3,0.0,
+VRT,Vertiv,4 · Power & cooling gear,revenue,2019Q4,0.0,
+VRT,Vertiv,4 · Power & cooling gear,revenue,2020Q1,0.897,inf
+VRT,Vertiv,4 · Power & cooling gear,revenue,2020Q2,1.006,inf
+VRT,Vertiv,4 · Power & cooling gear,revenue,2020Q3,1.162,inf
+VRT,Vertiv,4 · Power & cooling gear,revenue,2020Q4,1.306,inf
+VRT,Vertiv,4 · Power & cooling gear,revenue,2021Q1,1.098,22.41
+VRT,Vertiv,4 · Power & cooling gear,revenue,2021Q2,1.26,25.32
+VRT,Vertiv,4 · Power & cooling gear,revenue,2021Q3,1.229,5.76
+VRT,Vertiv,4 · Power & cooling gear,revenue,2021Q4,1.411,8.04
+VRT,Vertiv,4 · Power & cooling gear,revenue,2022Q1,1.156,5.28
+VRT,Vertiv,4 · Power & cooling gear,revenue,2022Q2,1.399,11.04
+VRT,Vertiv,4 · Power & cooling gear,revenue,2022Q3,1.481,20.52
+VRT,Vertiv,4 · Power & cooling gear,revenue,2022Q4,1.655,17.31
+VRT,Vertiv,4 · Power & cooling gear,revenue,2023Q1,1.521,31.54
+VRT,Vertiv,4 · Power & cooling gear,revenue,2023Q2,1.734,23.92
+VRT,Vertiv,4 · Power & cooling gear,revenue,2023Q3,1.743,17.66
+VRT,Vertiv,4 · Power & cooling gear,revenue,2023Q4,1.865,12.74
+VRT,Vertiv,4 · Power & cooling gear,revenue,2024Q1,1.639,7.76
+VRT,Vertiv,4 · Power & cooling gear,revenue,2024Q2,1.953,12.61
+VRT,Vertiv,4 · Power & cooling gear,revenue,2024Q3,2.074,18.99
+VRT,Vertiv,4 · Power & cooling gear,revenue,2024Q4,2.346,25.79
+VRT,Vertiv,4 · Power & cooling gear,revenue,2025Q1,2.036,24.21
+VRT,Vertiv,4 · Power & cooling gear,revenue,2025Q2,2.638,35.09
+VRT,Vertiv,4 · Power & cooling gear,revenue,2025Q3,2.676,29.05
+VRT,Vertiv,4 · Power & cooling gear,revenue,2025Q4,2.88,22.74
+VRT,Vertiv,4 · Power & cooling gear,revenue,2026Q1,2.65,30.13
+VRT,Vertiv,4 · Power & cooling gear,revenue,2026Q2,3.274,24.12
+VRT,Vertiv,4 · Power & cooling gear,revenue,2026Q3,4.313,61.18
+VST,Vistra,6 · Electricity,revenue,2019Q1,2.923,
+VST,Vistra,6 · Electricity,revenue,2019Q2,2.832,
+VST,Vistra,6 · Electricity,revenue,2019Q3,3.194,
+VST,Vistra,6 · Electricity,revenue,2019Q4,2.86,
+VST,Vistra,6 · Electricity,revenue,2020Q1,2.858,-2.22
+VST,Vistra,6 · Electricity,revenue,2020Q2,2.509,-11.41
+VST,Vistra,6 · Electricity,revenue,2020Q3,3.552,11.21
+VST,Vistra,6 · Electricity,revenue,2020Q4,2.524,-11.75
+VST,Vistra,6 · Electricity,revenue,2021Q1,3.207,12.21
+VST,Vistra,6 · Electricity,revenue,2021Q2,2.565,2.23
+VST,Vistra,6 · Electricity,revenue,2021Q3,2.991,-15.79
+VST,Vistra,6 · Electricity,revenue,2021Q4,3.314,31.3
+VST,Vistra,6 · Electricity,revenue,2022Q1,3.125,-2.56
+VST,Vistra,6 · Electricity,revenue,2022Q2,1.588,-38.09
+VST,Vistra,6 · Electricity,revenue,2022Q3,5.146,72.05
+VST,Vistra,6 · Electricity,revenue,2022Q4,3.869,16.75
+VST,Vistra,6 · Electricity,revenue,2023Q1,4.425,41.6
+VST,Vistra,6 · Electricity,revenue,2023Q2,3.189,100.82
+VST,Vistra,6 · Electricity,revenue,2023Q3,4.086,-20.6
+VST,Vistra,6 · Electricity,revenue,2023Q4,3.078,-20.44
+VST,Vistra,6 · Electricity,revenue,2024Q1,3.054,-30.98
+VST,Vistra,6 · Electricity,revenue,2024Q2,3.845,20.57
+VST,Vistra,6 · Electricity,revenue,2024Q3,6.288,53.89
+VST,Vistra,6 · Electricity,revenue,2024Q4,4.037,31.16
+VST,Vistra,6 · Electricity,revenue,2025Q1,3.933,28.78
+VST,Vistra,6 · Electricity,revenue,2025Q2,4.25,10.53
+VST,Vistra,6 · Electricity,revenue,2025Q3,4.971,-20.94
+VST,Vistra,6 · Electricity,revenue,2025Q4,4.584,13.55
+VST,Vistra,6 · Electricity,revenue,2026Q1,5.64,43.4
+VST,Vistra,6 · Electricity,revenue,2026Q2,4.017,-5.48
+VST,Vistra,6 · Electricity,revenue,2026Q3,6.347,27.68
