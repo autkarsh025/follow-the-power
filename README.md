@@ -2,6 +2,8 @@
 
 # ⚡ Gigawatt Ledger
 
+### Tracking AI infrastructure from capex to the power grid
+
 **The AI boom, traced from 26 companies' balance sheets to hourly electricity demand on the grid,
 explained by a Claude analyst agent whose every number is verified.**
 
