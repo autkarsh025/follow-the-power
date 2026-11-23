@@ -33,7 +33,7 @@ ends up as **electricity demand** on the grid. This project:
 | **Contrast** | West Texas grew +118%, but that's oil, gas and crypto mining, so it's kept as a contrast zone and out of the data-center totals. The step detector's one hit there is the April 2020 oil crash. |
 | **Supply chain** | Chips & memory is the fastest-growing layer (TTM revenue +70%). Micron, GE Vernova and Dell track hyperscaler capex most tightly. |
 | **Honesty** | Grid data beats a naive nowcast for only **6 of 24** companies. The grid *confirms* the build-out; it rarely front-runs earnings. |
-| **Agent** | **21/21 eval cases on both Claude Sonnet 5.5 and Haiku 5.5** (time travel, planted false claims, unit traps, out-of-scope questions, cited filing search, multi-step math); 235 numbers verified; LLM judge 4.27/5 (Sonnet) and 4.16/5 (Haiku). Across six live runs, most failures were grader/verifier bugs, each fixed with a test ([eval log](EVAL_LOG.md)). |
+| **Agent** | **22 eval cases, each run 3×: Claude Sonnet 5.5 passed all 22 every time (pass^3 22/22); Haiku 5.5 21/22**. Its one inconsistency: it resisted a planted prompt injection in only 2 of 3 runs, though the verifier still blocked the planted number. Cases cover time travel, prompt injection, planted false claims, unit traps, out-of-scope questions, cited filing search and multi-step math. LLM judge ≈4.3/5. Across seven live runs most failures were grader bugs, each fixed with a test ([eval log](EVAL_LOG.md)). |
 | **Data quality** | Automated checks caught SEC's API lagging on several utilities' and REITs' latest 10-Qs, and an XBRL tag holding zeros (fixed by tag fall-through). |
 
 ## Architecture
@@ -84,8 +84,8 @@ ends up as **electricity demand** on the grid. This project:
 - **RAG** (`filings.py`): MD&A extraction (skipping the table-of-contents copy and hidden inline-XBRL), paragraph-aware
   chunking, BM25 ranking, citations like `[NVDA 10-Q filed 2026-08-26, MD&A ¶14]`, point-in-time by filing date,
   plus an offline retrieval benchmark (hit@3, MRR).
-- **Evals** (`evals.py`): ~20 cases across fact, time-travel, analysis, multi-step, filing-search and robustness
-  (planted false claims, refusing to invent forecasts). Expected answers are computed from the data, never
+- **Evals** (`evals.py`): 22 cases across fact, time-travel, analysis, multi-step, filing-search and robustness
+  (prompt injection, planted false claims, unit traps, out-of-scope, refusing to invent forecasts), run k times for pass^k. Expected answers are computed from the data, never
   hard-coded; time-travel cases list future numbers that must not appear. Optional LLM-judge rubric and
   multi-model leaderboard; tokens, cache hits and latency tracked.
 - **MCP server** (`mcp_server.py`): the same tools and skills over JSON-RPC/stdio for Claude Desktop/Code
@@ -97,7 +97,7 @@ ends up as **electricity demand** on the grid. This project:
 ```bash
 pip install -r requirements.txt
 cp .env.example .env     # EIA_API_KEY (free), SEC_USER_AGENT="Name email", ANTHROPIC_API_KEY (agent only)
-pytest -q                # ~50 tests, offline: synthetic data with known answers + a scripted fake LLM
+pytest -q                # 63 tests, offline: synthetic data with known answers + a scripted fake LLM
 python -m ftp.pipeline   # load everything (incremental; --full to backfill)
 python -m ftp.evals --judge                      # agent evaluation
 python -m ftp.evals --models claude-sonnet-5-5,claude-haiku-5-5   # leaderboard
