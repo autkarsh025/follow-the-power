@@ -1,4 +1,4 @@
-# Eval log: every live run, what failed, and why
+# Gigawatt Ledger · eval log: every live run, what failed, and why
 
 Live runs of `python -m ftp.evals` against the real database. Each failure was traced to a root cause, and the
 cause was fixed with a regression test. **Most failures were in the grader or verifier, not the model**, which is

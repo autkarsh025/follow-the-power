@@ -1,4 +1,6 @@
-# Build guide: know follow-the-power cold
+# ⚡ Gigawatt Ledger: build guide & interview prep
+
+*Follow the money. Follow the power.* (Repo: `follow-the-power`; Python package: `ftp`.)
 
 How every piece works, why it was built that way, and the questions an interviewer is likely to ask.
 Read it top to bottom once; then use the "60-second pitch" and the Q&A before interviews.
@@ -7,7 +9,7 @@ Read it top to bottom once; then use the "60-second pitch" and the Q&A before in
 
 ## The 60-second pitch
 
-> "I built a data platform that follows the AI boom through money and electricity. It pulls quarterly financials
+> "I built **Gigawatt Ledger**, a data platform that follows the AI boom through money and electricity. It pulls quarterly financials
 > for 26 companies across the AI supply chain from SEC filings, stored point-in-time so I can replay history
 > without hindsight, and hourly power demand for five data-center hubs from the EIA, with weather removed by a
 > regression. On top sits a Claude agent with 16 tools: SQL, statistics, cited search over 10-Q text. Code verifies
@@ -189,3 +191,102 @@ open dataset with a validated data contract."
 
 **NVIDIA-flavored variant (Finance AI):** lead with bullets 3–4 and add: "Automated a weekly verified research memo
 and variance-analysis workflow (FP&A-style) with a governance rule that unverified reports are never published."
+
+
+---
+
+## 11. The 3-minute demo script (share your screen on the live dashboard)
+
+1. **Overview (30 s).** "AI spending turns into chips, then into electricity. This tracks all three." Point to the
+   findings: $201.9B of capex at +108%, Northern Virginia up ~4,900 MW. Show the memo: "an agent wrote this, and every
+   number in green was checked against the data."
+2. **Supply chain (30 s).** The revenue race (log scale): "Micron, Super Micro and NVIDIA pulled away in 2023." Drag the
+   **capex shock simulator**: "if big tech's capex growth fell to 0%, here's each company's implied revenue growth,
+   from its historical sensitivity, with error bars."
+3. **Data-center detector (40 s).** Pick Ohio → growth regimes: "flat until August 2024, then ~1,270 MW a year. The
+   break is chosen by BIC, not by me." Temperature response: "same temperature, more load every year."
+4. **Time machine (30 s).** Drag to early 2023: "this is exactly what was public that day. The backtests and the
+   agent's time-travel tests use the same function, so nothing peeks at the future."
+5. **AI analyst (40 s).** Open the receipts for `claim_check` or `prompt_injection`: "the tools it called, each number
+   traced to its source, and what the verifier rejected in earlier drafts. Sonnet passed 22/22 on three repeated runs."
+6. **Close (10 s).** "And the honest finding: grid data rarely beats a naive forecast of earnings. It confirms
+   spending rather than predicting it, and the dashboard says so."
+
+## 12. Numbers to know cold
+
+| | |
+|---|---|
+| Companies / layers | 26 / 6 (cloud buyers, chips & memory, servers & networking, power & cooling gear, data-center landlords, electricity) |
+| Grid | 5 zones, 337k+ hourly rows since 2019; Northern Virginia overnight +~50% (~4,900 MW) |
+| Regimes | Northern Virginia ~590 → ~1,100 MW/yr (May 2024); Ohio ~140 → ~1,270 MW/yr (Aug 2024) |
+| Spending | hyperscaler capex $201.9B in 2026Q3 (+108% YoY); NVIDIA $96.2B (+106%) |
+| Honest test | grid beats naive for 5 of 24 companies |
+| Weather model | R² 0.79–0.98; balance point 18 °C |
+| Text | 4,675 MD&A passages; retrieval hit@3 100%, MRR 1.00 on 15 queries |
+| Agent | 16 tools, 7 skills; 22 eval cases; pass^3: Sonnet 22/22, Haiku 21/22; judge ≈4.3/5; 68% of input tokens from prompt cache |
+| Engineering | 63 tests; ~230 quality checks per run; 9 open-data files with a validated contract |
+
+## 13. Worked examples
+
+**XBRL → quarters (the test case `test_trailing_twelve_month_facts_in_10q_are_not_fiscal_years`).** A utility files:
+Q1 = 110 (10-Q), H1 YTD = 230 and Q2 = 120 (10-Q), *trailing twelve months to June* = 450 (also in the 10-Q), 9M YTD =
+360 (10-Q). Naively, the 450 looks like a fiscal year (a ~365-day period) and shifts every quarter. The parser only
+lets **10-K** annual facts define fiscal years, so it yields Q1 110, Q2 120, Q3 360 − 230 = 130. That bug was hiding
+the latest quarters of several utilities until a quality check (filing freshness) flagged it.
+
+**Recast guard.** Dominion's FY2021 was recast in 2024 after it sold its gas utilities (400 → 250, say). Q4 = FY − 9M
+would give 250 − 300 = −50 if the recast year were differenced with the *original* 2021 nine-month YTD. Derived
+quarters therefore only combine facts filed within ~a year of each other.
+
+**Weather model, in one day.** On a 2 °C January night in Ohio, HDD = 18 − 2 = 16. With coefficients a ≈ 74 MW per
+degree-day and b ≈ 4.2 per HDD², weather adds ≈ 74·16 + 4.2·256 ≈ 2,260 MW to overnight load. Normalization subtracts
+that and adds back the *average* weather effect of all days, leaving load "at average-year weather".
+
+**Verifier, in one answer.** "Capex was **$201.92B** in 2026Q3, up **107.6%** [MSFT 10-Q filed 2026-10-28, MD&A ¶35]."
+Extracted claims: 201.92 (unit B) and 107.6 (%). "2026Q3", the filing date and "¶35" are stripped as non-claims. Both
+match `quarterly_financials` output within tolerance (0.5% or half a unit of the last shown digit) → receipts show them
+green, `from: quarterly_financials`.
+
+## 14. The agent loop, step by step
+
+```
+user question ──► system prompt (rules + as-of date + skills index) + 16 tool schemas  [prompt-cached]
+      │
+      ▼
+ Claude ──► tool_use(load_skill "claim-check") ──► SKILL.md instructions
+      │──► tool_use(quarterly_financials)     ──► rows; every number → evidence (+ which tool)
+      │──► tool_use(calculate "250 - 96.22")  ──► 153.78 → evidence
+      ▼
+ draft answer ──► verifier: numbers ⊆ evidence ∪ question numbers? quotes ⊆ retrieved passages?
+      │ no  → "these numbers don't match: …" (logged), up to 2 revisions
+      │ empty answer → one nudge to write it
+      ▼ yes
+ final answer + receipts (tool trace, provenance per number, revision log, tokens, seconds)
+```
+
+## 15. More interview questions (with short answers)
+
+- **"Why not just ask the LLM to be careful?"** Instructions reduce errors; they don't guarantee anything. The
+  verifier is deterministic and cheap, and it caught real slips in live runs (e.g. a computed % not run through `calculate`).
+- **"How did you pick 1–5 AM?"** It's the trough of residential and commercial load; median (not mean) resists odd hours.
+  A sensitivity check is easy (2–6 AM gives the same story).
+- **"Why month fixed effects instead of a time trend in the weather model?"** A trend imposes a shape; fixed effects
+  let growth be anything (including steps) while weather coefficients come from within-month variation only.
+- **"Your exposure scores use ~25 points. Isn't that fragile?"** Yes. That's why every correlation shows its noise band,
+  the simulator shows ±1 SD error bars, and only 'meaningful' links feed the simulator.
+- **"What happens if EIA is down?"** That step fails and is logged; others continue; the quality gate decides whether
+  publishing is safe; the next run's incremental window refills the gap automatically.
+- **"How would you scale this to 500 companies and 50 zones?"** Partition hourly data (Parquet by zone/month) with
+  DuckDB or a warehouse; parallelize SEC pulls within fair-access limits; move orchestration to Airflow/Dagster with
+  per-asset freshness checks; precompute dashboard aggregates.
+- **"How do you know the evals aren't too easy?"** They include adversarial cases (prompt injection, planted claims,
+  unit traps), consistency runs (pass^k revealed Haiku's injection weakness), and they *have* failed: 7 runs, each
+  failure root-caused in the eval log.
+- **"What's the most important bug you found?"** The capex sum silently including new companies after the expansion
+  ($239.9B instead of $201.9B). It was caught by comparing against a number I already trusted, and it's now a
+  regression test. It's the reason for automated sanity checks.
+- **"What would you build next?"** Claim-level verification (number + entity + period), segment revenue from filing
+  tables, and hybrid retrieval gated by the benchmark.
+- **"Why GitHub Actions instead of Airflow?"** One daily DAG with six steps doesn't need a scheduler cluster; Actions
+  gives scheduling, secrets, caching, logs and free compute. The steps are already isolated, so moving them to
+  Airflow tasks would be mechanical.

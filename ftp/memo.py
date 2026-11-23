@@ -48,7 +48,7 @@ def main(llm=None, db_path=None) -> dict:
         return out
     (OUT / "latest.json").write_text(json.dumps(out, indent=2, default=str))
     (OUT / f"{now:%Y-%m-%d}.md").write_text(
-        f"# AI build-out memo · {now:%Y-%m-%d}\n\n*Written by `{out['model']}` with follow-the-power's tools. "
+        f"# Gigawatt Ledger · AI build-out memo · {now:%Y-%m-%d}\n\n*Written by `{out['model']}` with Gigawatt Ledger's tools. "
         f"{len(res.numbers)} numbers, {'all verified' if ok else 'NOT all verified'} against tool output; "
         f"{res.revisions} forced revision(s).*\n\n{res.answer}\n\n---\nTools used: "
         + ", ".join(t["name"] for t in res.tool_calls) + "\n")

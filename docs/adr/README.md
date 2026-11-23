@@ -1,4 +1,4 @@
-# Architecture decision records
+# Gigawatt Ledger · architecture decision records
 
 Short records of the decisions that shape follow-the-power: the context, the choice, and what it costs.
 

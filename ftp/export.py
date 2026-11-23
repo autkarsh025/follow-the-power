@@ -14,7 +14,7 @@ from ftp import analytics, config, leadlag, power
 
 OUT = config.ROOT / "docs" / "data"
 
-DOC = """# follow-the-power open dataset
+DOC = """# Gigawatt Ledger open dataset
 
 Refreshed daily by GitHub Actions. All files are CSV (UTF-8, comma-separated). Times are UTC unless noted.
 

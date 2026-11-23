@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Follow the Power · the AI boom, seen through money and electricity</title>
+<title>Gigawatt Ledger · Follow the money. Follow the power.</title>
 <meta name="description" content="26 companies across the AI supply chain, hourly power demand in 5 data-center hubs, weather-normalized and point-in-time, explained by a verified Claude analyst agent.">
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
 <style>
@@ -76,8 +76,8 @@ footer{color:var(--t3);font-size:12.5px;margin-top:28px;line-height:1.7}.empty{c
 <body>
 <div class="wrap">
 <header>
-  <div><h1>follow<span>-</span>the<span>-</span>power ⚡</h1>
-    <p class="tag">Tracking the AI boom through money <i>and</i> electricity: 26 companies across the AI supply chain, hourly power demand in 5 data-center hubs, all point-in-time, explained by a Claude analyst whose every number is verified.</p></div>
+  <div><h1>Gigawatt <span>Ledger</span> ⚡</h1>
+    <p class="tag"><b>Follow the money. Follow the power.</b> The AI boom, traced from balance sheets to the electrical grid: 26 companies across the AI supply chain, hourly power demand in 5 data-center hubs, all point-in-time, explained by a Claude analyst whose every number is verified.</p></div>
   <div class="meta"><div><button class="btn" id="theme">☀️ Light</button> <a class="btn" href="https://github.com/autkarsh025/follow-the-power">GitHub ↗</a> <a class="btn" href="data/README.md">Open data ↗</a></div><div id="built"></div></div>
 </header>
 <nav class="tabs" id="tabs"></nav>
@@ -287,7 +287,7 @@ footer{color:var(--t3);font-size:12.5px;margin-top:28px;line-height:1.7}.empty{c
   </div>
 </section>
 
-<footer>Built by Utkarsh Agarwal. Data: SEC EDGAR, U.S. Energy Information Administration, Open-Meteo (ERA5). Not investment advice: a data-engineering and AI-evaluation project. · <a href="https://github.com/autkarsh025/follow-the-power">Source</a> · <a href="data/README.md">Open dataset</a></footer>
+<footer><b>Gigawatt Ledger</b> · built by Utkarsh Agarwal. Data: SEC EDGAR, U.S. Energy Information Administration, Open-Meteo (ERA5). Not investment advice: a data-engineering and AI-evaluation project. · <a href="https://github.com/autkarsh025/follow-the-power">Source</a> · <a href="data/README.md">Open dataset</a></footer>
 </div>
 <script id="data" type="application/json">__DATA__</script>
 <script>
@@ -343,7 +343,7 @@ function addCsvButtons() {
       const rows = [['x', ...tr.map(t => (t.name || 'y').replace(/,/g, ' '))]];
       xs.forEach(x => rows.push([x, ...tr.map(t => { const i = t.x.indexOf(x); return i < 0 ? '' : (t.y[i] ?? ''); })]));
       const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([rows.map(r => r.join(',')).join('\n')], {type: 'text/csv'}));
-      a.download = `follow-the-power_${id}.csv`; a.click();
+      a.download = `gigawatt-ledger_${id}.csv`; a.click();
     };
     card.appendChild(box);
   });
