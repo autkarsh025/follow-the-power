@@ -156,21 +156,28 @@ def _known(vs: list[dict], filed: pd.Timestamp) -> dict | None:
     return max(k, key=lambda v: v["filed_date"]) if k else None
 
 
+MAX_DERIVE_GAP_DAYS = 380   # a recast year filed years later must not be differenced with an old YTD
+
+
 def _derive(ytd, versions, y, q, ticker, metric, concept) -> list[dict]:
+    """Derived quarters only combine facts filed within ~a year of each other. A full year recast in a much
+    later 10-K (e.g. after a divestiture) minus the ORIGINAL 9-month YTD would mix two different company
+    perimeters and produce a nonsense quarter."""
     rows = []
     for _, r in ytd[ytd["q"] == q].iterrows():
         if q == 1:
             rows.append(_row(ticker, metric, y, 1, r["start_d"], r["end_d"], r["val"], r["filed_d"],
                              r["form"], r.get("accn"), concept, False))
             continue
-        prev = ytd[(ytd["q"] == q - 1) & (ytd["filed_d"] <= r["filed_d"])].sort_values("filed_d")
+        prev = ytd[(ytd["q"] == q - 1) & (ytd["filed_d"] <= r["filed_d"])
+                   & ((r["filed_d"] - ytd["filed_d"]).dt.days <= MAX_DERIVE_GAP_DAYS)].sort_values("filed_d")
         if not prev.empty:
             p = prev.iloc[-1]
             rows.append(_row(ticker, metric, y, q, p["end_d"] + pd.Timedelta(days=1), r["end_d"],
                              r["val"] - p["val"], r["filed_d"], r["form"], r.get("accn"), concept, True))
             continue
         earlier = [_known(versions.get(k, []), r["filed_d"]) for k in range(1, q)]
-        if all(earlier):
+        if all(earlier) and all((r["filed_d"] - pd.Timestamp(e["filed_date"])).days <= MAX_DERIVE_GAP_DAYS for e in earlier):
             start = pd.Timestamp(earlier[-1]["period_end"]) + pd.Timedelta(days=1)
             rows.append(_row(ticker, metric, y, q, start, r["end_d"], r["val"] - sum(e["value_usd"] for e in earlier),
                              r["filed_d"], r["form"], r.get("accn"), concept, True))

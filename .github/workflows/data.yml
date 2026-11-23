@@ -81,7 +81,7 @@ jobs:
         run: |
           git config user.name "follow-the-power bot"
           git config user.email "actions@users.noreply.github.com"
-          git add docs/ evals/ reports/ 2>/dev/null || true
+          for p in docs evals reports; do [ -e "$p" ] && git add "$p"; done   # one missing folder must not skip the rest
           git diff --cached --quiet || git commit -m "Daily data refresh"
           # main may have moved while this ran (e.g. a code push): rebase the data commit on top, retry
           git status --short | head -20

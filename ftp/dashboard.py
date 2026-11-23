@@ -201,6 +201,7 @@ def build() -> None:
         "matrix": analytics.lead_lag_matrix(chain_df), "feed": analytics.filing_feed(fin),
         "restatements": recs(analytics.restatements(fin)),
         "flags": recs(analytics.variance_flags(fin).head(80)),
+        "upcoming": analytics.upcoming_filings(fin),
         "memo": json.loads(MEMO.read_text()) if MEMO.exists() else None,
         "memo_archive": sorted([f.stem for f in (config.ROOT / "reports").glob("20*.md")], reverse=True)[:20]
         if (config.ROOT / "reports").exists() else [],

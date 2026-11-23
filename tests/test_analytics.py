@@ -148,3 +148,12 @@ def test_step_detector_ignores_calendar_seasonality():
     near = st[(pd.to_datetime(st["date"]) - pd.Timestamp("2023-06-01")).abs() <= pd.Timedelta(days=10)]
     assert len(near) == 1 and 250 < near["step_mw"].iloc[0] < 550
     assert len(st) <= 2
+
+
+def test_upcoming_filings_follow_the_annual_rhythm():
+    rows = []
+    for y in range(2021, 2026):
+        for md in ("01-28", "04-28", "07-28", "10-28"):
+            rows.append({"ticker": "MSFT", "filed_date": f"{y}-{md}"})
+    up = analytics.upcoming_filings(pd.DataFrame(rows), today="2026-01-10")
+    assert up[0]["expected"] == "2026-01-28" and up[0]["days_until"] == 18

@@ -106,3 +106,13 @@ def test_zero_valued_priority_tag_falls_through_to_next_concept():
                                "RevenueFromContractWithCustomerExcludingAssessedTax": {"units": {"USD": real}}}}}
     q = sec.quarterly(f, "VRT", "revenue")
     assert q[q["fiscal_q"] == 1]["value_usd"].tolist() == [100]
+
+
+def test_recast_full_year_filed_years_later_does_not_create_a_fake_q4():
+    items = [fact("2021-01-01", "2021-03-31", 100, "2021-04-30"), fact("2021-01-01", "2021-06-30", 200, "2021-07-30"),
+             fact("2021-01-01", "2021-09-30", 300, "2021-10-29"),
+             fact("2021-01-01", "2021-12-31", 400, "2022-02-24", form="10-K"),
+             fact("2021-01-01", "2021-12-31", 250, "2024-02-23", form="10-K")]     # recast after a divestiture
+    q = sec.quarterly(facts("Revenues", items), "D", "revenue")
+    q4 = q[(q["fiscal_year"] == 2021) & (q["fiscal_q"] == 4)]
+    assert q4["value_usd"].tolist() == [100]          # 400 - 300; no bogus 250 - 300 = -50 version

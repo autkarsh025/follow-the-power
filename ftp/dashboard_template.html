@@ -105,6 +105,7 @@ footer{color:var(--t3);font-size:12.5px;margin-top:28px;line-height:1.7}.empty{c
     <div class="card" data-csv="ov_power"><h2>Northern Virginia's always-on power</h2><p class="d">Monthly overnight baseload (median 1–5 AM), actual vs. weather-adjusted, MW.</p>
       <p class="look">the weather-adjusted line strips out heat waves and cold snaps; what's left keeps climbing. That's new 24/7 load.</p><div class="chart" id="ov_power"></div></div>
     <div class="card"><h2>Just reported</h2><p class="d">The latest SEC filings in the dataset, with headline numbers and growth.</p><div class="scroll" style="max-height:330px" id="feed"></div></div>
+    <div class="card wide"><h2>📅 Coming up</h2><p class="d">Estimated next report dates (same point in each company's annual filing rhythm). The pipeline picks them up automatically the day after they're filed.</p><div id="upcoming"></div></div>
   </div>
 </section>
 
@@ -405,6 +406,7 @@ R.overview = () => {
   const m = D.memo;
   if (!m) $('memocard').style.display = 'none';
   else $('memo').innerHTML = `<div class="ans">${highlight(m.answer, m.numbers)}</div><p class="d">${esc(m.written_at)} · ${esc(m.model)} · ${(m.numbers || []).length} numbers, ${m.verification && m.verification.ok ? '<span class="ok">all verified ✓</span>' : '<span class="bad">some unverified</span>'} · ${m.revisions} forced revision(s) · tools: ${esc((m.trace || []).map(t => t.name).join(' → '))}</p>`;
+  $('upcoming').innerHTML = (D.upcoming || []).length ? '<div class="chips">' + D.upcoming.map(u => `<span class="chip" title="last filed ${esc(u.last_filed)}"><span class="dot" style="background:${layerColor(CO[u.ticker].layer)}"></span> ${esc(u.name)} · ${new Date(u.expected + 'T12:00:00').toLocaleDateString('en-US', {month: 'short', day: 'numeric'})}${u.days_until < 0 ? ' (due)' : ' (in ' + u.days_until + 'd)'}</span>`).join('') + '</div>' : '<div class="empty">No reports expected in the next 60 days.</div>';
   $('feed').innerHTML = table(D.feed.slice(0, 14), [{h: 'Filed', k: 'filed'}, {h: 'Company', f: r => `<span class="pill"><span class="dot" style="background:${layerColor(CO[r.ticker].layer)}"></span>${esc(r.name)}</span>`},
     {h: 'What', f: r => `${esc(r.metric.replace('_', ' '))} ${esc(r.quarter)}`}, {h: '$B', num: 1, f: r => fmt(r.value_b, 2)}, {h: 'YoY', num: 1, f: r => r.yoy == null ? '—' : sgn(r.yoy) + '%'}]);
 };

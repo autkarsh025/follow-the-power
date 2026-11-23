@@ -646,3 +646,21 @@ def variance_flags(fin: pd.DataFrame, z: float = 2.0, min_hist: int = 8) -> pd.D
                              "change_pp": round(float(acc.iloc[i]), 1), "z": round(float(score), 1),
                              "direction": "acceleration" if score > 0 else "deceleration"})
     return pd.DataFrame(rows).sort_values("quarter", ascending=False).reset_index(drop=True) if rows else pd.DataFrame()
+
+
+def upcoming_filings(fin: pd.DataFrame, today: str | None = None, horizon_days: int = 60) -> list[dict]:
+    """Estimated next report date per company: the same calendar point one year after the corresponding filing
+    (companies keep a steady annual rhythm: Q3 reported ~late October every year), falling back to last filing +
+    the median gap between filings. Shows what's coming up in the next `horizon_days`."""
+    today_ts = pd.Timestamp(today) if today else pd.Timestamp.now().normalize()
+    out = []
+    for t, g in fin.groupby("ticker"):
+        dates = sorted(pd.to_datetime(g["filed_date"].unique()))
+        if len(dates) < 5:
+            continue
+        cands = [d + pd.DateOffset(years=1) for d in dates if d + pd.DateOffset(years=1) > dates[-1] + pd.Timedelta(days=30)]
+        nxt = min(cands) if cands else dates[-1] + pd.Timedelta(days=float(np.median(np.diff(dates)).astype("timedelta64[D]").astype(int)))
+        if today_ts - pd.Timedelta(days=7) <= nxt <= today_ts + pd.Timedelta(days=horizon_days):
+            out.append({"ticker": t, "name": config.COMPANIES.get(t, {}).get("name"), "expected": nxt.strftime("%Y-%m-%d"),
+                        "last_filed": dates[-1].strftime("%Y-%m-%d"), "days_until": int((nxt - today_ts).days)})
+    return sorted(out, key=lambda r: r["expected"])
