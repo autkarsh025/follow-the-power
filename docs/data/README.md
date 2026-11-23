@@ -1,4 +1,4 @@
-# follow-the-power open dataset
+# Gigawatt Ledger open dataset
 
 Refreshed daily by GitHub Actions. All files are CSV (UTF-8, comma-separated). Times are UTC unless noted.
 
