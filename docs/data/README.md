@@ -10,6 +10,8 @@ Refreshed daily by GitHub Actions. All files are CSV (UTF-8, comma-separated). T
 | `zone_weather_normalized.csv` | grid zone × month | zone, month, actual_mw, normalized_mw (weather removed), weather_part_mw, normalized_yoy, actual_yoy, tmean_c, hdd, cdd |
 | `zone_daily.csv` | grid zone × local day | zone, date, overnight_mw (median 1–5 AM), normalized_mw, deweathered_mw (weather & weekday removed), tmean_c |
 | `state_sales.csv` | state × month | state, sector (COM = commercial), month, sales_gwh |
+| `history.csv` | run date × metric | run_date, metric (headline KPIs: capex, NVIDIA revenue, weather-adjusted zone growth, row counts), value |
+| `schema.json` | the data contract | expected columns and types for every file; validated on each export |
 | `quality_checks.csv` | check × subject (latest run) | check_id, subject, severity, passed, value, detail |
 
 Sources: SEC EDGAR XBRL (companyfacts API); U.S. EIA (EIA-930 hourly subregion demand; electric power retail sales);

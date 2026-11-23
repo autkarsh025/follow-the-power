@@ -1,0 +1,69 @@
+{
+ "files": {
+  "fin_quarterly.csv": {
+   "ticker": "string",
+   "metric": "string",
+   "fiscal_year": "integer",
+   "fiscal_q": "integer",
+   "quarter": "string",
+   "period_start": "date",
+   "period_end": "date",
+   "value_usd": "number",
+   "filed_date": "date",
+   "form": "string",
+   "concept": "string",
+   "derived": "integer"
+  },
+  "fin_latest.csv": {
+   "ticker": "string",
+   "name": "string",
+   "layer": "string",
+   "metric": "string",
+   "quarter": "string",
+   "value_b": "number",
+   "yoy": "number"
+  },
+  "zone_monthly.csv": {
+   "zone": "string",
+   "month": "string",
+   "overnight_mw": "number",
+   "peak_mw": "number",
+   "flatness": "number",
+   "baseload_yoy": "number"
+  },
+  "zone_weather_normalized.csv": {
+   "zone": "string",
+   "month": "string",
+   "actual_mw": "number",
+   "normalized_mw": "number",
+   "weather_part_mw": "number",
+   "normalized_yoy": "number"
+  },
+  "zone_daily.csv": {
+   "zone": "string",
+   "date": "date",
+   "overnight_mw": "number",
+   "normalized_mw": "number",
+   "deweathered_mw": "number",
+   "tmean_c": "number"
+  },
+  "state_sales.csv": {
+   "state": "string",
+   "sector": "string",
+   "month": "string",
+   "sales_gwh": "number"
+  },
+  "quality_checks.csv": {
+   "check_id": "string",
+   "subject": "string",
+   "severity": "string",
+   "passed": "integer"
+  },
+  "history.csv": {
+   "run_date": "date",
+   "metric": "string",
+   "value": "number"
+  }
+ },
+ "violations": []
+}
