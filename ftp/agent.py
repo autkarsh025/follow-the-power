@@ -96,7 +96,8 @@ class Result:
     usage: dict = field(default_factory=lambda: {"input_tokens": 0, "output_tokens": 0})
     error: str | None = None
     numbers: list[dict] = field(default_factory=list)
-    seconds: float = 0.0   # each number in the answer + the tool it came from
+    seconds: float = 0.0
+    revision_log: list[dict] = field(default_factory=list)   # what the verifier rejected in each draft   # each number in the answer + the tool it came from
 
     def to_dict(self) -> dict:
         return self.__dict__.copy()
@@ -137,6 +138,8 @@ def run(question: str, llm: LLM, as_of: str | None = None, db_path=None, words: 
             res.seconds = round(time.time() - t0, 1)
             return res
         res.revisions += 1
+        res.revision_log.append({"draft": res.revisions, "unverified": rep.unverified, "bad_quotes": bad_quotes,
+                                 "excerpt": answer[:300]})
         problems = []
         if rep.unverified:
             problems.append("these numbers don't match any tool result or calculation: " + ", ".join(rep.unverified))

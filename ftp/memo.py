@@ -35,7 +35,7 @@ def main(llm=None, db_path=None) -> dict:
     now = datetime.now(timezone.utc)
     out = {"written_at": now.strftime("%Y-%m-%d %H:%M UTC"), "model": getattr(llm, "model", agent.MODEL),
            "answer": res.answer, "numbers": res.numbers, "trace": res.tool_calls, "verification": res.verification,
-           "revisions": res.revisions, "usage": res.usage, "seconds": res.seconds, "error": res.error}
+           "revisions": res.revisions, "revision_log": res.revision_log, "usage": res.usage, "seconds": res.seconds, "error": res.error}
     OUT.mkdir(exist_ok=True)
     (OUT / "latest.json").write_text(json.dumps(out, indent=2, default=str))
     ok = res.verification.get("ok")

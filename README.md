@@ -29,9 +29,11 @@ ends up as **electricity demand** on the grid. This project:
 |---|---|
 | **Spending** | Hyperscaler capex hit **$201.9B in 2026Q3, +108% YoY**, 11.7× the 2019 quarterly average. NVIDIA's latest quarter: **$96.2B, +106%**. |
 | **Power** | Northern Virginia's overnight baseload is **up ~50% since 2019 (~4,900 MW)**, about 2.7M GPUs at 1.4 kW × PUE 1.3. Ohio +22%, Dallas +14%, Chicago +3%. |
-| **Contrast** | West Texas grew +118%, but that's oil, gas and crypto mining, so it's kept as a contrast zone and out of the data-center totals. |
+| **Take-off** | A statistical break test finds **Ohio's always-on load was flat until mid-2024, then started growing ~1,100 MW/yr**. Northern Virginia shows no break, just a steady ~680 MW/yr ramp. |
+| **Contrast** | West Texas grew +118%, but that's oil, gas and crypto mining, so it's kept as a contrast zone and out of the data-center totals. The step detector's one hit there is the April 2020 oil crash. |
 | **Supply chain** | Chips & memory is the fastest-growing layer (TTM revenue +70%). Micron, GE Vernova and Dell track hyperscaler capex most tightly. |
 | **Honesty** | Grid data beats a naive nowcast for only **6 of 24** companies. The grid *confirms* the build-out; it rarely front-runs earnings. |
+| **Agent** | **19/19 eval cases on both Claude Sonnet 5.5 and Haiku 5.5** (time travel, planted false claims, cited filing search, multi-step math); 206 numbers verified; LLM-judge 4.2/5. Haiku passed everything with ~40% fewer input tokens. The first live run scored 17/19: both failures were grader/verifier bugs (citation ¶-numbers read as claims, quote pairing), which were fixed with tests. |
 | **Data quality** | Automated checks caught SEC's API lagging on several utilities' and REITs' latest 10-Qs, and an XBRL tag holding zeros (fixed by tag fall-through). |
 
 ## Architecture

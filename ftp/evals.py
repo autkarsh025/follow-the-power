@@ -242,7 +242,7 @@ def grade(case: Case, res: agent.Result) -> dict:
             "verifier_ok": res.verification.get("ok"), "unverified": res.verification.get("unverified"),
             "numbers_checked": res.verification.get("numbers_checked", 0),
             "revisions": res.revisions, "skill_used": skill_used, "tool_calls": len(res.tool_calls),
-            "trace": res.tool_calls, "numbers": res.numbers, "seconds": res.seconds,
+            "trace": res.tool_calls, "numbers": res.numbers, "seconds": res.seconds, "revision_log": res.revision_log,
             "question": case.question, "answer": res.answer, "usage": res.usage, "error": res.error}
 
 

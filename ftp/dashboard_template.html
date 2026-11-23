@@ -706,10 +706,11 @@ function receipt(i) {
   let html = esc(c.answer || '(no answer)');
   html = highlight(c.answer, c.numbers);
   const trace = (c.trace || []).map((t, k) => (k ? '<span class="ar">→</span>' : '') + `<span class="t ${t.error ? 'err' : ''}" title="${esc(JSON.stringify(t.input))}">${esc(t.name)}${t.name === 'load_skill' ? ': ' + esc(t.input.name) : ''}${t.numbers_returned ? ' · ' + t.numbers_returned + ' nums' : ''}</span>`).join('');
+  const rl = (c.revision_log || []).map(r => `<li>Draft ${r.draft} rejected: ${r.unverified && r.unverified.length ? 'unverifiable numbers <span class="mono">' + esc(r.unverified.join(', ')) + '</span>' : ''}${r.bad_quotes && r.bad_quotes.length ? ' · misquoted text' : ''}</li>`).join('');
   const j = c.judge && c.judge.mean ? `<p class="d">Judge: grounded ${c.judge.grounded}/5 · clear ${c.judge.clear}/5 · caveats ${c.judge.caveats}/5 · answers ${c.judge.answers}/5. <i>${esc(c.judge.comment || '')}</i></p>` : '';
   $('receipt').innerHTML = `<p class="d"><b>Q</b> (as of ${esc(c.as_of || 'today')}): ${esc(c.question)}</p><p class="d"><i>${esc(c.why || '')}</i></p>
     <div class="trace">${trace || '<span class="muted">no tools called</span>'}</div><div class="ans">${html}</div>
-    <p class="d">${status(c.passed)} · ${c.numbers_checked || 0} numbers checked · ${c.revisions} revision(s) · ${fmt(c.seconds, 1)}s${(c.missing || []).length ? ' · missing expected: ' + esc(c.missing.join(', ')) : ''}${(c.bad_quotes || []).length ? ' · bad quotes: ' + c.bad_quotes.length : ''}</p>${j}`;
+    ${rl ? `<p class="d" style="margin-bottom:0">🛑 The verifier sent it back before this final answer:</p><ul class="d" style="margin-top:2px">${rl}</ul>` : ''}<p class="d">${status(c.passed)} · ${c.numbers_checked || 0} numbers checked · ${c.revisions} revision(s) · ${fmt(c.seconds, 1)}s${(c.missing || []).length ? ' · missing expected: ' + esc(c.missing.join(', ')) : ''}${(c.bad_quotes || []).length ? ' · bad quotes: ' + c.bad_quotes.length : ''}</p>${j}`;
 }
 
 // ============================== DATA

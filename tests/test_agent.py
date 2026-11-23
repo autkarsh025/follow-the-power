@@ -175,3 +175,11 @@ def test_grader_accepts_more_precise_answers(dbp):
     assert evals.grade(case, res)["missing"] == []
     res2 = agent.Result("q", None, answer="The correlation is 0.49.", verification={"ok": True})
     assert evals.grade(case, res2)["missing"] == [0.52]
+
+
+def test_revision_log_records_what_was_rejected(dbp):
+    llm = scripted([("tool", "quarterly_financials", {"last_n": 4}),
+                    ("text", lambda r: "Revenue grew 999.9%."),
+                    ("text", lambda r: f"Revenue grew {r[0]['rows'][-1]['nvda_yoy_pct']}%.")])
+    res = agent.run("growth?", llm, db_path=dbp)
+    assert res.revision_log == [{"draft": 1, "unverified": ["999.9%"], "bad_quotes": [], "excerpt": "Revenue grew 999.9%."}]
