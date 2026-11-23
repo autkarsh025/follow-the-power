@@ -216,6 +216,7 @@ def build() -> None:
         "restatements": recs(analytics.restatements(fin)),
         "flags": recs(analytics.variance_flags(fin).head(80)),
         "upcoming": analytics.upcoming_filings(fin),
+        "lineage": analytics.lineage(fin),
         "memo": json.loads(MEMO.read_text()) if MEMO.exists() else None,
         "memo_archive": sorted([f.stem for f in (config.ROOT / "reports").glob("20*.md")], reverse=True)[:20]
         if (config.ROOT / "reports").exists() else [],

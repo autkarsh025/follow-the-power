@@ -114,7 +114,9 @@ python -m ftp.mcp_server # MCP server on stdio
   are illustrations under stated assumptions.
 - SEC's companyfacts API sometimes lags filings; the quality checks flag it rather than hide it.
 
-See **[BUILD_GUIDE.md](BUILD_GUIDE.md)** for how every piece works and why.
+See **[BUILD_GUIDE.md](BUILD_GUIDE.md)** for how every piece works and why, and **[docs/adr](docs/adr/README.md)** for the
+architecture decision records (point-in-time storage, SQLite + cache, code-based verification, BM25, weather model,
+publishing negative results).
 
 ---
 Data: SEC EDGAR; U.S. Energy Information Administration (EIA-930, retail sales); Open-Meteo (ERA5). Not investment advice.

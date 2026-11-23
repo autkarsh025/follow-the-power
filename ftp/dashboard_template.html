@@ -125,6 +125,9 @@ footer{color:var(--t3);font-size:12.5px;margin-top:28px;line-height:1.7}.empty{c
     <div class="card wide" data-csv="exposure"><h2>AI exposure score: who moves with big tech's spending?</h2>
       <p class="d">For each company: correlation between hyperscaler capex growth and the company's revenue growth, at the lag (0–4 quarters) where it's strongest. The shaded band is noise: bars inside it aren't meaningful.</p>
       <p class="look">chips and power-gear makers near the top: their revenue IS big tech's capex. Utilities sit lower because electricity bills move slowly.</p><div class="chart tall" id="exposure"></div><div class="scroll" id="exposure_t"></div></div>
+    <div class="card wide"><h2>🎛️ Capex shock simulator</h2><p class="d">What if big tech's capex growth changed? Each company's implied revenue growth = its historical intercept + beta × capex growth (fitted at its best lag, shown in the table above). The bars show ±1 standard deviation of each model's past errors. A sensitivity sketch, not a forecast: only companies whose link is outside the noise band are shown.</p>
+      <div class="ctl"><label>Hyperscaler capex growth (YoY)</label><input type="range" id="shock" min="-40" max="150" step="5" value="0"><b id="shockv"></b><span class="muted" id="shocknow"></span></div>
+      <div class="chart tall" id="sim"></div></div>
     <div class="card" data-csv="margins"><h2>Pricing power: gross margins</h2><p class="d">Gross profit as % of revenue (chips, memory, servers, networking).</p>
       <p class="look">NVIDIA's margin jump in 2023 is what scarcity pricing looks like. Memory (Micron) is famously cyclical.</p><div class="chart" id="margins"></div></div>
     <div class="card"><h2>Who leads whom: the full matrix</h2><p class="d">Strongest correlation between every pair of growth series (row vs. column) within ±4 quarters. Hover for the lag: positive = the row leads.</p>
@@ -251,6 +254,7 @@ footer{color:var(--t3);font-size:12.5px;margin-top:28px;line-height:1.7}.empty{c
     <div class="card"><h2>SEC freshness</h2><p class="d">Latest filing date per company in the dataset.</p><div class="scroll" style="max-height:380px" id="fresh"></div></div>
     <div class="card"><h2>Restatement tracker</h2><p class="d">Quarters whose value changed in a later filing. Point-in-time storage keeps both versions.</p><div class="scroll" style="max-height:380px" id="restate"></div></div>
     <div class="card wide"><h2>Variance screen: unusual quarters across all companies</h2><p class="d">Growth acceleration more than 2 robust standard deviations from each company's own history. Most recent first.</p><div class="scroll" style="max-height:380px" id="flags"></div></div>
+    <div class="card wide"><h2>Data lineage</h2><p class="d">For every series: which XBRL tags it was built from (quarters per tag), how many quarters were <i>derived</i> (year-to-date differencing, Q4 = full year − 9 months) instead of reported directly, coverage, and total filed versions.</p><div class="scroll" style="max-height:380px" id="lineage"></div></div>
     <div class="card"><h2>Pipeline runs</h2><p class="d">Each source loads independently; incremental with a revision window.</p><div id="runs"></div></div>
     <div class="card"><h2>Open dataset</h2><p class="d">Download the cleaned tables (refreshed daily). Column docs in <a href="data/README.md">data/README.md</a>.</p><div id="files"></div></div>
     <div class="card wide"><h2>How it works</h2>
@@ -450,6 +454,15 @@ R.chain = () => {
   $('exposure_t').innerHTML = table(ex, [{h: 'Company', f: r => `<span class="pill"><span class="dot" style="background:${layerColor(r.layer)}"></span>${esc(r.name)}</span>`}, {h: 'Layer', f: r => esc(r.layer.split('· ')[1])},
     {h: 'Correlation', num: 1, f: r => fmt(r.corr, 2)}, {h: 'Lag (q)', num: 1, k: 'best_lag_q'}, {h: 'Beta', num: 1, f: r => fmt(r.beta, 2)}, {h: 'R²', num: 1, f: r => fmt(r.r2, 2)}, {h: 'n', num: 1, k: 'n'},
     {h: 'Meaningful?', f: r => r.meaningful ? '<span class="ok">✓ yes</span>' : '<span class="muted">noise</span>'}]);
+  const sim = (D.exposure || []).filter(e => e.meaningful && e.alpha != null);
+  const [, capNow] = lastNN(D.series.quarter, D.series.capex_yoy);
+  const sl = $('shock'); if (sl.dataset.init !== '1') { sl.value = Math.round((capNow || 0) / 5) * 5; sl.dataset.init = '1'; }
+  const drawSim = () => { const g = +sl.value; $('shockv').textContent = sgn(g, 0) + '%'; $('shocknow').textContent = capNow != null ? `(latest actual: ${sgn(capNow, 0)}%)` : '';
+    const ys = sim.map(e => e.alpha + e.beta * g);
+    plot('sim', [{type: 'bar', x: sim.map(e => e.name), y: ys, marker: {color: sim.map(e => layerColor(e.layer))}, error_y: {type: 'data', array: sim.map(e => e.resid_sd), color: C.t3, thickness: 1},
+      customdata: sim.map(e => [e.beta, e.alpha, e.best_lag_q]), hovertemplate: '%{x}: %{y:+.0f}% implied (beta %{customdata[0]}, lag %{customdata[2]}q)<extra></extra>'}],
+      {hovermode: 'closest', yaxis: {title: 'implied revenue growth, % YoY'}, margin: {l: 56, r: 10, t: 8, b: 110}, xaxis: {tickangle: -40}}); };
+  sl.oninput = drawSim; drawSim();
   const M = D.matrix;
   if (M && M.names) plot('matrix', [{type: 'heatmap', x: M.names, y: M.names, z: M.corr, zmin: -1, zmax: 1, zmid: 0, colorscale: [[0, '#2a78d6'], [0.5, C.mid], [1, '#e34948']],
     customdata: M.lag.map((r, i) => r.map((l, j) => [l, M.band[i][j]])), hovertemplate: '%{y} vs %{x}<br>r = %{z:.2f} at lag %{customdata[0]} (noise ±%{customdata[1]})<extra></extra>', colorbar: {thickness: 10}}],
@@ -738,6 +751,8 @@ R.data = () => {
     {h: 'Revised', num: 1, f: r => fmt(r.latest_b, 3)}, {h: 'Change', num: 1, f: r => sgn(r.change_pct, 2) + '%'}, {h: 'Revised on', k: 'latest_filed'}]);
   $('flags').innerHTML = table(D.flags || [], [{h: 'Company', f: r => esc(r.name)}, {h: 'Quarter', k: 'quarter'}, {h: 'What', f: r => esc(r.metric)},
     {h: 'YoY', num: 1, f: r => sgn(r.yoy) + '%'}, {h: 'Prev.', num: 1, f: r => sgn(r.prev_yoy) + '%'}, {h: 'Change', num: 1, f: r => sgn(r.change_pp) + ' pp'}, {h: 'z', num: 1, f: r => fmt(r.z, 1)}, {h: '', f: r => r.direction === 'acceleration' ? '▲' : '▼'}]);
+  $('lineage').innerHTML = table(D.lineage || [], [{h: 'Company', f: r => esc(r.name)}, {h: 'Metric', f: r => esc(r.metric.replace('_', ' '))}, {h: 'XBRL tags (quarters)', f: r => `<span class="mono" style="font-size:11px">${esc(r.concepts)}</span>`},
+    {h: 'Quarters', num: 1, k: 'quarters'}, {h: 'Derived', num: 1, f: r => fmt(r.derived_pct) + '%'}, {h: 'Versions', num: 1, k: 'versions'}, {h: 'Coverage', f: r => `${esc(r.first)} – ${esc(r.last)}`}]);
   $('runs').innerHTML = table(D.runs, [{h: 'Step', k: 'step'}, {h: 'Status', f: r => status(r.status === 'success', 'ok', 'failed')}, {h: 'Rows', num: 1, f: r => fmt(r.rows_loaded)}, {h: 'Finished', k: 'finished_at'}]);
   const files = D.manifest ? Object.entries(D.manifest.files) : [];
   $('files').innerHTML = table(files.map(([f, n]) => ({f, n})), [{h: 'File', f: r => `<a href="data/${esc(r.f)}">${esc(r.f)}</a>`}, {h: 'Rows', num: 1, f: r => fmt(r.n)}]);

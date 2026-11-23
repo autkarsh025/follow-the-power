@@ -480,8 +480,10 @@ def exposure(fin: pd.DataFrame) -> pd.DataFrame:
         lag, r, pair = best
         slope, icpt = np.polyfit(pair.iloc[:, 0], pair.iloc[:, 1], 1)
         n = len(pair)
+        resid = pair.iloc[:, 1] - (icpt + slope * pair.iloc[:, 0])
         rows.append({"ticker": t, "name": info["name"], "layer": info["layer"], "best_lag_q": lag, "corr": round(r, 2),
-                     "beta": round(float(slope), 2), "r2": round(r * r, 2), "n": n, "noise_band": round(2 / np.sqrt(n), 2),
+                     "beta": round(float(slope), 2), "alpha": round(float(icpt), 1), "resid_sd": round(float(resid.std()), 1),
+                     "r2": round(r * r, 2), "n": n, "noise_band": round(2 / np.sqrt(n), 2),
                      "meaningful": bool(abs(r) > 2 / np.sqrt(n))})
     return pd.DataFrame(rows).sort_values("corr", ascending=False).reset_index(drop=True) if rows else pd.DataFrame()
 
@@ -713,3 +715,18 @@ def growth_regimes(monthly: pd.DataFrame, col: str = "normalized_mw", max_breaks
         segs.append({"from": s.index[a], "to": s.index[b], "mw_per_year": round(12 * float(slope)),
                      "pct_per_year": round(100 * 12 * float(slope) / mid_level, 1)})
     return {"breaks": [s.index[b] for b in br], "segments": segs, "fitted": np.round(yhat).tolist(), "month": s.index.tolist()}
+
+
+
+def lineage(fin: pd.DataFrame) -> list[dict]:
+    """Where every series comes from: XBRL concepts used (with quarter counts), share of quarters that were derived
+    (YTD differencing / Q4 = FY - 9M) rather than reported directly, coverage, and how many versions were filed."""
+    out = []
+    for (t, m), g in fin.groupby(["ticker", "metric"]):
+        latest = g.sort_values("filed_date").drop_duplicates(["fiscal_year", "fiscal_q"], keep="last")
+        out.append({"ticker": t, "name": config.COMPANIES.get(t, {}).get("name"), "metric": m,
+                    "concepts": "; ".join(f"{c} ({n})" for c, n in latest["concept"].value_counts().items()),
+                    "quarters": int(len(latest)), "versions": int(len(g)),
+                    "derived_pct": round(100 * float(latest["derived"].mean()), 0),
+                    "first": latest["quarter"].min(), "last": latest["quarter"].max()})
+    return out
