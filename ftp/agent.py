@@ -32,14 +32,20 @@ def system_prompt(tb: Toolbox) -> str:
     when = (f"Today is {tb.as_of}. You only know data that was public on this date; never mention or guess later "
             f"results." if tb.as_of else "Use the latest available data.")
     skills = "\n".join(f"- {s['name']}: {s['description']}" for s in tb.skills.values())
-    return f"""You are a financial analyst covering the AI infrastructure build-out: NVIDIA's revenue,
-hyperscaler capital spending (Microsoft, Alphabet, Amazon, Meta), and data-center power demand in
-Northern Virginia, the largest data-center hub in the world. {when}
+    return f"""You are a financial analyst covering the AI infrastructure build-out, end to end: cloud companies'
+capital spending (Microsoft, Alphabet, Amazon, Meta, Oracle), chip makers' revenue (NVIDIA, AMD, Broadcom),
+data-center power & cooling equipment (Vertiv), the utilities and generators selling the electricity
+(Dominion, Constellation, Vistra), and electricity demand in five grid zones, led by Northern Virginia,
+the largest data-center hub in the world. {when}
 
 Rules:
 - Every number in your answer must come from a tool result or a `calculate` result. If you need a
   difference, ratio or growth rate, compute it with `calculate`. Never estimate from memory.
 - Name the quarter (e.g. 2026Q2) for every figure. Revenue and capex are in USD billions.
+- Numbers written in the user's question are CLAIMS to check, not facts. If one conflicts with the data,
+  say so and give the correct figure from a tool.
+- Never forecast an exact future figure. You may describe trends and backtest results.
+- Weather moves electricity demand; prefer weather-adjusted figures when judging data-center growth.
 - Be honest about uncertainty: small samples, correlation vs. causation, models that don't beat a naive baseline.
 - Answer in under 200 words, in plain business language.
 
@@ -75,6 +81,7 @@ class Result:
     verification: dict = field(default_factory=dict)
     usage: dict = field(default_factory=lambda: {"input_tokens": 0, "output_tokens": 0})
     error: str | None = None
+    numbers: list[dict] = field(default_factory=list)   # each number in the answer + the tool it came from
 
     def to_dict(self) -> dict:
         return self.__dict__.copy()
@@ -94,14 +101,19 @@ def run(question: str, llm: LLM, as_of: str | None = None, db_path=None) -> Resu
         if uses:
             results = []
             for u in uses:
+                before = len(tb.evidence)
                 out = tb.run(u["name"], u["input"])
-                res.tool_calls.append({"name": u["name"], "input": u["input"], "error": out.get("error")})
+                out = out if isinstance(out, dict) else {"result": out}
+                res.tool_calls.append({"name": u["name"], "input": u["input"], "error": out.get("error"),
+                                       "numbers_returned": len(tb.evidence) - before if not out.get("error") else 0})
                 results.append({"type": "tool_result", "tool_use_id": u["id"], "content": json.dumps(out, default=str)})
             messages.append({"role": "user", "content": results})
             continue
         answer = "\n".join(b["text"] for b in reply["content"] if b["type"] == "text").strip()
-        rep = verify.verify(answer, tb.evidence)
+        given = [v for _, v, _, _ in verify.extract(question)]   # numbers the user quoted can be repeated
+        rep = verify.verify(answer, tb.evidence + given)
         res.answer, res.verification = answer, rep.to_dict()
+        res.numbers = verify.provenance(answer, tb.provenance, given)
         if rep.ok or res.revisions >= MAX_REVISIONS:
             return res
         res.revisions += 1

@@ -19,7 +19,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from ftp import config, leadlag, power, sec
+from ftp import analytics, config, leadlag, power, sec
 
 SKILLS_DIR = config.ROOT / "skills"
 SERIES_NAMES = ("nvda_yoy", "capex_yoy", "overnight_yoy")
@@ -71,7 +71,13 @@ class Toolbox:
         self.db_path = Path(db_path or config.DB_PATH)
         self.as_of = as_of
         self.evidence: list[float] = []
+        self.provenance: list[tuple[float, str]] = []    # (number, tool that returned it): the "receipts"
         self.skills = load_skills()
+        self._tool = None
+        self._zone_cache: dict[str, dict] = {}
+        # Grid data counts as public GRID_PUBLICATION_LAG_DAYS after the hour it describes.
+        self.grid_until = ((pd.Timestamp(as_of) - pd.Timedelta(days=power.GRID_PUBLICATION_LAG_DAYS)).strftime("%Y-%m-%d")
+                           if as_of else None)
 
     # ------------------------------------------------------------------ plumbing
     def _conn(self) -> sqlite3.Connection:
@@ -87,6 +93,7 @@ class Toolbox:
                 self._record(v)
         elif isinstance(obj, (int, float)) and not isinstance(obj, bool) and not math.isnan(obj):
             self.evidence.append(float(obj))
+            self.provenance.append((float(obj), self._tool or "?"))
         return obj
 
     def specs(self) -> list[dict]:
@@ -118,6 +125,36 @@ class Toolbox:
              "description": "Backtest of forecasting NVIDIA's YoY revenue growth: naive (last quarter's growth), capex model, "
                             "grid model. Mean absolute error in percentage points; lower is better. Also per-quarter predictions.",
              "input_schema": {"type": "object", "properties": {}}},
+            {"name": "company_financials",
+             "description": "Quarterly revenue or capex for any tracked company, in billions USD with YoY growth %. "
+                            "Tickers: MSFT, GOOGL, AMZN, META, ORCL (cloud buyers); NVDA, AMD, AVGO (chips); VRT (Vertiv, "
+                            "data-center power & cooling equipment); D (Dominion Energy, the Northern Virginia utility; revenue "
+                            "and capex); CEG (Constellation), VST (Vistra) (power generators). Metric: 'revenue' or 'capex'.",
+             "input_schema": {"type": "object", "properties": {"ticker": {"type": "string"}, "metric": {"type": "string"},
+                                                               "last_n": {"type": "integer"}}, "required": ["ticker", "metric"]}},
+            {"name": "supply_chain_snapshot",
+             "description": "Latest quarter's value and YoY growth for every company in the AI supply chain, grouped by "
+                            "layer (cloud buyers -> chips -> power gear -> electricity).",
+             "input_schema": {"type": "object", "properties": {}}},
+            {"name": "zone_overview",
+             "description": "Compare the grid zones (" + ", ".join(f"{z[1]}: {z[2]}" for z in config.GRID_ZONES) + "): "
+                            "latest-quarter overnight baseload YoY %, weather-adjusted 12-month baseload growth %, MW of "
+                            "always-on load added since 2019 and its rough GPU equivalent.",
+             "input_schema": {"type": "object", "properties": {}}},
+            {"name": "weather_adjusted",
+             "description": "Monthly overnight baseload for one zone, actual vs WEATHER-NORMALIZED (temperature effects "
+                            "removed with a degree-day regression), with YoY growth of each, the weather part in MW, and "
+                            "model fit (R^2). Use it to separate data-center growth from hot summers / cold winters.",
+             "input_schema": {"type": "object", "properties": {"zone": {"type": "string"}, "last_n": {"type": "integer"}},
+                              "required": ["zone"]}},
+            {"name": "step_changes",
+             "description": "Sudden, sustained jumps in a zone's weather-adjusted baseload (e.g. a large new load being "
+                            "energized): date, size in MW, before/after level, % change, and the detection threshold.",
+             "input_schema": {"type": "object", "properties": {"zone": {"type": "string"}}, "required": ["zone"]}},
+            {"name": "restatements",
+             "description": "Quarters whose reported value was later revised in an SEC filing: original vs revised "
+                            "value (billions USD), filing dates, % change. Optional ticker filter.",
+             "input_schema": {"type": "object", "properties": {"ticker": {"type": "string"}}}},
             {"name": "calculate",
              "description": "Arithmetic on numbers you already have (e.g. '105.9 - 85.2'). Use it for ANY number you derive; "
                             "the answer may only contain numbers from tool results or calculations.",
@@ -129,7 +166,7 @@ class Toolbox:
         ]
         if self.as_of is None:
             s.append({"name": "sql",
-                      "description": "Read-only SQL (SELECT) on tables fin_quarterly, zone_hourly, state_monthly_sales. "
+                      "description": "Read-only SQL (SELECT) on tables fin_quarterly, zone_hourly, state_monthly_sales, zone_weather_daily, quality_checks. "
                                      "Max 50 rows returned.",
                       "input_schema": {"type": "object", "properties": {"query": {"type": "string"}}, "required": ["query"]}})
         return s
@@ -139,6 +176,7 @@ class Toolbox:
             fn = getattr(self, f"t_{name}")
         except AttributeError:
             return {"error": f"unknown tool {name}"}
+        self._tool = name
         try:
             return fn(**(args or {}))
         except Exception as exc:  # tool errors go back to the model, they don't crash the run
@@ -206,6 +244,89 @@ class Toolbox:
         scores = leadlag.score(bt)
         return self._record({"scores": scores.to_dict(orient="records"),
                              "recent_quarters": bt.tail(6).to_dict(orient="records")})
+
+    def t_company_financials(self, ticker: str, metric: str, last_n: int = 8) -> dict:
+        ticker, metric = ticker.upper(), metric.lower()
+        cg = analytics.chain_growth(self._fin(), as_of=self.as_of)
+        g = cg[(cg["ticker"] == ticker) & (cg["metric"] == metric)].tail(int(last_n))
+        if g.empty:
+            return {"error": f"no {metric} data for {ticker}"}
+        rows = [{"calendar_quarter": r.quarter, "value_usd_b": _r(r.value_b, 2), "yoy_pct": _r(r.yoy, 1)} for r in g.itertuples()]
+        return self._record({"ticker": ticker, "name": config.COMPANIES.get(ticker, {}).get("name"), "metric": metric,
+                             "rows": rows})
+
+    def t_supply_chain_snapshot(self) -> dict:
+        cg = analytics.chain_growth(self._fin(), as_of=self.as_of)
+        out = []
+        for (t, m), g in cg.groupby(["ticker", "metric"]):
+            r = g.iloc[-1]
+            out.append({"layer": config.COMPANIES[t]["layer"], "ticker": t, "name": config.COMPANIES[t]["name"],
+                        "metric": m, "calendar_quarter": r.quarter, "value_usd_b": _r(r.value_b, 2), "yoy_pct": _r(r.yoy, 1)})
+        return self._record({"companies": sorted(out, key=lambda x: (x["layer"], x["ticker"]))})
+
+    def _zone(self, zone: str) -> dict:
+        zone = zone.upper()
+        if zone not in [z[1] for z in config.GRID_ZONES]:
+            raise ValueError(f"zone must be one of {[z[1] for z in config.GRID_ZONES]}")
+        if zone not in self._zone_cache:
+            with self._conn() as c:
+                h = analytics.hourly_local(c, zone, self.grid_until)
+                daily = analytics.daily_frame(c, zone, h)
+                norm = analytics.weather_normalize(c, zone, daily, until=self.grid_until)
+                q = power.zone_quarterly(c, zone)
+                if self.as_of:
+                    q = q[q["known_date"] <= self.as_of]
+            self._zone_cache[zone] = {"h": h, "daily": daily, "norm": norm, "q": q}
+        return self._zone_cache[zone]
+
+    def t_zone_overview(self) -> dict:
+        rows = []
+        for _, zone, label, _ in config.GRID_ZONES:
+            z = self._zone(zone)
+            if z["daily"].empty:
+                continue
+            add = analytics.added_load(z["norm"], z["daily"])
+            nm = z["norm"]["monthly"].set_index("month")["normalized_mw"].dropna() if z["norm"] else pd.Series(dtype=float)
+            rows.append({"zone": zone, "label": label,
+                         "latest_quarter": z["q"]["quarter"].iloc[-1] if not z["q"].empty else None,
+                         "overnight_yoy_pct": _r(z["q"]["overnight_yoy"].iloc[-1], 1) if not z["q"].empty else None,
+                         "weather_adj_12m_growth_pct": _r(100 * (nm.tail(12).mean() / nm.iloc[-24:-12].mean() - 1), 1)
+                         if len(nm) >= 24 else None,
+                         "added_mw_since_2019": add.get("added_mw"), "added_pct": add.get("added_pct"),
+                         "gpu_equivalent": add.get("gpu_equivalent")})
+        return self._record({"zones": rows, "gpu_assumption": f"{analytics.KW_PER_GPU_IT} kW per GPU x PUE {analytics.PUE}"})
+
+    def t_weather_adjusted(self, zone: str, last_n: int = 12) -> dict:
+        z = self._zone(zone)
+        if not z["norm"]:
+            return {"error": f"no weather data for {zone}"}
+        m = z["norm"]["monthly"].tail(int(last_n))
+        rows = [{"month": r.month, "actual_mw": _r(r.actual_mw, 0), "weather_adjusted_mw": _r(r.normalized_mw, 0),
+                 "weather_part_mw": _r(r.weather_part_mw, 0), "actual_yoy_pct": _r(r.actual_yoy, 1),
+                 "weather_adjusted_yoy_pct": _r(r.normalized_yoy, 1), "avg_temp_c": _r(r.tmean_c, 1)} for r in m.itertuples()]
+        nm = z["norm"]["monthly"].set_index("month")["normalized_mw"].dropna()
+        out = {"zone": zone.upper(), "model_r2": z["norm"]["r2"], "rows": rows}
+        if len(nm) >= 24:
+            out["last_12m_vs_prior_12m_growth_pct"] = _r(100 * (nm.tail(12).mean() / nm.iloc[-24:-12].mean() - 1), 1)
+        return self._record(out)
+
+    def t_step_changes(self, zone: str) -> dict:
+        z = self._zone(zone)
+        if z["norm"]:
+            st = analytics.step_changes(z["norm"]["daily"])
+        else:
+            st = analytics.step_changes(z["daily"], col="overnight_mw")
+        return self._record({"zone": zone.upper(), "threshold_mw": st.attrs.get("threshold_mw"),
+                             "steps": st.to_dict(orient="records")})
+
+    def t_restatements(self, ticker: str | None = None) -> dict:
+        fin = self._fin()
+        if self.as_of:
+            fin = fin[fin["filed_date"] <= self.as_of]
+        r = analytics.restatements(fin)
+        if ticker and not r.empty:
+            r = r[r["ticker"] == ticker.upper()]
+        return self._record({"restatements": [] if r.empty else r.head(15).to_dict(orient="records")})
 
     def t_calculate(self, expression: str) -> dict:
         return self._record({"expression": expression, "result": round(safe_eval(expression), 4)})

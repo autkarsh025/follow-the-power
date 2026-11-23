@@ -46,3 +46,25 @@ CREATE TABLE IF NOT EXISTS pipeline_runs (
     status        TEXT NOT NULL,
     error_message TEXT
 );
+
+-- Daily temperature at a representative point per zone (Open-Meteo / ERA5), for weather normalization.
+CREATE TABLE IF NOT EXISTS zone_weather_daily (
+    zone     TEXT NOT NULL,
+    date     TEXT NOT NULL,                -- local date 'YYYY-MM-DD'
+    tmean_c  REAL,
+    tmin_c   REAL,
+    tmax_c   REAL,
+    PRIMARY KEY (zone, date)
+);
+
+-- Results of automated data-quality checks, one row per check per pipeline run.
+CREATE TABLE IF NOT EXISTS quality_checks (
+    run_at    TEXT NOT NULL,
+    check_id  TEXT NOT NULL,
+    subject   TEXT NOT NULL,               -- zone / ticker / table the check is about
+    severity  TEXT NOT NULL,               -- 'critical' fails the run; 'warn' is reported
+    passed    INTEGER NOT NULL,
+    value     REAL,
+    detail    TEXT,
+    PRIMARY KEY (run_at, check_id, subject)
+);

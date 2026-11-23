@@ -1,0 +1,410 @@
+"""Deeper grid analytics: finding data centers in electricity demand.
+
+  daily_frame          per local day: overnight baseload (median 1-5 AM), mean, peak, min
+  weather_normalize    remove temperature effects -> "weather-normalized" baseload growth
+  temperature_response load vs temperature, one curve per year (curves shift UP = new always-on load)
+  step_changes         sudden sustained jumps in normalized baseload (a big new load switching on)
+  load_duration        sorted hourly loads per year; a flatter curve = more 24/7 load
+  heatmap              average load by month x hour of day
+  added_load           MW of always-on load added since 2019, in GPU and household equivalents
+  forecast             log-linear trend of normalized baseload with bootstrap uncertainty bands
+  zone_summary         one row per zone for the comparison table
+  chain_*              growth across the AI supply chain + a lead/lag matrix
+  restatements         quarters whose reported value changed in a later SEC filing
+
+Everything here is descriptive statistics with stated assumptions; the dashboard explains each in plain English.
+"""
+from __future__ import annotations
+
+import sqlite3
+
+import numpy as np
+import pandas as pd
+
+from ftp import config, leadlag, power, weather
+
+LAGS = range(-4, 5)
+
+# Unit conversions for "how big is that?" (stated on the dashboard; deliberately round numbers)
+KW_PER_GPU_IT = 1.4      # H100-class 8-GPU server draws ~10-11 kW incl. CPUs/networking -> ~1.4 kW per GPU
+PUE = 1.3                # power usage effectiveness: cooling & losses on top of IT load
+KW_PER_HOME = 1.2        # average US home uses ~10,500 kWh/yr ~= 1.2 kW on average
+
+
+def tz_of(zone: str) -> str:
+    return next(z[3] for z in config.GRID_ZONES if z[1] == zone)
+
+
+def label_of(zone: str) -> str:
+    return next(z[2] for z in config.GRID_ZONES if z[1] == zone)
+
+
+def hourly_local(conn: sqlite3.Connection, zone: str, until: str | None = None) -> pd.DataFrame:
+    """Hourly load in local time. `until` (YYYY-MM-DD, exclusive) gives a point-in-time view."""
+    df = pd.read_sql_query("SELECT period_utc, demand_mwh FROM zone_hourly WHERE zone = ? AND demand_mwh IS NOT NULL "
+                           "AND period_utc < ? ORDER BY period_utc", conn, params=(zone, until or "9999"))
+    if df.empty:
+        return df
+    df["ts"] = pd.to_datetime(df["period_utc"], utc=True).dt.tz_convert(tz_of(zone))
+    df["date"] = df["ts"].dt.strftime("%Y-%m-%d")
+    df["hour"] = df["ts"].dt.hour
+    return df
+
+
+def daily_frame(conn: sqlite3.Connection, zone: str, h: pd.DataFrame | None = None, until: str | None = None) -> pd.DataFrame:
+    h = hourly_local(conn, zone, until) if h is None else h
+    if h.empty:
+        return pd.DataFrame(columns=["date", "overnight_mw", "mean_mw", "peak_mw", "min_mw"])
+    g = h.groupby("date")["demand_mwh"]
+    d = pd.DataFrame({"mean_mw": g.mean(), "peak_mw": g.max(), "min_mw": g.min(), "hours": g.size()})
+    d["overnight_mw"] = h[h["hour"].isin(power.OVERNIGHT_HOURS)].groupby("date")["demand_mwh"].median()
+    d = d[(d["hours"] >= 20)].dropna(subset=["overnight_mw"]).drop(columns="hours")
+    return d.rename_axis("date").reset_index()
+
+
+def _weather(conn, zone, until: str | None = None) -> pd.DataFrame:
+    w = pd.read_sql_query("SELECT date, tmean_c FROM zone_weather_daily WHERE zone = ? AND date < ?", conn,
+                          params=(zone, until or "9999"))
+    if not w.empty:
+        w["hdd"], w["cdd"] = weather.degree_days(w["tmean_c"])
+    return w
+
+
+def _design(df: pd.DataFrame) -> np.ndarray:
+    """Weather terms: heating and cooling degree days, with curvature (demand rises faster in extremes)."""
+    return np.column_stack([df["hdd"], df["hdd"] ** 2, df["cdd"], df["cdd"] ** 2])
+
+
+def weather_normalize(conn: sqlite3.Connection, zone: str, daily: pd.DataFrame | None = None,
+                      until: str | None = None) -> dict:
+    """Weather-normalized overnight baseload.
+
+    Model, per day:  overnight_load = level[month] + f(HDD, CDD) + weekend + noise
+      level[month]  one free level per calendar month (YYYY-MM): absorbs ALL growth, so the weather
+                    coefficients come only from day-to-day swings inside a month
+      f             quadratic in heating & cooling degree days
+    Normalized load = actual - f(actual weather) + f(normal weather for that time of year), where
+    "normal" = the average weather effect for that calendar month over all years.
+    Year-over-year growth of the normalized series is growth that weather can't explain.
+    """
+    d = daily_frame(conn, zone, until=until) if daily is None else daily
+    w = _weather(conn, zone, until)
+    if d.empty or w.empty:
+        return {}
+    df = d.merge(w, on="date").sort_values("date").reset_index(drop=True)
+    if len(df) < 400:
+        return {}
+    df["month"] = df["date"].str[:7]
+    df["weekend"] = (pd.to_datetime(df["date"]).dt.dayofweek >= 5).astype(float)
+    fe = pd.get_dummies(df["month"]).astype(float).to_numpy()
+    X = np.column_stack([fe, _design(df), df["weekend"]])
+    y = df["overnight_mw"].to_numpy()
+    beta, *_ = np.linalg.lstsq(X, y, rcond=None)
+    fitted = X @ beta
+    r2 = 1 - ((y - fitted) ** 2).sum() / ((y - y.mean()) ** 2).sum()
+    wb = beta[fe.shape[1]:fe.shape[1] + 4]
+    df["weather_effect"] = _design(df) @ wb
+    w["cal_month"] = w["date"].str[5:7]
+    w["effect"] = _design(w) @ wb
+    normal = w.groupby("cal_month")["effect"].mean()
+    df["normal_effect"] = df["month"].str[5:7].map(normal)
+    df["normalized_mw"] = df["overnight_mw"] - df["weather_effect"] - beta[-1] * df["weekend"] + df["normal_effect"] \
+        + beta[-1] * (2 / 7)
+    # Weather AND weekday removed, nothing added back: trend + steps + noise. Used for step detection,
+    # because the monthly "normal weather" add-back would itself create small jumps at month boundaries.
+    df["deweathered_mw"] = df["overnight_mw"] - df["weather_effect"] - beta[-1] * df["weekend"]
+    # weather-only model on the residual after removing month levels: how much of daily variation is weather?
+    within = y - fe @ beta[:fe.shape[1]]
+    wvar = 1 - ((within - _design(df) @ wb - beta[-1] * df["weekend"]) ** 2).sum() / ((within - within.mean()) ** 2).sum()
+    m = df.groupby("month").agg(actual_mw=("overnight_mw", "mean"), normalized_mw=("normalized_mw", "mean"),
+                                weather_mw=("weather_effect", "mean"), normal_mw=("normal_effect", "mean"),
+                                tmean_c=("tmean_c", "mean"), hdd=("hdd", "sum"), cdd=("cdd", "sum"),
+                                days=("date", "size")).reset_index()
+    m = m[m["days"] >= 25].drop(columns="days")
+    idx = pd.PeriodIndex(m["month"], freq="M")
+    m = m.set_index(idx).asfreq("M")
+    m["normalized_yoy"] = 100 * (m["normalized_mw"] / m["normalized_mw"].shift(12) - 1)
+    m["actual_yoy"] = 100 * (m["actual_mw"] / m["actual_mw"].shift(12) - 1)
+    m["weather_part_mw"] = m["actual_mw"] - m["normalized_mw"]
+    m = m.dropna(subset=["actual_mw"])
+    m.index = m.index.astype(str)
+    m = m.drop(columns="month").rename_axis("month").reset_index().round(2)
+    return {"monthly": m, "daily": df[["date", "overnight_mw", "normalized_mw", "deweathered_mw", "tmean_c"]],
+            "r2": round(float(r2), 3), "weather_share_within_month": round(float(wvar), 3),
+            "coef": {"hdd": round(float(wb[0]), 2), "hdd2": round(float(wb[1]), 3),
+                     "cdd": round(float(wb[2]), 2), "cdd2": round(float(wb[3]), 3), "weekend": round(float(beta[-1]), 1)},
+            "days": int(len(df))}
+
+
+def temperature_response(conn: sqlite3.Connection, zone: str, daily: pd.DataFrame | None = None) -> dict:
+    """Mean overnight load in 2 °C temperature bins, one curve per year. At the SAME temperature,
+    a higher curve means more load that has nothing to do with the weather."""
+    d = daily_frame(conn, zone) if daily is None else daily
+    w = _weather(conn, zone)
+    if d.empty or w.empty:
+        return {}
+    df = d.merge(w, on="date")
+    df["year"] = df["date"].str[:4]
+    df["bin"] = (np.floor(df["tmean_c"] / 2) * 2 + 1).clip(-15, 35)
+    out = {}
+    for yr, g in df.groupby("year"):
+        b = g.groupby("bin")["overnight_mw"].agg(["mean", "size"])
+        b = b[b["size"] >= 5]
+        if len(b) >= 5:
+            out[yr] = {"temp_c": b.index.tolist(), "mw": b["mean"].round(0).tolist()}
+    return out
+
+
+def step_changes(daily: pd.DataFrame, col: str = "deweathered_mw", window: int = 28, min_sep: int = 60,
+                 k: float = 4.0, min_frac: float = 0.015) -> pd.DataFrame:
+    """Sudden, sustained level shifts in daily baseload.
+
+    For every day t: jump = median(next `window` days) - median(previous `window` days).
+    A step is a local maximum of |jump| (no larger one within `min_sep` days) that is bigger than
+    k x a robust noise scale (MAD of the jump series) AND bigger than `min_frac` of the typical load.
+    Medians make it robust to single odd days; requiring a sustained shift ignores heat waves."""
+    if daily is None or daily.empty or col not in daily:
+        return pd.DataFrame(columns=["date", "step_mw", "before_mw", "after_mw", "pct"])
+    s = daily.set_index(pd.to_datetime(daily["date"]))[col].asfreq("D")
+    before = s.rolling(window, min_periods=int(window * 0.8)).median().shift(1)
+    after = s[::-1].rolling(window, min_periods=int(window * 0.8)).median()[::-1]
+    jump = (after - before).dropna()
+    if jump.empty:
+        return pd.DataFrame(columns=["date", "step_mw", "before_mw", "after_mw", "pct"])
+    mad = (jump - jump.median()).abs().median() * 1.4826
+    thr = max(k * mad, min_frac * float(s.median()))
+    cand = jump[jump.abs() > thr]
+    peaks = []
+    for t, v in cand.abs().sort_values(ascending=False).items():
+        if all(abs((t - p).days) > min_sep for p in peaks):
+            peaks.append(t)
+    rows = [{"date": t.strftime("%Y-%m-%d"), "step_mw": round(float(jump[t]), 0), "before_mw": round(float(before[t]), 0),
+             "after_mw": round(float(after[t]), 0), "pct": round(100 * float(jump[t] / before[t]), 2)} for t in sorted(peaks)]
+    out = pd.DataFrame(rows, columns=["date", "step_mw", "before_mw", "after_mw", "pct"])
+    out.attrs["threshold_mw"] = round(float(thr), 0)
+    return out
+
+
+def load_duration(h: pd.DataFrame) -> dict:
+    """Load-duration curve per calendar year: hourly loads sorted high->low, as % of that year's peak.
+    Load factor = average / peak. Data centers fill in the bottom of the curve and raise the load factor."""
+    if h.empty:
+        return {}
+    out = {}
+    years = h["ts"].dt.year
+    for yr in sorted(years.unique()):
+        v = h.loc[years == yr, "demand_mwh"].to_numpy()
+        if len(v) < 24 * 300:
+            continue
+        pk = v.max()
+        pct = np.percentile(v, np.arange(100, -1, -2))
+        out[str(yr)] = {"hours_pct": list(range(0, 101, 2)), "pct_of_peak": np.round(100 * pct / pk, 1).tolist(),
+                        "load_factor": round(float(v.mean() / pk), 3), "peak_mw": round(float(pk)),
+                        "min_mw": round(float(v.min()))}
+    return out
+
+
+def heatmap(h: pd.DataFrame) -> dict:
+    if h.empty:
+        return {}
+    h = h.assign(month=h["ts"].dt.strftime("%Y-%m"))
+    p = h.pivot_table(index="hour", columns="month", values="demand_mwh", aggfunc="mean")
+    counts = h.groupby("month").size()
+    p = p[[c for c in p.columns if counts[c] >= 24 * 25]]
+    return {"months": list(p.columns), "hours": list(range(24)),
+            "mw": [[None if np.isnan(x) else round(float(x)) for x in p.loc[hr].tolist()] for hr in range(24) if hr in p.index]}
+
+
+def yearly_profiles(h: pd.DataFrame) -> dict:
+    """Average hourly profile per year as % of that year's average peak hour."""
+    if h.empty:
+        return {}
+    out = {}
+    for yr, g in h.groupby(h["ts"].dt.year):
+        if len(g) < 24 * 300:
+            continue
+        prof = g.groupby("hour")["demand_mwh"].mean().reindex(range(24))
+        out[str(yr)] = {"mw": prof.round(0).tolist(), "pct_of_peak": (100 * prof / prof.max()).round(1).tolist()}
+    return out
+
+
+def added_load(norm: dict, daily: pd.DataFrame) -> dict:
+    """Always-on load added since 2019: last 12 months vs 2019 average of (normalized if available) baseload."""
+    if norm:
+        m = norm["monthly"].set_index("month")["normalized_mw"].dropna()
+        basis = "weather-normalized"
+    elif not daily.empty:
+        m = daily.assign(month=daily["date"].str[:7]).groupby("month")["overnight_mw"].mean()
+        basis = "raw"
+    else:
+        return {}
+    base = m[m.index.str.startswith("2019")]
+    if len(base) < 10 or len(m) < 24:
+        return {}
+    recent = m.tail(12)
+    mw = float(recent.mean() - base.mean())
+    return {"basis": basis, "base_mw": round(float(base.mean())), "recent_mw": round(float(recent.mean())),
+            "added_mw": round(mw), "added_pct": round(100 * mw / float(base.mean()), 1),
+            "recent_window": f"{recent.index[0]} to {recent.index[-1]}",
+            "gpu_equivalent": int(round(mw * 1000 / (KW_PER_GPU_IT * PUE), -3)),
+            "homes_equivalent": int(round(mw * 1000 / KW_PER_HOME, -3)),
+            "assumptions": {"kw_per_gpu_it": KW_PER_GPU_IT, "pue": PUE, "kw_per_home": KW_PER_HOME}}
+
+
+def forecast(monthly: pd.DataFrame, col: str = "normalized_mw", fit_months: int = 36, horizon: int = 24,
+             n_boot: int = 400, seed: int = 0) -> dict:
+    """Log-linear trend on the last `fit_months` months, projected `horizon` months.
+
+    Uncertainty: residual block bootstrap (blocks of 3 months keep short-run autocorrelation),
+    refitting the trend each time, then adding resampled noise to the path. Reports the 10th/50th/90th
+    percentiles. This is an extrapolation ("if the recent trend continues"), not a prediction of new projects."""
+    if monthly is None or monthly.empty or col not in monthly:
+        return {}
+    s = monthly.set_index("month")[col].dropna().tail(fit_months)
+    if len(s) < 24:
+        return {}
+    t = np.arange(len(s))
+    y = np.log(s.to_numpy())
+    b1, b0 = np.polyfit(t, y, 1)
+    resid = y - (b0 + b1 * t)
+    rng = np.random.default_rng(seed)
+    tf = np.arange(len(s), len(s) + horizon)
+    paths = np.empty((n_boot, horizon))
+    nblk = int(np.ceil(len(s) / 3))
+    for i in range(n_boot):
+        starts = rng.integers(0, len(s) - 2, nblk)
+        r = np.concatenate([resid[j:j + 3] for j in starts])[:len(s)]
+        bb1, bb0 = np.polyfit(t, b0 + b1 * t + r, 1)
+        noise = np.concatenate([resid[j:j + 3] for j in rng.integers(0, len(s) - 2, int(np.ceil(horizon / 3)))])[:horizon]
+        paths[i] = np.exp(bb0 + bb1 * tf + noise)
+    last = pd.Period(s.index[-1], freq="M")
+    months = [str(last + k) for k in range(1, horizon + 1)]
+    p10, p50, p90 = np.percentile(paths, [10, 50, 90], axis=0)
+    return {"months": months, "p10": np.round(p10).tolist(), "p50": np.round(p50).tolist(), "p90": np.round(p90).tolist(),
+            "fit_from": s.index[0], "fit_to": s.index[-1], "annual_growth_pct": round(100 * (np.exp(12 * b1) - 1), 1)}
+
+
+def zone_summary(conn: sqlite3.Connection, zone: str, h: pd.DataFrame, daily: pd.DataFrame, norm: dict) -> dict:
+    if daily.empty:
+        return {}
+    q = power.zone_quarterly(conn, zone)
+    ld = load_duration(h)
+    yrs = sorted(ld)
+    row = {"zone": zone, "label": label_of(zone), "latest_quarter": q["quarter"].iloc[-1] if not q.empty else None,
+           "overnight_yoy": None if q.empty else q["overnight_yoy"].iloc[-1],
+           "flatness_now": None if q.empty else round(float(q["flatness"].iloc[-1]), 3),
+           "load_factor_first": ld[yrs[0]]["load_factor"] if yrs else None,
+           "load_factor_last": ld[yrs[-1]]["load_factor"] if yrs else None,
+           "first_year": yrs[0] if yrs else None, "last_year": yrs[-1] if yrs else None}
+    if norm:
+        nm = norm["monthly"].set_index("month")["normalized_mw"].dropna()
+        if len(nm) >= 24:
+            row["normalized_12m_growth"] = round(100 * (nm.tail(12).mean() / nm.iloc[-24:-12].mean() - 1), 2)
+        row["weather_r2"] = norm["r2"]
+    row.update({f"added_{k}": v for k, v in added_load(norm, daily).items() if k in ("added_mw", "added_pct", "gpu_equivalent")})
+    return {k: (None if isinstance(v, float) and np.isnan(v) else v) for k, v in row.items()}
+
+
+def normalized_index(norm: dict, daily: pd.DataFrame) -> dict:
+    """Monthly baseload indexed to the 2019 average (= 100): normalized if possible, else raw."""
+    if norm:
+        m = norm["monthly"].set_index("month")["normalized_mw"].dropna()
+    elif not daily.empty:
+        m = daily.assign(month=daily["date"].str[:7]).groupby("month")["overnight_mw"].mean()
+    else:
+        return {}
+    base = m[m.index.str.startswith("2019")].mean()
+    if not base or np.isnan(base):
+        return {}
+    return {"month": m.index.tolist(), "index": (100 * m / base).round(1).tolist()}
+
+
+# ---------------------------------------------------------------------------- supply chain
+def chain_growth(fin: pd.DataFrame, as_of: str | None = None) -> pd.DataFrame:
+    """Calendar-quarter value and YoY growth for every company/metric (latest version, or as known on as_of)."""
+    from ftp import sec
+    v = sec.as_of(fin, as_of or "2100-01-01")
+    rows = []
+    for (t, m), g in v.groupby(["ticker", "metric"]):
+        s = g.groupby("quarter")["value_usd"].last().sort_index()
+        s.index = pd.PeriodIndex(s.index, freq="Q")
+        s = s[~s.index.duplicated()].asfreq("Q")
+        yoy = 100 * (s / s.shift(4) - 1)
+        for q, val in s.items():
+            if not np.isnan(val):
+                rows.append({"ticker": t, "metric": m, "quarter": str(q), "value_b": round(val / 1e9, 3),
+                             "yoy": None if np.isnan(yoy[q]) else round(float(yoy[q]), 2)})
+    return pd.DataFrame(rows)
+
+
+def chain_series(fin: pd.DataFrame, grid_q: pd.DataFrame, norm_q: pd.Series | None = None) -> pd.DataFrame:
+    """Quarterly YoY growth series for the lead/lag matrix, indexed by calendar quarter."""
+    cg = chain_growth(fin)
+    s = leadlag.series(fin).set_index("quarter")
+    cols = {"Hyperscaler capex": s["capex_yoy"]}
+    names = {("ORCL", "capex"): "Oracle capex", ("NVDA", "revenue"): "NVIDIA revenue", ("AMD", "revenue"): "AMD revenue",
+             ("AVGO", "revenue"): "Broadcom revenue", ("VRT", "revenue"): "Vertiv revenue",
+             ("D", "capex"): "Dominion capex", ("D", "revenue"): "Dominion revenue",
+             ("CEG", "revenue"): "Constellation revenue", ("VST", "revenue"): "Vistra revenue"}
+    for (t, m), name in names.items():
+        g = cg[(cg["ticker"] == t) & (cg["metric"] == m)]
+        if not g.empty:
+            cols[name] = g.set_index("quarter")["yoy"].astype(float)
+    if not grid_q.empty:
+        cols["N. Virginia baseload"] = grid_q.set_index("quarter")["overnight_yoy"]
+    if norm_q is not None and not norm_q.empty:
+        cols["N. Virginia baseload (weather-adj.)"] = norm_q
+    df = pd.DataFrame(cols).sort_index()
+    return df[df.index >= "2019Q1"]
+
+
+def lead_lag_matrix(df: pd.DataFrame) -> dict:
+    """For every ordered pair (row, col): the lag in -4..+4 with the strongest correlation.
+    Positive lag = the ROW series leads the COLUMN series by that many quarters."""
+    names = list(df.columns)
+    corr = [[None] * len(names) for _ in names]
+    lag = [[None] * len(names) for _ in names]
+    band = [[None] * len(names) for _ in names]
+    for i, a in enumerate(names):
+        for j, b in enumerate(names):
+            if i == j:
+                continue
+            cc = leadlag.cross_correlation(df[a], df[b]).dropna(subset=["corr"])
+            if cc.empty:
+                continue
+            best = cc.loc[cc["corr"].abs().idxmax()]
+            corr[i][j] = round(float(best["corr"]), 2)
+            lag[i][j] = int(best["lag_quarters"])
+            band[i][j] = round(float(best["noise_band"]), 2)
+    return {"names": names, "corr": corr, "lag": lag, "band": band}
+
+
+def norm_quarterly(norm: dict) -> pd.Series:
+    if not norm:
+        return pd.Series(dtype=float)
+    m = norm["monthly"].dropna(subset=["normalized_mw"]).copy()
+    m["quarter"] = pd.PeriodIndex(m["month"], freq="M").asfreq("Q").astype(str)
+    q = m.groupby("quarter").agg(v=("normalized_mw", "mean"), n=("month", "size"))
+    q = q[q["n"] == 3]["v"]
+    q.index = pd.PeriodIndex(q.index, freq="Q")
+    q = q.asfreq("Q")
+    out = 100 * (q / q.shift(4) - 1)
+    out.index = out.index.astype(str)
+    return out.round(2)
+
+
+def restatements(fin: pd.DataFrame) -> pd.DataFrame:
+    """Quarters whose value changed in a later filing (point-in-time storage makes this visible)."""
+    if fin.empty:
+        return pd.DataFrame()
+    rows = []
+    for (t, m, fy, fq), g in fin.groupby(["ticker", "metric", "fiscal_year", "fiscal_q"]):
+        g = g.sort_values("filed_date")
+        if g["value_usd"].round(-3).nunique() < 2:
+            continue
+        first, last = g.iloc[0], g.iloc[-1]
+        rows.append({"ticker": t, "metric": m, "fiscal": f"FY{fy} Q{fq}", "quarter": last["quarter"],
+                     "first_b": round(first["value_usd"] / 1e9, 3), "first_filed": first["filed_date"],
+                     "latest_b": round(last["value_usd"] / 1e9, 3), "latest_filed": last["filed_date"],
+                     "change_pct": round(100 * (last["value_usd"] / first["value_usd"] - 1), 2), "versions": len(g)})
+    return pd.DataFrame(rows).sort_values("latest_filed", ascending=False) if rows else pd.DataFrame()

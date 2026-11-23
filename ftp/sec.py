@@ -73,15 +73,26 @@ def _fiscal_year_starts(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def quarterly(facts: dict, ticker: str, metric: str) -> pd.DataFrame:
-    """Point-in-time quarterly values for one company and metric (tries each candidate concept)."""
-    for concept in config.METRIC_CONCEPTS[metric]:
+    """Point-in-time quarterly values for one company and metric.
+
+    Companies switch XBRL tags over time (e.g. `Revenues` -> `RevenueFromContract...` after ASC 606),
+    so every candidate concept is converted and the results are merged PER QUARTER: each quarter
+    takes its versions from the highest-priority concept that covers it. Using only the first
+    concept found would silently drop the years tagged differently."""
+    parts = []
+    for rank, concept in enumerate(config.METRIC_CONCEPTS[metric]):
         df = facts_frame(facts, concept)
-        if not df.empty and (df["days"].between(*QUARTER_DAYS).any() or df["days"].between(*YEAR_DAYS).any()):
-            out = _to_quarters(df, ticker, metric, concept)
-            if not out.empty:
-                return out
-    log.warning("%s %s: no usable concept found", ticker, metric)
-    return pd.DataFrame()
+        if df.empty or not (df["days"].between(*QUARTER_DAYS).any() or df["days"].between(*YEAR_DAYS).any()):
+            continue
+        out = _to_quarters(df, ticker, metric, concept)
+        if not out.empty:
+            parts.append(out.assign(_rank=rank))
+    if not parts:
+        log.warning("%s %s: no usable concept found", ticker, metric)
+        return pd.DataFrame()
+    allq = pd.concat(parts, ignore_index=True)
+    best = allq.groupby(["fiscal_year", "fiscal_q"])["_rank"].transform("min")
+    return allq[allq["_rank"] == best].drop(columns="_rank").reset_index(drop=True)
 
 
 def _to_quarters(df: pd.DataFrame, ticker: str, metric: str, concept: str) -> pd.DataFrame:

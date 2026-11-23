@@ -18,7 +18,7 @@ from dataclasses import dataclass, field
 
 NUM_RE = re.compile(
     r"(?<![\w.])(?P<neg>[-−])?\$?(?P<num>\d{1,3}(?:,\d{3})+|\d+)(?P<dec>\.\d+)?\s*"
-    r"(?P<unit>%|pp|percentage points?|billion|bn|B\b|million|M\b|MW|GW|GWh|TWh|x\b)?",
+    r"(?P<unit>%|pp|percentage points?|billion|bn|B\b|million|M\b|MW|GW|GWh|TWh|°C|x\b)?",
     re.IGNORECASE,
 )
 QUARTER_RE = re.compile(r"\b(?:Q[1-4]\s*\d{4}|\d{4}\s*Q[1-4]|Q[1-4])\b", re.IGNORECASE)
@@ -82,3 +82,15 @@ def verify(text: str, evidence: list[float]) -> Report:
         if not matches(value, unit, decimals, evidence):
             rep.unverified.append(raw)
     return rep
+
+
+def provenance(text: str, sources: list[tuple[float, str]], given: list[float] = ()) -> list[dict]:
+    """For each number in the answer: was it verified, and which tool produced it?
+    `sources` = (value, tool name) pairs; `given` = numbers quoted in the question itself."""
+    out = []
+    for raw, value, unit, decimals in extract(text):
+        src = next((tool for v, tool in sources if matches(value, unit, decimals, [v])), None)
+        if src is None and matches(value, unit, decimals, list(given)):
+            src = "question"
+        out.append({"text": raw, "verified": src is not None, "source": src})
+    return out
