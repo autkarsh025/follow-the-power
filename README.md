@@ -29,7 +29,7 @@ ends up as **electricity demand** on the grid. This project:
 |---|---|
 | **Spending** | Hyperscaler capex hit **$201.9B in 2026Q3, +108% YoY**, 11.7× the 2019 quarterly average. NVIDIA's latest quarter: **$96.2B, +106%**. |
 | **Power** | Northern Virginia's overnight baseload is **up ~50% since 2019 (~4,900 MW)**, about 2.7M GPUs at 1.4 kW × PUE 1.3. Ohio +22%, Dallas +14%, Chicago +3%. |
-| **Take-off** | A statistical break test finds **Ohio's always-on load was flat until mid-2024, then started growing ~1,100 MW/yr**. Northern Virginia shows no break, just a steady ~680 MW/yr ramp. |
+| **Acceleration** | A statistical break test (piecewise trend, BIC) finds **Northern Virginia accelerated in May 2024 (~590 → ~1,100 MW/yr)** and **Ohio broke out in August 2024 (~140 → ~1,270 MW/yr)**; Dallas sped up from late 2023. |
 | **Contrast** | West Texas grew +118%, but that's oil, gas and crypto mining, so it's kept as a contrast zone and out of the data-center totals. The step detector's one hit there is the April 2020 oil crash. |
 | **Supply chain** | Chips & memory is the fastest-growing layer (TTM revenue +70%). Micron, GE Vernova and Dell track hyperscaler capex most tightly. |
 | **Honesty** | Grid data beats a naive nowcast for only **6 of 24** companies. The grid *confirms* the build-out; it rarely front-runs earnings. |
@@ -67,7 +67,9 @@ ends up as **electricity demand** on the grid. This project:
 
 **Analytics**
 - Weather normalization: per-day regression with **month fixed effects** (absorbing all growth) + quadratic heating/
-  cooling degree days + weekend effect; normalized = actual − weather(actual) + weather(normal). R² 0.79–0.98.
+  cooling degree days + weekend effect; normalized = load at average-year weather (actual − actual weather effect +
+  one constant average effect), which also removes the seasonal swing. R² 0.79–0.98.
+- Growth regimes: continuous piecewise-linear trend with 0–2 breakpoints chosen by BIC: *when* did growth speed up?
 - Step detection: deseasonalized (1-year rolling-mean detrend + day-of-year profile), then 4-week median jumps
   vs. a robust MAD threshold, with non-maximum suppression.
 - Load-duration curves, hour × month heatmaps, temperature-response curves, bootstrap trend projection (block

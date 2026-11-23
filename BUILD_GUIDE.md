@@ -59,6 +59,9 @@ highest-priority concept that covers it. Revenue/capex ≤ 0 is dropped so a dor
   continuity, non-positive values. *Critical* failures (no data for the primary zone or NVIDIA) fail the run
   before publishing; warnings go to the dashboard. Results are stored per run.
 - **State between runs:** the SQLite DB lives in the GitHub Actions cache; the bot commit rebases if `main` moved.
+- **Eval failures that were grader bugs:** the first live run scored 17/19. One "failure" was a *more precise*
+  answer (0.516 vs. expected 0.52); the other was the verifier reading citation ¶-numbers as claims and mis-pairing
+  quotes. Fixed with tests → 19/19 on two models. Lesson: audit the grader as hard as the model.
 - **Real bugs caught by these systems:** `.gitignore` hid `docs/data`; a hidden-XBRL parser bug produced 0
   passages; the capex sum silently included new companies (caught by a sanity check against the morning's
   number; now a regression test); SEC's API lagging on utilities' latest 10-Qs (flagged, not hidden).
@@ -71,11 +74,17 @@ upserts port directly to Postgres; the natural next step at scale is Parquet par
 - **Overnight baseload:** median load 1–5 AM. Homes/offices sleep; data centers don't.
 - **Weather normalization:** per-day regression `overnight = level[YYYY-MM] + a·HDD + b·HDD² + c·CDD + d·CDD² +
   e·weekend`. The month fixed effects absorb *all* growth, so weather coefficients come only from day-to-day swings
-  within a month (no confusion between "it got hotter" and "it grew"). Normalized = actual − weather(actual) +
-  weather(normal for that calendar month). R² 0.79–0.98 across zones.
+  within a month (no confusion between "it got hotter" and "it grew"). Normalized = load at *average-year weather*:
+  actual − weather(actual) + one constant (the average weather effect over all days). Using one constant rather than
+  a per-month "normal" also removes the seasonal swing, so trends are readable. R² 0.79–0.98 across zones.
+- **Growth regimes:** continuous piecewise-linear trend (hinge terms) with 0–2 breakpoints, each segment ≥ 12 months,
+  chosen by BIC (n·ln(RSS/n) + k·ln n), so a break must earn its parameters. Real result: Northern Virginia sped up
+  in May 2024 and Ohio in August 2024. A straight line gets zero breaks (tested).
 - **Step detection:** deseasonalize (1-year rolling-mean detrend, then subtract a smoothed day-of-year profile;
-  a mean, not a median, because a median over a sinusoid is biased), then jump = median(next 28 days) −
-  median(previous 28). Steps = local maxima above max(4×MAD, 1.5% of load). Robust to single odd days and heat waves.
+  a mean, not a median, because a median over a sinusoid is biased), then jump = median(next 8 weeks) −
+  median(previous 8 weeks). Steps = local maxima above max(4×MAD, 1.5% of load). Tuned on real data: 4-week windows
+  flagged a long January cold snap the weather model underfit; 8-week windows flag only the April 2020 oil crash in
+  West Texas. Data-center growth is a ramp, so a quiet detector in the hubs is the expected, honest result.
 - **Temperature response:** mean load per 2 °C bin per year. Curves shifting up = more load at the same temperature.
 - **Load-duration curve / load factor:** sorted hours; average ÷ peak rises as always-on load grows.
 - **Lead/lag:** corr(x_t, y_{t+k}), k = −4..4, on YoY growth (removes seasonality and trend). Noise band ≈ 2/√n.
