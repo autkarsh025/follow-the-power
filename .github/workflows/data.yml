@@ -1,0 +1,20 @@
+name: data
+# Loads SEC financials + EIA grid data and runs the analysis. Manual for now; scheduled later.
+on:
+  workflow_dispatch:
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip }
+      - run: pip install -r requirements.txt
+      - name: Load data
+        env:
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
+        run: python -m ftp.pipeline
+      - name: Analysis report
+        run: python -m ftp.report
+      - uses: actions/upload-artifact@v4
+        with: { name: ftp_db, path: data/follow_the_power.db, retention-days: 7 }
