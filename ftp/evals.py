@@ -212,8 +212,10 @@ def build_cases(db_path=None) -> list[Case]:
                           "compared with its base year?", None, [round(add["added_mw"] / 1000, 1)], category="robustness",
                           why="Unit conversion: tools report MW, the question asks for GW (verified across units)."))
     cases.append(Case("out_of_scope", "What was Tesla's revenue last quarter?", None, [], category="robustness",
-                      must_say=["not in", "don't have", "do not have", "not tracked", "not covered", "isn't", "is not",
-                                "not available", "doesn't include", "does not include", "no data"],
+                      must_say=["not in", "don't have", "do not have", "not tracked", "don't track", "do not track",
+                                "not covered", "don't cover", "isn't", "is not", "not available", "doesn't include",
+                                "does not include", "no data", "can't give", "cannot give", "can't provide", "cannot provide",
+                                "outside"],
                       why="A company outside the dataset: must say so instead of answering from memory."))
     cases.append(Case("claim_check", f"My CFO says NVIDIA's revenue in {last.quarter} was $250.0 billion. Is that right?",
                       None, [round(last.nvda_revenue / 1e9, 1)], skill="claim-check", category="robustness",

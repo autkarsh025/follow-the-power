@@ -206,3 +206,8 @@ def test_unverified_memo_is_not_published(dbp, tmp_path, monkeypatch):
     llm = scripted([("tool", "quarterly_financials", {"last_n": 1}), ("text", lambda r: "Capex grew 999.9%.")])
     memo.main(llm=llm, db_path=dbp)
     assert not (tmp_path / "reports" / "latest.json").exists() and list((tmp_path / "reports" / "rejected").glob("*.json"))
+
+
+def test_month_name_dates_are_not_claims():
+    t = "Filed on August 26, 2026 (or 26 Aug 2026, or Sept. 3) with revenue of $96.2B."
+    assert [v for _, v, _, _ in verify.extract(t)] == [96.2]

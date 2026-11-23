@@ -233,7 +233,7 @@ footer{color:var(--t3);font-size:12.5px;margin-top:28px;line-height:1.7}.empty{c
   <div class="grid">
     <div class="card"><h2>Results by category</h2><p class="d">Cases passed per test category.</p><div class="chart short" id="agcat"></div></div>
     <div class="card"><h2>Leaderboard</h2><p class="d">Same cases, different models (when several were run).</p><div id="aglb"></div></div>
-    <div class="card wide"><h2>Every test case</h2><p class="d">Click a row to see the receipts below.</p><div class="scroll" id="agcases"></div></div>
+    <div class="card wide"><h2>Every test case</h2><p class="d">Click a row to see the receipts below. Every failure in past live runs was traced to a root cause; most were grader bugs, not model errors. See the <a href="https://github.com/autkarsh025/follow-the-power/blob/main/EVAL_LOG.md">eval log</a>.</p><div class="scroll" id="agcases"></div></div>
     <div class="card wide"><h2>🔍 Receipts</h2><p class="d">The question, the tools the agent called (in order), and its answer. <span class="pill"><span class="dot" style="background:var(--good)"></span>verified number</span> (hover to see which tool produced it) · <span class="pill"><span class="dot" style="background:var(--crit)"></span>unverified</span></p>
       <div class="ctl"><select id="rsel"></select></div><div id="receipt"></div></div>
     <div class="card"><h2>Retrieval benchmark (filing search)</h2><p class="d">Does the search find a relevant passage? 15 company questions, scored daily without an LLM: hit@3 and mean reciprocal rank.</p><div id="retr"></div></div>

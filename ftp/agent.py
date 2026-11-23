@@ -154,7 +154,8 @@ def run(question: str, llm: LLM, as_of: str | None = None, db_path=None, words: 
                             + "; ".join(f'"{q[:80]}"' for q in bad_quotes))
         messages.append({"role": "user", "content":
                          "Verification failed: " + " | ".join(problems) + ". Revise the answer: get each number from a "
-                         "tool or `calculate`, quote filing text exactly (or paraphrase without quotes), or remove it."})
+                         "tool or `calculate`, quote filing text exactly (or paraphrase without quotes), or remove it. Write only the "
+                         "corrected answer for the user; don't mention this check."})
     res.error = "max turns reached"
     res.seconds = round(time.time() - t0, 1)
     return res

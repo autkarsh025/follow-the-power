@@ -22,7 +22,10 @@ NUM_RE = re.compile(
     re.IGNORECASE,
 )
 QUARTER_RE = re.compile(r"\b(?:Q[1-4]\s*\d{4}|\d{4}\s*Q[1-4]|Q[1-4])\b", re.IGNORECASE)
-DATE_RE = re.compile(r"\b\d{4}-\d{2}(?:-\d{2})?\b")
+_MON = r"(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]*\.?"
+DATE_RE = re.compile(r"\b\d{4}-\d{2}(?:-\d{2})?\b"                     # 2026-08-26
+                     rf"|\b{_MON}\s+\d{{1,2}}(?:st|nd|rd|th)?(?:,?\s+\d{{4}})?\b"  # August 26, 2026
+                     rf"|\b\d{{1,2}}(?:st|nd|rd|th)?\s+{_MON}(?:\s+\d{{4}})?\b", re.IGNORECASE)   # 26 August 2026
 CITE_RE = re.compile(r"\[[A-Z]{1,5} 10-[QK][^\]]*\]|¶\s*\d+")   # [NVDA 10-Q filed …, MD&A ¶14] / ¶14: a source, not a claim
 
 
