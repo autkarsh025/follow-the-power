@@ -72,3 +72,14 @@ def test_q4_without_9m_ytd_uses_sum_of_quarters():
     items = [i for i in INCOME_STYLE if not (i["start"] == "2024-01-01" and i["end"] == "2024-09-30")]
     df = sec.quarterly(facts("Revenues", items), "NVDA", "revenue")
     assert values(df)[4] == 160
+
+
+def test_current_fiscal_year_without_10k_is_included():
+    # FY2025 is still in progress: only Q1 and the 6-month YTD have been filed.
+    items = INCOME_STYLE + [
+        fact("2025-01-01", "2025-03-31", 200, "2025-04-25"),
+        fact("2025-04-01", "2025-06-30", 210, "2025-07-25"), fact("2025-01-01", "2025-06-30", 410, "2025-07-25"),
+    ]
+    df = sec.quarterly(facts("Revenues", items), "NVDA", "revenue")
+    fy25 = sec.as_of(df, "2030-01-01").query("fiscal_year == 2025").sort_values("fiscal_q")
+    assert list(fy25["value_usd"]) == [200, 210]

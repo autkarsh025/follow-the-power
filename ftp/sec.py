@@ -57,9 +57,17 @@ def facts_frame(facts: dict, concept: str) -> pd.DataFrame:
 
 
 def _fiscal_year_starts(df: pd.DataFrame) -> pd.DataFrame:
-    """Annual (~365-day) periods define each fiscal year's start and end."""
+    """Annual (~365-day) periods define each fiscal year's start and end.
+
+    The CURRENT fiscal year has no full-year figure yet (no 10-K), so it would be invisible.
+    If 10-Q facts start the day after the last completed year ends, add that in-progress year."""
     yr = df[df["days"].between(*YEAR_DAYS)][["start_d", "end_d"]].drop_duplicates()
     yr = yr.sort_values("start_d").drop_duplicates("end_d")
+    if not yr.empty:
+        nxt = yr["end_d"].max() + pd.Timedelta(days=1)
+        if (df["start_d"] == nxt).any():
+            yr = pd.concat([yr, pd.DataFrame({"start_d": [nxt], "end_d": [nxt + pd.Timedelta(days=364)]})],
+                           ignore_index=True)
     yr["fiscal_year"] = yr["end_d"].dt.year
     return yr
 
