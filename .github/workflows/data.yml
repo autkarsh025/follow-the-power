@@ -84,7 +84,10 @@ jobs:
           git add docs/ evals/ reports/ 2>/dev/null || true
           git diff --cached --quiet || git commit -m "Daily data refresh"
           # main may have moved while this ran (e.g. a code push): rebase the data commit on top, retry
-          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
+          git status --short | head -20
+          ok=0
+          for i in 1 2 3; do git pull --rebase --autostash -q && git push -q && ok=1 && break; sleep 5; done
+          [ "$ok" = 1 ] || { echo "push failed"; exit 1; }
 
       - uses: actions/upload-artifact@v4
         if: always()

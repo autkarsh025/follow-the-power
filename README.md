@@ -1,70 +1,116 @@
-# follow-the-power ⚡ the AI boom, seen through the electrical grid
+# follow-the-power ⚡ the AI boom, seen through money *and* electricity
 
-**[▶ Live dashboard](https://autkarsh025.github.io/follow-the-power/)** · ![tests](https://github.com/autkarsh025/follow-the-power/actions/workflows/tests.yml/badge.svg)
+**[▶ Live dashboard](https://autkarsh025.github.io/follow-the-power/)** · **[Open dataset](https://autkarsh025.github.io/follow-the-power/data/README.md)** · ![tests](https://github.com/autkarsh025/follow-the-power/actions/workflows/tests.yml/badge.svg)
 
-A data pipeline and a verified Claude analyst agent that follow the AI build-out from **big tech's budgets → NVIDIA's revenue → the power grid**, using only official public data (SEC filings and U.S. Energy Information Administration grid data), with every number tracked **point-in-time**.
+A data platform and a **verified Claude analyst agent** that follow the AI build-out from big tech's budgets, down a
+26-company supply chain, to hourly electricity demand in five data-center hubs. Built only from official public data
+(SEC EDGAR, U.S. EIA, ERA5 weather), with every number stored **point-in-time**.
 
 ## In plain English
 
-AI runs on GPUs, and GPUs run on electricity. Every NVIDIA chip ends up in a data center that draws power around the clock, and Northern Virginia (PJM's Dominion zone) hosts the largest concentration of data centers in the world. This project:
+AI runs on GPUs, and GPUs run on electricity. When Microsoft, Alphabet, Amazon and Meta spend hundreds of billions
+on AI, that money flows to chip makers, server builders, power-equipment makers and data-center landlords, and
+ends up as **electricity demand** on the grid. This project:
 
-1. **Collects the money:** NVIDIA's quarterly revenue and the capital spending of Microsoft, Alphabet, Amazon and Meta, straight from SEC filings, remembering **the date each number was first published**.
-2. **Collects the power:** hourly electricity demand in Northern Virginia since 2019, plus monthly commercial electricity sales in data-center states.
-3. **Detects data centers in the grid:** they run 24/7, so they raise the **overnight baseload** and make the daily load curve flatter.
-4. **Tests what leads what,** honestly: correlations come with noise bands, and forecasts are backtested using only data that was public at the time.
-5. **Puts a Claude agent on top:** it answers questions using the data, **every number it writes is automatically verified**, and it's scored by **replaying history** so it can't see the future.
+1. **Follows the money:** revenue, capex and gross margins for 26 companies in six layers, parsed from SEC
+   filings, remembering *the date each number became public* (so history can be replayed without hindsight).
+2. **Follows the power:** hourly demand in 5 grid zones since 2019, with **weather removed** by a degree-day
+   regression, so a hot summer isn't mistaken for data-center growth.
+3. **Finds data centers in the grid:** they run 24/7, so they lift the *overnight* load. Step detection flags
+   sudden sustained jumps (a campus switching on); temperature-response curves show more load *at the same temperature*.
+4. **Tests what leads what, honestly:** lead/lag with noise bands, and point-in-time nowcast backtests for every
+   company (does money or power predict revenue better than "growth continues"? Mostly not, and it says so).
+5. **Puts a Claude agent on top:** 16 tools, 7 skills, cited filing search, an MCP server. Every number it writes is
+   checked against tool output, quotes are checked word-for-word, and it's evaluated by **replaying history**.
 
-## Findings (real data, through Q3 2026)
+## What it found (real data, Nov 2026)
 
-- **The chain is visible: NVIDIA → capex → power.** NVIDIA's revenue growth runs ~3–4 quarters ahead of hyperscaler capex growth (r ≈ 0.51 vs. a ±0.42 noise band), and capex growth runs ~1 quarter ahead of Northern Virginia's overnight load growth (r ≈ 0.54 vs. ±0.40).
-- **The scale:** hyperscaler capex reached **$202B in Q3 2026, +108% YoY**; NVIDIA's latest reported quarter was **$96.2B, +106%**.
-- **The honest result:** the grid does **not** forecast NVIDIA's revenue better than a naive "growth continues" guess (average miss 41 vs. 36 percentage points). The grid confirms the build-out *after* the money moves; it doesn't front-run it.
+| | |
+|---|---|
+| **Spending** | Hyperscaler capex hit **$201.9B in 2026Q3, +108% YoY**, 11.7× the 2019 quarterly average. NVIDIA's latest quarter: **$96.2B, +106%**. |
+| **Power** | Northern Virginia's overnight baseload is **up ~50% since 2019 (~4,900 MW)**, about 2.7M GPUs at 1.4 kW × PUE 1.3. Ohio +22%, Dallas +14%, Chicago +3%. |
+| **Contrast** | West Texas grew +118%, but that's oil, gas and crypto mining, so it's kept as a contrast zone and out of the data-center totals. |
+| **Supply chain** | Chips & memory is the fastest-growing layer (TTM revenue +70%). Micron, GE Vernova and Dell track hyperscaler capex most tightly. |
+| **Honesty** | Grid data beats a naive nowcast for only **6 of 24** companies. The grid *confirms* the build-out; it rarely front-runs earnings. |
+| **Data quality** | Automated checks caught SEC's API lagging on several utilities' and REITs' latest 10-Qs, and an XBRL tag holding zeros (fixed by tag fall-through). |
 
 ## Architecture
 
 ```
- SEC EDGAR (XBRL companyfacts) ─┐                         ┌─ power index (overnight baseload, flatness)
-                                ├─► point-in-time SQLite ─┼─ lead/lag (cross-correlation + noise bands)
- EIA (hourly zone demand,       │   every value + filed   ├─ nowcast backtest (no look-ahead)
-      state retail sales) ──────┘   date / known date     └─ Claude agent: tools + skills + verifier
-                                                                         │
-                         GitHub Actions (daily) ─► evals + dashboard (GitHub Pages)
+ SEC EDGAR ─ XBRL companyfacts (26 cos) ─┐
+           └ 10-Q/10-K MD&A text ─────────┤                           ┌─ weather normalization, step detection
+ EIA ───── hourly demand (5 zones),       ├─► point-in-time SQLite ───┼─ lead/lag matrix, AI-exposure scores
+           state retail sales ────────────┤   incremental · idempotent├─ nowcast backtests (26 companies)
+ Open-Meteo ERA5 daily temperature ───────┘   quality-gated           └─ BM25 filing search (4,600+ passages)
+                                                     │
+            Claude agent: 16 point-in-time tools · 7 skills · number + quote verifier · MCP server
+                                                     │
+        GitHub Actions (daily): load → quality checks → open dataset → [evals · memo] → dashboard (Pages)
 ```
 
-## Design decisions
+## Engineering highlights
 
-**Point-in-time financials.** SEC's XBRL data mixes quarterly figures, year-to-date figures, full-year totals and restatements. `ftp/sec.py` turns them into clean quarters (direct quarterly facts, YTD differencing for cash-flow items, Q4 = FY − 9M) and keeps **every published version with its first filing date**. `sec.as_of(df, date)` answers "what was known on this date?", which is the foundation for honest backtests.
+**Data engineering**
+- **Point-in-time financials.** XBRL mixes quarterly, year-to-date, annual and restated values. `sec.py` derives clean
+  quarters (direct facts, YTD differencing, Q4 = FY − 9M), keeps every version with its first filing date, and
+  merges XBRL tags per quarter (companies switch tags; utilities report trailing-12-month figures inside 10-Qs,
+  which the parser deliberately ignores when finding fiscal years).
+- **Incremental, idempotent loads.** Hourly data resumes from the last stored hour minus a 3-day revision window;
+  upserts make re-runs safe; the SQLite database persists between Actions runs in the cache. SEC loads replace a
+  company's rows, so parser fixes self-heal stored history.
+- **Quality gate.** ~230 checks per run (coverage, freshness, gaps, implausible values, quarter continuity,
+  non-positive financials). Critical failures stop the run before anything is published.
+- **Fault isolation.** Each source and each company loads independently; one bad filing can't block the rest.
+- **Open dataset.** Cleaned tables published daily as CSV with a data dictionary.
 
-**Restatements vs. re-reports.** A value re-filed unchanged keeps its original date; a changed value becomes a new version. The current, unfinished fiscal year (no 10-K yet) is inferred from 10-Q filings, a bug the first real run exposed.
+**Analytics**
+- Weather normalization: per-day regression with **month fixed effects** (absorbing all growth) + quadratic heating/
+  cooling degree days + weekend effect; normalized = actual − weather(actual) + weather(normal). R² 0.79–0.98.
+- Step detection: deseasonalized (1-year rolling-mean detrend + day-of-year profile), then 4-week median jumps
+  vs. a robust MAD threshold, with non-maximum suppression.
+- Load-duration curves, hour × month heatmaps, temperature-response curves, bootstrap trend projection (block
+  bootstrap with refitting), lead/lag with ~2/√n noise bands, robust-z variance screen, restatement tracker.
 
-**The data-center signature.** Data centers draw flat power 24/7, so the analysis uses the median **1–5 AM load** (baseload) and **flatness** (overnight ÷ peak), compared year over year to cancel seasons.
-
-**Honest statistics.** Every correlation is reported with its noise band (~2/√n). The nowcast backtest stands 7 days after each quarter ends (before NVIDIA reports), uses only filings public by then, and scores against the number as **first reported**.
-
-**The agent** (`ftp/agent.py`, `ftp/tools.py`):
-- **Tools** are point-in-time: with `as_of`, the agent literally can't read later data. Raw SQL is only offered without `as_of`, because time rules can't be enforced on arbitrary queries, and it runs on a read-only connection.
-- **Skills** (`skills/*/SKILL.md`): variance analysis, lead/lag interpretation and grid signals, loaded on demand with `load_skill`.
-- **Number verifier** (`ftp/verify.py`): every figure in an answer must match a number a tool returned (or a `calculate` result), within rounding. Unverifiable numbers trigger a forced revision.
-- **Evaluation harness** (`ftp/evals.py`): expected answers are computed from the database, never hard-coded. Time-travel cases also list **future numbers that must not appear**. Results: `evals/results.md` and the dashboard.
+**AI engineering**
+- **Agent** (`agent.py`): Claude tool use with prompt caching. With `as_of`, tools literally can't read later data;
+  raw SQL is only offered without `as_of` and runs read-only.
+- **Verifier** (`verify.py`): every figure must match a tool result (or a number quoted in the question) within
+  rounding, with unit conversion (million↔billion, GW↔MW). Quotes must appear verbatim in retrieved passages.
+  Failures force a revision. Every number carries **provenance** (which tool produced it).
+- **RAG** (`filings.py`): MD&A extraction (skipping the table-of-contents copy and hidden inline-XBRL), paragraph-aware
+  chunking, BM25 ranking, citations like `[NVDA 10-Q filed 2026-08-26, MD&A ¶14]`, point-in-time by filing date,
+  plus an offline retrieval benchmark (hit@3, MRR).
+- **Evals** (`evals.py`): ~20 cases across fact, time-travel, analysis, multi-step, filing-search and robustness
+  (planted false claims, refusing to invent forecasts). Expected answers are computed from the data, never
+  hard-coded; time-travel cases list future numbers that must not appear. Optional LLM-judge rubric and
+  multi-model leaderboard; tokens, cache hits and latency tracked.
+- **MCP server** (`mcp_server.py`): the same tools and skills over JSON-RPC/stdio for Claude Desktop/Code
+  (standard library only, tested over a real subprocess).
+- **Automated memo** (`memo.py`): the agent writes a verified weekly research note, archived in `reports/`.
 
 ## Run it
 
 ```bash
 pip install -r requirements.txt
-cp .env.example .env            # EIA_API_KEY (free), ANTHROPIC_API_KEY (for the agent), SEC_USER_AGENT="Name email"
-pytest -q                        # offline: synthetic data + a scripted fake LLM
-python -m ftp.pipeline           # load SEC + EIA data (~1 minute)
-python -m ftp.report             # coverage, power index, lead/lag, backtest
-python -m ftp.evals              # agent evaluation (Claude API; typically well under $1)
-python -m ftp.dashboard          # docs/index.html
+cp .env.example .env     # EIA_API_KEY (free), SEC_USER_AGENT="Name email", ANTHROPIC_API_KEY (agent only)
+pytest -q                # ~50 tests, offline: synthetic data with known answers + a scripted fake LLM
+python -m ftp.pipeline   # load everything (incremental; --full to backfill)
+python -m ftp.evals --judge                      # agent evaluation
+python -m ftp.evals --models claude-sonnet-5-5,claude-haiku-5-5   # leaderboard
+python -m ftp.memo       # agent-written research memo
+python -m ftp.export && python -m ftp.dashboard  # open dataset + docs/index.html
+python -m ftp.mcp_server # MCP server on stdio
 ```
 
 ## Limits (said out loud)
 
-- ~25–30 quarters is a small sample; lead/lag results are suggestive, not proof.
-- Correlation of growth rates ≠ causation: the whole AI cycle moves these series together.
-- One grid zone isn't the whole market; weather, electrification and population also move load.
-- NVIDIA's total revenue is used. Its Data Center segment isn't in the SEC's simple XBRL API (it's dimensional data); extracting it from filings is a planned extension.
+- ~25–30 quarters is a small sample: lead/lag results are suggestive, not proof. Correlation ≠ causation.
+- XBRL gives company totals, not segments (NVIDIA's Data Center revenue comes from filing text via search).
+- One weather point per zone; overnight load growth also includes EVs, heat pumps and industry. GPU equivalents
+  are illustrations under stated assumptions.
+- SEC's companyfacts API sometimes lags filings; the quality checks flag it rather than hide it.
+
+See **[BUILD_GUIDE.md](BUILD_GUIDE.md)** for how every piece works and why.
 
 ---
-Data: SEC EDGAR; U.S. Energy Information Administration (EIA-930 hourly subregion demand; electric power retail sales). Not investment advice.
+Data: SEC EDGAR; U.S. Energy Information Administration (EIA-930, retail sales); Open-Meteo (ERA5). Not investment advice.
