@@ -392,9 +392,10 @@ def chain_series(fin: pd.DataFrame, grid_q: pd.DataFrame, norm_q: pd.Series | No
     if not grid_q.empty:
         cols["N. Virginia baseload"] = grid_q.set_index("quarter")["overnight_yoy"]
     if norm_q is not None and not norm_q.empty:
-        cols["N. Virginia baseload (weather-adj.)"] = norm_q
+        cols["N. Va. baseload, weather-adj."] = norm_q
     df = pd.DataFrame(cols).sort_index()
-    return df[df.index >= "2019Q1"]
+    df = df[df.index >= "2019Q1"]
+    return df.loc[:, df.notna().sum() >= 8]          # too few quarters for a meaningful correlation
 
 
 def lead_lag_matrix(df: pd.DataFrame) -> dict:
@@ -539,7 +540,7 @@ def layer_totals(fin: pd.DataFrame, since: str = "2019Q1") -> dict:
             layers.setdefault(config.COMPANIES[t]["layer"], []).append(pd.Series(d["ttm_b"], index=d["quarter"]))
     out = {}
     for layer, ss in sorted(layers.items()):
-        tot = pd.concat(ss, axis=1).dropna().sum(axis=1)
+        tot = pd.concat(ss, axis=1).sort_index().dropna().sum(axis=1)     # quarters in time order
         yoy = (100 * (tot / tot.shift(4) - 1)).round(1)
         out[layer] = {"quarter": tot.index.tolist(), "ttm_b": tot.round(1).tolist(),
                       "yoy": [None if np.isnan(v) else v for v in yoy.tolist()], "companies": len(ss)}

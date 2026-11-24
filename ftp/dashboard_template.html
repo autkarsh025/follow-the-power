@@ -371,7 +371,24 @@ const L = (x = {}) => Object.assign({paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolo
   legend: {orientation: 'h', x: 0, y: -0.2, yanchor: 'top', font: {size: 11.5}}, hovermode: 'x unified',
   hoverlabel: {bgcolor: C.s2, bordercolor: C.b, font: {color: C.t1}}}, Object.fromEntries(Object.entries(x).filter(([k]) => k !== 'xaxis' && k !== 'yaxis')));
 const TRACES = {};
-function plot(id, traces, layout) { if (!$(id)) return; TRACES[id] = traces; Plotly.react(id, traces, L(layout), cfg); }
+// Quarter labels: '2024Q3' -> "'24 Q3", kept in true time order, horizontal and thinned out.
+const QRE = /^(\d{4})Q([1-4])$/;
+const qlab = q => { const m = QRE.exec(q); return m ? `'${m[1].slice(2)} Q${m[2]}` : q; };
+function plot(id, traces, layout = {}) {
+  if (!$(id)) return;
+  TRACES[id] = traces;
+  const qs = new Set();
+  traces.forEach(t => (t.x || []).forEach(v => { if (typeof v === 'string' && QRE.test(v)) qs.add(v); }));
+  let lay = layout;
+  if (qs.size) {
+    const order = [...qs].sort();
+    traces = traces.map(t => (t.x && t.x.some(v => typeof v === 'string' && QRE.test(v))) ? Object.assign({}, t, {x: t.x.map(qlab)}) : t);
+    lay = Object.assign({}, layout, {xaxis: Object.assign({tickangle: 0, nticks: 9, categoryorder: 'array', categoryarray: order.map(qlab), automargin: true}, layout.xaxis || {})});
+    // shapes and annotations anchored on a quarter move with the relabelled axis
+    ['shapes', 'annotations'].forEach(k => { if (lay[k]) lay[k] = lay[k].map(o => Object.assign({}, o, QRE.test(o.x0 || '') ? {x0: qlab(o.x0), x1: qlab(o.x1)} : {}, QRE.test(o.x || '') ? {x: qlab(o.x)} : {})); });
+  }
+  Plotly.react(id, traces, L(lay), cfg);
+}
 const CO = D.meta.companies;
 const LAYERS = [...new Set(Object.values(CO).map(c => c.layer))].sort();
 const layerColor = l => C.cat[LAYERS.indexOf(l) % 8];
@@ -540,7 +557,7 @@ R.chain = () => {
   const M = D.matrix;
   if (M && M.names) plot('matrix', [{type: 'heatmap', x: M.names, y: M.names, z: M.corr, zmin: -1, zmax: 1, zmid: 0, colorscale: [[0, '#2a78d6'], [0.5, C.mid], [1, '#e34948']],
     customdata: M.lag.map((r, i) => r.map((l, j) => [l, M.band[i][j]])), hovertemplate: '%{y} vs %{x}<br>r = %{z:.2f} at lag %{customdata[0]} (noise ±%{customdata[1]})<extra></extra>', colorbar: {thickness: 10}}],
-    {margin: {l: 170, r: 10, t: 8, b: 150}, hovermode: 'closest', xaxis: {tickangle: -45, gridcolor: 'rgba(0,0,0,0)'}, yaxis: {autorange: 'reversed', gridcolor: 'rgba(0,0,0,0)'}});
+    {margin: {l: 10, r: 10, t: 8, b: 10}, hovermode: 'closest', xaxis: {tickangle: -45, gridcolor: 'rgba(0,0,0,0)', automargin: true}, yaxis: {autorange: 'reversed', gridcolor: 'rgba(0,0,0,0)', automargin: true}});
 };
 
 // ============================== COMPANY
