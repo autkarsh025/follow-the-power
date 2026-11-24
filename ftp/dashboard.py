@@ -103,26 +103,17 @@ def findings(d: dict) -> list[dict]:
     _, capy = last(s["quarter"], s["capex_yoy"])
     base = [v for x, v in zip(s["quarter"], s["capex_b"]) if x.startswith("2019") and v is not None]
     if cap and base:
-        out.append({"icon": "💸", "title": "The spending",
-                    "text": f"Microsoft, Alphabet, Amazon and Meta spent ${cap:,.1f}B on capex in {q} "
-                            f"({capy:+.0f}% vs. a year earlier), {cap / (sum(base) / len(base)):.1f}× their 2019 quarterly average."})
+        out.append({"figure": f"${cap:,.1f}B", "title": f"Hyperscaler capex in {q}",
+                    "text": f"Microsoft, Alphabet, Amazon and Meta combined: {capy:+.0f}% on a year earlier and "
+                            f"{cap / (sum(base) / len(base)):.1f} times their 2019 quarterly average."})
     dom = d["zones"].get(config.PRIMARY_ZONE)
     if dom and dom.get("added"):
         a = dom["added"]
         g = dom["summary"].get("normalized_12m_growth")
-        out.append({"icon": "⚡", "title": "The power",
-                    "text": f"Northern Virginia's always-on (overnight) load is up {a['added_mw']:,} MW since 2019 "
-                            f"({a['added_pct']:+.0f}%), roughly {a['gpu_equivalent']:,} AI GPUs running 24/7, or "
-                            f"{a['homes_equivalent']:,} homes." + (f" Weather-adjusted, it grew {g:+.1f}% in the last 12 months." if g is not None else "")})
-    hubs = [z for z in d["zones"].values() if z.get("role") == "hub" and (z.get("added") or {}).get("added_mw", 0) > 0]
-    tot = sum(z["added"]["added_mw"] for z in hubs)
-    if tot:
-        contrast = [z for z in d["zones"].values() if z.get("role") == "contrast" and z.get("added")]
-        extra = (f" (West Texas, the contrast zone driven by oil, gas and crypto mining, added {contrast[0]['added']['added_mw']:,} MW "
-                 f"on its own.)" if contrast else "")
-        out.append({"icon": "🗺️", "title": f"Across {len(hubs)} data-center hubs",
-                    "text": f"Together they added about {tot:,} MW of weather-adjusted always-on load versus their base year, "
-                            f"roughly {int(round(tot * 1000 / (analytics.KW_PER_GPU_IT * analytics.PUE), -4)):,} GPUs' worth.{extra}"})
+        out.append({"figure": f"+{a['added_mw']:,} MW", "title": "Always-on load added in Northern Virginia since 2019",
+                    "text": f"Overnight demand is {a['added_pct']:+.0f}% higher, roughly {a['gpu_equivalent'] / 1e6:.1f} million AI GPUs "
+                            f"running around the clock, or {a['homes_equivalent'] / 1e6:.1f} million homes."
+                            + (f" Adjusted for weather, it grew {g:+.1f}% over the last 12 months." if g is not None else "")})
     accel = []
     for z in d["zones"].values():
         segs = (z.get("regimes") or {}).get("segments") or []
@@ -132,35 +123,41 @@ def findings(d: dict) -> list[dict]:
                 and segs[-2]["mw_per_year"] >= 0 and segs[-1]["mw_per_year"] > 1.5 * max(segs[-2]["mw_per_year"], 50)):
             accel.append((segs[-1]["mw_per_year"] - segs[-2]["mw_per_year"], z, segs))
     for _, z, segs in sorted(accel, key=lambda x: -x[0])[:2]:
-        out.append({"icon": "🚀", "title": f"{z['label'].split(' (')[0]} accelerated",
-                    "text": f"Weather-adjusted always-on load grew about {segs[-2]['mw_per_year']:,} MW/yr until {segs[-1]['from']}, "
-                            f"then {segs[-1]['mw_per_year']:,} MW/yr ({segs[-1]['pct_per_year']:+.1f}%/yr). The break is detected "
-                            "statistically (BIC) and is consistent with a wave of new data-center campuses."})
+        when = pd.Period(segs[-1]["from"], freq="M").strftime("%B %Y")
+        out.append({"figure": f"{segs[-1]['mw_per_year']:,} MW/yr", "title": f"{z['label'].split(' (')[0]} accelerated in {when}",
+                    "text": f"Up from about {segs[-2]['mw_per_year']:,} MW a year before that. The break point is chosen by a "
+                            "statistical test (BIC), not by hand, and lines up with a wave of new data-center campuses."})
+    hubs = [z for z in d["zones"].values() if z.get("role") == "hub" and (z.get("added") or {}).get("added_mw", 0) > 0]
+    tot = sum(z["added"]["added_mw"] for z in hubs)
+    if tot:
+        contrast = [z for z in d["zones"].values() if z.get("role") == "contrast" and z.get("added")]
+        extra = (f" West Texas added {contrast[0]['added']['added_mw']:,} MW on its own, but that growth is oil, gas and "
+                 "crypto mining, so it is tracked as a contrast and left out." if contrast else "")
+        out.append({"figure": f"{tot:,} MW", "title": f"Added across {len(hubs)} data-center hubs",
+                    "text": f"Weather-adjusted always-on load versus each hub's base year.{extra}"})
     ex = d.get("exposure") or []
     good = [e for e in ex if e["meaningful"]]
     if good:
         top = good[0]
-        out.append({"icon": "🔗", "title": "Most tied to AI spending",
-                    "text": f"{top['name']}'s revenue growth tracks hyperscaler capex growth most closely (correlation "
-                            f"{top['corr']:.2f}, {top['best_lag_q']}-quarter lag). {len(good)} of {len(ex)} companies show a "
-                            "correlation outside the noise band."})
+        out.append({"figure": f"r = {top['corr']:.2f}", "title": f"{top['name']} tracks big tech's capex most closely",
+                    "text": f"Correlation between its revenue growth and hyperscaler capex growth, at a {top['best_lag_q']}-quarter lag. "
+                            f"{len(good)} of {len(ex)} companies show a link stronger than chance."})
     lt = d.get("layers") or {}
     if lt:
         best = max(lt.items(), key=lambda kv: (kv[1]["yoy"][-1] or -1e9))
-        out.append({"icon": "🏗️", "title": "Hottest layer",
-                    "text": f"{best[0].split('· ')[-1]} is the fastest-growing layer: trailing-12-month revenue "
-                            f"{best[1]['yoy'][-1]:+.0f}% year over year (${best[1]['ttm_b'][-1]:,.0f}B)."})
+        out.append({"figure": f"{best[1]['yoy'][-1]:+.0f}%", "title": f"{best[0].split('· ')[-1]} is the fastest-growing layer",
+                    "text": f"Trailing-twelve-month revenue, now ${best[1]['ttm_b'][-1]:,.0f}B across the companies in that layer."})
     sb = d.get("scoreboard") or []
     if sb:
         beat = [r for r in sb if r["grid"] < r["naive"]]
-        out.append({"icon": "🎯", "title": "The honest test",
-                    "text": f"Grid data improved on a naive \"growth continues\" nowcast for {len(beat)} of {len(sb)} companies. "
-                            "The grid confirms the build-out; it rarely front-runs earnings."})
+        out.append({"figure": f"{len(beat)} of {len(sb)}", "title": "Companies where grid data beats a naive forecast",
+                    "text": "Power data confirms the build-out after the money moves. It rarely predicts a company's revenue "
+                            "better than assuming last quarter's growth continues."})
     ev = d.get("evals")
     if ev:
-        out.append({"icon": "🤖", "title": "The analyst",
-                    "text": f"The Claude analyst agent passed {ev['passed']}/{ev['total']} evaluation cases (time travel, "
-                            "planted false claims, cited filing search), with every number traced to a tool."})
+        out.append({"figure": f"{ev['passed']}/{ev['total']}", "title": "Evaluation cases passed by the AI analyst",
+                    "text": "Including time travel, planted false claims, prompt injection and cited filing search, with every "
+                            "number in every answer traced back to the data."})
     return out
 
 
