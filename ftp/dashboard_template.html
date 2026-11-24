@@ -395,7 +395,7 @@ function addCsvButtons() {
   document.querySelectorAll('.card[data-csv]').forEach(card => {
     if (card.querySelector('.tools')) return;
     const id = card.dataset.csv, box = document.createElement('div'); box.className = 'tools';
-    box.innerHTML = '<button class="btn small" title="Download the chart data as CSV">⤓ CSV</button>';
+    box.innerHTML = '<button class="btn small" title="Download the chart data as CSV">CSV</button>';
     box.firstChild.onclick = () => {
       const tr = (TRACES[id] || []).filter(t => t.x && t.y && !t.z);
       if (!tr.length) return;
