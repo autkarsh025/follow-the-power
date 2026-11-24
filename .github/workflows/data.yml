@@ -99,6 +99,13 @@ jobs:
           for i in 1 2 3; do git pull --rebase --autostash -q && git push -q && ok=1 && break; sleep 5; done
           [ "$ok" = 1 ] || { echo "push failed"; exit 1; }
 
+      - name: Publish to the public site (built pages only)
+        env:
+          SITE_DEPLOY_TOKEN: ${{ secrets.SITE_DEPLOY_TOKEN }}
+        run: |
+          python site/build_site.py
+          bash site/deploy.sh gigawatt-ledger docs site/public
+
       - uses: actions/upload-artifact@v4
         if: always()
         with: { name: ftp_db, path: data/follow_the_power.db, retention-days: 7 }

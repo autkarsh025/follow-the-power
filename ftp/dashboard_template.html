@@ -138,7 +138,7 @@ header{display:grid;grid-template-columns:1fr auto;align-items:start;gap:24px}
 <header>
   <div><h1>Gigawatt Ledger</h1>
     <p class="tag"><b>Tracking AI infrastructure from capex to the power grid.</b> 26 companies across the AI supply chain, hourly power demand in 5 data-center hubs, all point-in-time, with an AI analyst whose every number is verified.</p></div>
-  <div class="meta"><div><button class="btn" id="theme">Dark mode</button> <a class="btn" href="https://github.com/autkarsh025/follow-the-power">Source code</a> <a class="btn" href="data/README.md">Open data</a></div><div id="built"></div></div>
+  <div class="meta"><div><button class="btn" id="theme">Dark mode</button> <a class="btn" href="/">Utkarsh Agarwal</a> <a class="btn" href="data/README.md">Open data</a></div><div id="built"></div></div>
 </header>
 <nav class="tabs" id="tabs"></nav>
 
@@ -155,7 +155,7 @@ header{display:grid;grid-template-columns:1fr auto;align-items:start;gap:24px}
   <p class="ledger-note" id="ledgernote"></p>
   <div class="card" id="changed" style="margin-top:14px;display:none"><h2>What changed since the last run</h2><p class="d" id="changed_d"></p><div class="chips" id="changed_c"></div></div>
   <div class="grid"><div class="card wide" id="memocard"><h2>This week's research memo, written by the AI analyst</h2>
-    <p class="d">Written with the same tools as the rest of this page. Every number was checked against the data; hover a highlighted figure to see which tool produced it. Archive in <a href="https://github.com/autkarsh025/follow-the-power/tree/main/reports">reports/</a>.</p>
+    <p class="d">Written with the same tools as the rest of this page. Every number was checked against the data; hover a highlighted figure to see which tool produced it.</p>
     <div id="memo"></div></div></div>
   <h3 class="section">The chain at a glance</h3>
   <p class="sect">Trailing-12-month revenue growth for each layer of the AI supply chain (companies with data since 2019). Click a layer to explore it.</p>
@@ -293,7 +293,7 @@ header{display:grid;grid-template-columns:1fr auto;align-items:start;gap:24px}
   <div class="grid">
     <div class="card"><h2>Results by category</h2><p class="d">Cases passed per test category.</p><div class="chart short" id="agcat"></div></div>
     <div class="card"><h2>Leaderboard</h2><p class="d">Same cases, different models (when several were run).</p><div id="aglb"></div></div>
-    <div class="card wide"><h2>Every test case</h2><p class="d">Click a row to see the receipts below. Every failure in past live runs was traced to a root cause; most were grader bugs, not model errors. See the <a href="https://github.com/autkarsh025/follow-the-power/blob/main/EVAL_LOG.md">eval log</a>.</p><div class="scroll" id="agcases"></div></div>
+    <div class="card wide"><h2>Every test case</h2><p class="d">Click a row to see the receipts below. Every failure in past live runs was traced to a root cause; most were grader bugs, not model errors.</p><div class="scroll" id="agcases"></div></div>
     <div class="card wide"><h2>Receipts</h2><p class="d">The question, the tools the agent called (in order), and its answer. <span class="pill"><span class="dot" style="background:var(--good)"></span>verified number</span> (hover to see which tool produced it), <span class="pill"><span class="dot" style="background:var(--crit)"></span>unverified</span></p>
       <div class="ctl"><select id="rsel"></select></div><div id="receipt"></div></div>
     <div class="card"><h2>Retrieval benchmark (filing search)</h2><p class="d">Does the search find a relevant passage? 15 company questions, scored daily without an LLM: hit@3 and mean reciprocal rank.</p><div id="retr"></div></div>
@@ -347,7 +347,7 @@ header{display:grid;grid-template-columns:1fr auto;align-items:start;gap:24px}
   </div>
 </section>
 
-<footer><b>Gigawatt Ledger</b>, built by Utkarsh Agarwal. Data: SEC EDGAR, U.S. Energy Information Administration, Open-Meteo (ERA5). Not investment advice: a data-engineering and AI-evaluation project., <a href="https://github.com/autkarsh025/follow-the-power">Source</a>, <a href="data/README.md">Open dataset</a></footer>
+<footer><b>Gigawatt Ledger</b>, built by Utkarsh Agarwal. Data: SEC EDGAR, U.S. Energy Information Administration, Open-Meteo (ERA5). Not investment advice: a data-engineering and AI-evaluation project., <a href="/">Utkarsh Agarwal</a>, <a href="data/README.md">Open dataset</a></footer>
 </div>
 <script id="data" type="application/json">__DATA__</script>
 <script>
