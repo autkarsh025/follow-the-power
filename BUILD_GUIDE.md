@@ -1,4 +1,4 @@
-# ⚡ Gigawatt Ledger: build guide & interview prep
+# Gigawatt Ledger: build guide & interview prep
 
 *Tracking AI infrastructure from capex to the power grid.* (Repo: `follow-the-power`; Python package: `ftp`.)
 

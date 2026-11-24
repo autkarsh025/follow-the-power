@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚡ Gigawatt Ledger
+# Gigawatt Ledger
 
 ### Tracking AI infrastructure from capex to the power grid
 
