@@ -1,13 +1,13 @@
 {
- "built_at": "2026-11-23 19:39 UTC",
+ "built_at": "2026-11-24 00:53 UTC",
  "files": {
   "fin_quarterly.csv": 1379,
   "fin_latest.csv": 1308,
   "zone_monthly.csv": 460,
   "zone_weather_normalized.csv": 460,
-  "zone_daily.csv": 14049,
+  "zone_daily.csv": 14054,
   "state_sales.csv": 552,
   "quality_checks.csv": 226,
-  "history.csv": 10
+  "history.csv": 20
  }
 }
