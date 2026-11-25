@@ -1,13 +1,14 @@
 """Build Utkarsh Agarwal's personal site into site/public/ (home, /projects/, /about/).
 
 The public site (utkarshagarwal.dev) holds only built pages; this script stays private.
-Figures come from the Gigawatt Ledger open dataset (docs/data) at build time; the status readout
-refreshes in the browser from each pipeline's published files. Snippets are real: code excerpts
-from the two projects and answers the AI analyst gave in its eval runs (site/snippets.json).
+Gigawatt Ledger figures are computed here from the project's open dataset (docs/data) and drawn in
+the browser by a small canvas renderer. Sundown figures are drawn from /sundown/status.json, which
+that pipeline republishes every morning. Snippets are real: code from both projects and answers the
+AI analyst gave in its eval runs (site/snippets.json).
 
 Usage:
-  python site/build_site.py            # publishable build -> site/public/
-  python site/build_site.py --preview  # also shows empty photo slots and fill-in prompts -> site/preview/
+  python site/build_site.py            # -> site/public/
+  python site/build_site.py --preview  # also shows empty photo slots -> site/preview/
 """
 from __future__ import annotations
 
@@ -20,94 +21,146 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+import numpy as np
+
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 DATA = ROOT / "docs" / "data"
-FALLBACK = json.loads((HERE / "figdata.json").read_text())
 SNIPPETS = json.loads((HERE / "snippets.json").read_text())
-HYPERSCALERS = {"MSFT", "GOOGL", "AMZN", "META"}
+HYPERSCALERS = ["MSFT", "GOOGL", "AMZN", "META"]
+HS_NAMES = {"MSFT": "Microsoft", "GOOGL": "Alphabet", "AMZN": "Amazon", "META": "Meta"}
+ZONES = [("DOM", "N. Virginia"), ("AEP", "Ohio, central U.S."), ("CE", "Chicago"), ("NCEN", "Dallas–Fort Worth"), ("FWES", "West Texas")]
 PREVIEW = "--preview" in sys.argv
 esc = html.escape
 
 # =============================================================================================== content
-# Everything here comes from the résumé or the projects themselves. The phone number stays off the site.
-PROFILE = {
-    "name": "Utkarsh Agarwal",
-    "email": "autkarsh@berkeley.edu",
-    "linkedin": "https://www.linkedin.com/in/utkarsh-agarwal-4078601b1/",
-}
+# From the résumé and what Utkarsh shared. Phone number and private details stay off the site.
+PROFILE = {"name": "Utkarsh Agarwal", "email": "autkarsh@berkeley.edu",
+           "linkedin": "https://www.linkedin.com/in/utkarsh-agarwal-4078601b1/"}
 
 EXPERIENCE = [
-    ("Jan 2025 – May 2025", "Undergraduate data researcher", "University of Wisconsin–Madison",
-     "Analyzed dorm energy data in Python with faculty and PhD researchers and found about 12% in potential savings. "
-     "Mapped shuttle ridership to flag inefficient routes and presented recommendations to faculty."),
-    ("May 2023 – Aug 2023", "Software engineering intern", "Seaside Sustainability, Gloucester, MA",
-     "Built a full-stack Python and Node.js web app with backend services and an integrated online donation system."),
+    ("2025", "Undergraduate data researcher", "University of Wisconsin–Madison",
+     "Modeled dorm energy use in Python with faculty and PhD researchers and found about 12% in potential savings; "
+     "mapped shuttle ridership to flag inefficient routes."),
+    ("2023", "Software engineering intern", "Seaside Sustainability",
+     "Built a full-stack Python and Node.js web app with an integrated donation system."),
 ]
 LEADERSHIP = [
-    ("May 2025 – now", "Director of Internal Development, Project Lead", "Project Rishi at UC Berkeley",
-     "Lead a 10-person team in a 40-member organization building a rural educational coaching center, "
-     "including grant applications and budget planning through UC Berkeley."),
-    ("Aug 2023 – May 2024", "Division I cross country and track", "University of Wisconsin–Madison",
-     "Ran DI cross country and track after captaining my high school varsity team as its top runner."),
+    ("2025–", "Director of Internal Development", "Project Rishi, UC Berkeley",
+     "Lead a team of 10 in a 40-member organization building an education center in rural India; own the grant applications and budget."),
+    ("2019–23", "Varsity captain, cross country and track", "Saint Francis High School",
+     "CIF California state cross country qualifier. 4:28 mile, 16:09 5K."),
 ]
 EDUCATION = [
-    ("Expected May 2028", "B.A. Data Science and Applied Mathematics", "University of California, Berkeley",
-     "Admitted as an out-of-state transfer, about 40 a year. Data structures, computer architecture, data science, "
-     "linear algebra, discrete math."),
-    ("Aug 2023 – May 2025", "B.S. Data Science and Economics, transferred", "University of Wisconsin–Madison",
-     "Data science programming I and II, object-oriented programming, microeconomic theory, econometrics."),
+    ("2025–28", "B.A. Data Science and Applied Mathematics", "UC Berkeley",
+     "Out-of-state transfer admit, about 40 a year. Linear algebra, discrete math, data structures, computer architecture."),
+    ("2023–25", "Data Science and Economics", "University of Wisconsin–Madison",
+     "Programming I and II, object-oriented programming, econometrics, microeconomic theory. Transferred."),
 ]
 SKILLS = [
     ("Languages", "Python, SQL, R, Java, C, Swift"),
-    ("AI and ML", "LLM agents and tool use, agent skills, RAG, eval harnesses, MCP, Claude and OpenAI APIs, PyTorch"),
-    ("Data engineering", "pandas, SQLite, Spark, Airflow, Git, Docker, GitHub Actions, pytest, Plotly"),
+    ("Modeling", "Regression and fixed effects, time series, piecewise trends, backtesting, bootstrap"),
+    ("AI systems", "LLM agents and tool use, RAG, eval harnesses, MCP, Claude and OpenAI APIs, PyTorch"),
+    ("Data engineering", "pandas, SQLite, Spark, Airflow, Docker, GitHub Actions, pytest"),
 ]
-
-# Photos for /about/: drop the file in site/photos/ and it appears. Missing files are skipped
-# (shown as labelled empty slots only in --preview builds).
-PHOTOS = [
-    ("me.jpg", "Portrait", "tall"),
-    ("running.jpg", "Racing cross country", "wide"),
-    ("bmw.jpg", "The BMW", "square"),
-    ("berkeley.jpg", "Berkeley", "square"),
-]
-# Prompts for things only Utkarsh can write. Rendered only in --preview builds.
-FILL_IN = [
-    ("The car", "Which BMW you tuned, and the best part of the project."),
-    ("Anything else", "Books, music, a favourite place in the Bay Area, anything you'd want someone to know."),
-]
-# Running personal records (as Utkarsh reports them).
 PRS = [("Mile", "4:28"), ("3,200 m", "9:31"), ("5K", "16:09"), ("Half marathon", "1:19")]
+PHOTOS = [("me.jpg", "", "tall"), ("running.jpg", "Cross country", "wide"), ("bmw.jpg", "The BMW", "sq"), ("berkeley.jpg", "Berkeley", "sq")]
 
 
 # =============================================================================================== data
 def _rows(name):
     p = DATA / name
-    if not p.exists():
-        return []
     with p.open() as f:
         return list(csv.DictReader(f))
 
 
-def load_series():
-    dom = [(r["month"], float(r["normalized_mw"])) for r in _rows("zone_weather_normalized.csv")
-           if r["zone"] == "DOM" and r["normalized_mw"]]
+def hero_series():
+    """Daily overnight load in Dominion (N. Virginia), weather-adjusted 30-day mean, and a one-break trend fit."""
+    rows = [r for r in _rows("zone_daily.csv") if r["zone"] == "DOM"]
+    dates = [r["date"] for r in rows]
+    raw = np.array([float(r["overnight_mw"]) for r in rows])
+    adj = np.array([float(r["normalized_mw"]) for r in rows])
+    k = 15
+    smooth = np.array([adj[max(0, i - k):i + k + 1].mean() for i in range(len(adj))])
+    # continuous piecewise-linear fit on the monthly weather-adjusted series, breakpoint by least squares
+    mon = [(r["month"], float(r["normalized_mw"])) for r in _rows("zone_weather_normalized.csv") if r["zone"] == "DOM"]
+    y = np.array([v for _, v in mon]); t = np.arange(len(y)); best = None
+    for b in range(18, len(y) - 12):
+        X = np.c_[np.ones_like(t), t, np.maximum(0, t - b)]
+        c, *_ = np.linalg.lstsq(X, y, rcond=None)
+        sse = float(((X @ c - y) ** 2).sum())
+        if best is None or sse < best[0]:
+            best = (sse, b, c)
+    _, b, c = best
+    s1, s2 = c[1] * 12, (c[1] + c[2]) * 12
+    # fitted line at month midpoints -> map to daily index
+    fit_m = [(mon[i][0], float(c[0] + c[1] * i + c[2] * max(0, i - b))) for i in range(len(mon))]
+    base = np.mean([v for m, v in mon if m.startswith(mon[0][0][:4])])
+    added = float(np.mean(y[-12:]) - base)
+    return {
+        "dates": dates, "raw": raw.round().astype(int).tolist(), "adj": smooth.round().astype(int).tolist(),
+        "fit": [[m + "-15", round(v)] for m, v in fit_m], "brk": mon[b][0] + "-01",
+        "s1": round(s1), "s2": round(s2), "brk_label": mon[b][0], "added": round(added),
+    }
+
+
+def capex_series():
     cap = defaultdict(dict)
+    nv = {}
     for r in _rows("fin_quarterly.csv"):
         if r["metric"] == "capex" and r["ticker"] in HYPERSCALERS:
-            cap[r["quarter"]][r["ticker"]] = float(r["value_usd"])
-    capq = sorted((q, sum(v.values()) / 1e9) for q, v in cap.items() if len(v) == len(HYPERSCALERS))
-    latest = {r["metric"]: float(r["value"]) for r in _rows("history.csv")}
-    if len(dom) < 24 or len(capq) < 8:
-        dom = list(zip(FALLBACK["dom_m"], FALLBACK["dom"]))
-        capq = list(zip(FALLBACK["cap_q"], FALLBACK["cap"]))
-    capq = [x for x in capq if x[0] >= "2019Q1"]
-    return dom, capq, latest
+            cap[r["quarter"]][r["ticker"]] = float(r["value_usd"]) / 1e9
+        if r["metric"] == "revenue" and r["ticker"] == "NVDA":
+            nv[r["quarter"]] = float(r["value_usd"]) / 1e9
+    qs = sorted(q for q, v in cap.items() if len(v) == 4 and q >= "2019Q1")
+    return {"q": qs, "stack": {t: [round(cap[q][t], 2) for q in qs] for t in HYPERSCALERS},
+            "names": [HS_NAMES[t] for t in HYPERSCALERS], "nvda": [round(nv[q], 2) if q in nv else None for q in qs]}
+
+
+def zone_series():
+    by = defaultdict(list)
+    for r in _rows("zone_weather_normalized.csv"):
+        if r["normalized_mw"]:
+            by[r["zone"]].append((r["month"], float(r["normalized_mw"])))
+    months = sorted({m for z in by.values() for m, _ in z})
+    out = []
+    for code, name in ZONES:
+        s = dict(by[code])
+        first = [v for m, v in sorted(s.items())[:12]]
+        base = sum(first) / len(first)
+        out.append({"name": name, "v": [round(100 * s[m] / base, 1) if m in s else None for m in months]})
+    return {"months": months, "series": out}
+
+
+def leadlag_series():
+    """Correlation of hyperscaler capex YoY growth with N. Virginia overnight-load YoY growth at quarterly lags."""
+    cap = capex_series()
+    tot = {q: sum(cap["stack"][t][i] for t in HYPERSCALERS) for i, q in enumerate(cap["q"])}
+    mon = defaultdict(list)
+    for r in _rows("zone_monthly.csv"):
+        if r["zone"] == "DOM" and r["overnight_mw"]:
+            y, m = r["month"].split("-")
+            mon[f"{y}Q{(int(m) - 1) // 3 + 1}"].append(float(r["overnight_mw"]))
+    pw = {q: sum(v) / len(v) for q, v in mon.items() if len(v) == 3}
+    def yoy(d):
+        return {q: 100 * (v / d[f"{int(q[:4]) - 1}{q[4:]}"] - 1) for q, v in d.items() if f"{int(q[:4]) - 1}{q[4:]}" in d}
+    cy, py = yoy(tot), yoy(pw)
+    qs = sorted(set(cy) | set(py))
+    idx = {q: i for i, q in enumerate(qs)}
+    out = []
+    for lag in range(-4, 5):
+        pairs = [(cy[q], py[qs[idx[q] + lag]]) for q in cy if 0 <= idx[q] + lag < len(qs) and qs[idx[q] + lag] in py]
+        if len(pairs) >= 8:
+            a, b = np.array(pairs).T
+            out.append({"lag": lag, "r": round(float(np.corrcoef(a, b)[0, 1]), 3), "n": len(pairs), "band": round(2 / len(pairs) ** 0.5, 3)})
+    return out
+
+
+def latest():
+    return {r["metric"]: float(r["value"]) for r in _rows("history.csv")}
 
 
 def code_excerpt(path: Path, start: str, stop: str | None = None, max_lines: int = 26) -> str:
-    """Lines of a source file from the line containing `start` up to (not including) `stop`."""
     lines = path.read_text().splitlines()
     i = next(n for n, l in enumerate(lines) if start in l)
     j = next((n for n in range(i + 1, len(lines)) if stop and stop in lines[n]), len(lines))
@@ -117,8 +170,7 @@ def code_excerpt(path: Path, start: str, stop: str | None = None, max_lines: int
     return "\n".join(out)
 
 
-def _snippet(cache: str, src: Path, start: str, stop: str | None, n: int = 26) -> str:
-    """Excerpt from the source when it is available (local builds), else the cached copy (CI)."""
+def _snippet(cache, src, start, stop, n=26):
     cached = HERE / cache
     if src.exists():
         cached.write_text(re.sub(r"\n{3,}", "\n\n", code_excerpt(src, start, stop, n)) + "\n")
@@ -126,24 +178,22 @@ def _snippet(cache: str, src: Path, start: str, stop: str | None, n: int = 26) -
 
 
 def sql_snippet():
-    return _snippet("snippet_netpeak.sql", ROOT.parent / "gp-repo" / "sql" / "analysis" / "06_net_peak_battery_share.sql",
-                    "daily_net_peak AS (", None)
+    return _snippet("snippet_netpeak.sql", ROOT.parent / "gp-repo" / "sql" / "analysis" / "06_net_peak_battery_share.sql", "daily_net_peak AS (", None)
 
 
 def py_snippet():
     return _snippet("snippet_verify.py", ROOT / "ftp" / "verify.py", "def matches(", "def provenance(")
 
 
-# =============================================================================================== highlighting
+# =============================================================================================== text helpers
 SQL_KW = r"\b(WITH|AS|SELECT|FROM|WHERE|AND|OR|JOIN|USING|ON|GROUP|BY|ORDER|DESC|ASC|OVER|PARTITION|CASE|WHEN|THEN|ELSE|END|SUM|COUNT|ROUND|NULLIF|COALESCE|ROW_NUMBER|IS|NOT|NULL)\b"
-PY_KW = r"\b(def|return|for|in|if|not|any|max|abs|import|from|as|True|False|None|and|or|with)\b"
+PY_KW = r"\b(def|return|for|in|if|not|any|max|abs|True|False|None|and|or)\b"
 
 
 def highlight(code: str, lang: str) -> str:
-    """Tiny tokenizer: comments, strings, numbers, keywords. Enough for short snippets."""
     kw = SQL_KW if lang == "sql" else PY_KW
     com = r"--[^\n]*" if lang == "sql" else r"#[^\n]*"
-    pat = re.compile(rf'(?P<c>{com})|(?P<s>"""[\s\S]*?"""|\'[^\'\n]*\'|"[^"\n]*")|(?P<n>\b\d+(?:\.\d+)?(?:e-?\d+)?\b)|(?P<k>{kw})')
+    pat = re.compile(rf'(?P<c>{com})|(?P<s>\'[^\'\n]*\'|"[^"\n]*")|(?P<n>\b\d+(?:\.\d+)?(?:e-?\d+)?\b)|(?P<k>{kw})')
     out, pos = [], 0
     for m in pat.finditer(code):
         out.append(esc(code[pos:m.start()]))
@@ -154,609 +204,676 @@ def highlight(code: str, lang: str) -> str:
 
 
 def md_inline(text: str) -> str:
-    """Render the analyst's markdown (bold, bullets, tables) into simple HTML."""
     out, in_ul, table = [], False, []
+    inline = lambda s: re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", esc(s))
 
-    def inline(s):
-        return re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", esc(s))
-
-    def flush_table():
+    def flush():
         nonlocal table
         if table:
             rows_ = [r for r in table if not re.match(r"^\|[\s|:-]+\|$", r)]
             cells = [[c.strip() for c in r.strip("|").split("|")] for r in rows_]
-            head, body = cells[0], cells[1:]
-            out.append('<table class="ans"><thead><tr>' + "".join(f"<th>{inline(c)}</th>" for c in head) + "</tr></thead><tbody>"
-                       + "".join("<tr>" + "".join(f"<td>{inline(c)}</td>" for c in r) + "</tr>" for r in body) + "</tbody></table>")
+            out.append('<table class="ans"><thead><tr>' + "".join(f"<th>{inline(c)}</th>" for c in cells[0]) + "</tr></thead><tbody>"
+                       + "".join("<tr>" + "".join(f"<td>{inline(c)}</td>" for c in r) + "</tr>" for r in cells[1:]) + "</tbody></table>")
             table = []
 
     for line in text.strip().splitlines():
         s = line.strip()
         if s.startswith("|"):
-            table.append(s)
-            continue
-        flush_table()
+            table.append(s); continue
+        flush()
         if s.startswith("- "):
             if not in_ul:
-                out.append("<ul>")
-                in_ul = True
-            out.append(f"<li>{inline(s[2:])}</li>")
-            continue
+                out.append("<ul>"); in_ul = True
+            out.append(f"<li>{inline(s[2:])}</li>"); continue
         if in_ul:
-            out.append("</ul>")
-            in_ul = False
+            out.append("</ul>"); in_ul = False
         if s:
             out.append(f"<p>{inline(s)}</p>")
-    flush_table()
+    flush()
     if in_ul:
         out.append("</ul>")
     return "".join(out)
 
 
-# =============================================================================================== figures
-def trace(dom, W=1000, H=150):
-    vals = [v for _, v in dom]
-    lo, hi = min(vals), max(vals)
-    pad = 6
-    x = lambda i: W * i / (len(vals) - 1)
-    pts = " ".join(f"{x(i):.1f},{pad + (H - 2 * pad) * (hi - v) / (hi - lo):.1f}" for i, v in enumerate(vals))
-    ticks = "".join(f'<text x="{x(i) + 4:.1f}" y="{H + 18}" class="tk">{m[:4]}</text>'
-                    f'<line x1="{x(i):.1f}" x2="{x(i):.1f}" y1="{H + 4}" y2="{H + 8}" class="tl"/>'
-                    for i, (m, _) in enumerate(dom) if m.endswith("-01"))
-    return (f'<svg class="trace" viewBox="0 0 {W} {H + 24}" preserveAspectRatio="none" role="img" '
-            f'aria-label="Northern Virginia weather-adjusted electricity load, {dom[0][1]:,.0f} MW in {dom[0][0][:4]} to {dom[-1][1]:,.0f} MW in {dom[-1][0]}">'
-            f'<line x1="0" x2="{W}" y1="{H + 4}" y2="{H + 4}" class="tl"/>{ticks}'
-            f'<polyline points="{pts}" class="line" pathLength="1"/></svg>')
+def fig(fid: str, h: int, caption: str, n: int | None = None, cls: str = "", controls: str = "") -> str:
+    num = f'<b>Figure {n}.</b> ' if n else ""
+    return (f'<figure class="fig {cls}">{controls}<div class="plot" data-fig="{fid}" style="height:{h}px" role="img" aria-label="{esc(re.sub("<[^>]+>", "", caption))}"></div>'
+            f'<figcaption>{num}{caption}</figcaption></figure>')
 
 
-def capex_chart(capq, W=640, H=150):
-    vals = [v for _, v in capq]
-    mx = max(vals) * 1.04
-    bw = W / len(vals)
-    bars = "".join(
-        f'<rect x="{i * bw + 1:.2f}" y="{H - H * v / mx:.1f}" width="{bw - 2:.2f}" height="{H * v / mx:.1f}" '
-        f'class="{"hi" if i == len(vals) - 1 else "b"}" data-tip="{q[:4]} Q{q[-1]}: ${v:.1f}B"/>'
-        for i, (q, v) in enumerate(capq))
-    ticks = "".join(f'<text x="{i * bw:.1f}" y="{H + 16}" class="tk">{q[:4]}</text>'
-                    for i, (q, _) in enumerate(capq) if q.endswith("Q1") and int(q[:4]) % 2 == 1)
-    return (f'<svg class="chart" viewBox="0 0 {W} {H + 20}" preserveAspectRatio="none" role="img" '
-            f'aria-label="Big tech capital spending per quarter, rising to ${vals[-1]:.0f} billion">{bars}{ticks}</svg>')
-
-
-def duck_chart(W=640, H=150):
-    bat = FALLBACK["duck"]["battery"]
-    lo, hi = min(min(bat), 0) * 1.08, max(bat) * 1.08
-    y = lambda v: H * (hi - v) / (hi - lo)
-    bw = W / 24
-    hour = lambda i: "midnight" if i == 0 else "noon" if i == 12 else f"{i % 12} {'am' if i < 12 else 'pm'}"
-    bars = []
-    for i, v in enumerate(bat):
-        y0, y1 = sorted([y(0), y(v)])
-        verb = "discharging" if v > 0 else "charging"
-        bars.append(f'<rect x="{i * bw + 2:.1f}" y="{y0:.1f}" width="{bw - 4:.1f}" height="{max(y1 - y0, 1):.1f}" '
-                    f'class="{"hi" if v > 0 else "b"}" data-tip="{hour(i)}: {verb} {abs(v):.1f} GW"/>')
-    ticks = "".join(f'<text x="{(h + .5) * bw:.1f}" y="{H + 16}" text-anchor="middle" class="tk">{hour(h)}</text>' for h in (0, 6, 12, 18))
-    return (f'<svg class="chart" viewBox="0 0 {W} {H + 20}" preserveAspectRatio="none" role="img" '
-            f'aria-label="California batteries charge at midday and discharge after sunset">'
-            f'<line x1="0" x2="{W}" y1="{y(0):.1f}" y2="{y(0):.1f}" class="zl"/>{"".join(bars)}{ticks}</svg>')
-
-
-# =============================================================================================== components
-def rows(items):
-    return "".join(
-        f'<li class="row"><span class="when">{esc(w)}</span><div><h3>{esc(t)}</h3>'
-        f'<p class="org">{esc(o)}</p><p>{esc(d)}</p></div></li>' for w, t, o, d in items)
-
-
-def window(wid: str, tabs: list[tuple[str, str, str]]) -> str:
-    """A tabbed snippet window. tabs = [(label, meta line, html body)]."""
-    bar = "".join(f'<button role="tab" id="{wid}-t{i}" aria-controls="{wid}-p{i}" aria-selected="{str(i == 0).lower()}" '
-                  f'tabindex="{0 if i == 0 else -1}">{esc(lab)}</button>' for i, (lab, _, _) in enumerate(tabs))
-    panels = "".join(f'<div role="tabpanel" id="{wid}-p{i}" aria-labelledby="{wid}-t{i}" {"hidden" if i else ""} data-meta="{esc(meta)}">{body}</div>'
-                     for i, (_, meta, body) in enumerate(tabs))
-    return (f'<div class="win" data-win><div class="bar"><div role="tablist" aria-label="Snippets">{bar}</div>'
+def window(wid, tabs):
+    bar = "".join(f'<button role="tab" id="{wid}-t{i}" aria-controls="{wid}-p{i}" aria-selected="{str(i == 0).lower()}" tabindex="{0 if i == 0 else -1}">{esc(l)}</button>'
+                  for i, (l, _, _) in enumerate(tabs))
+    panels = "".join(f'<div role="tabpanel" id="{wid}-p{i}" aria-labelledby="{wid}-t{i}" {"hidden" if i else ""} data-meta="{esc(m)}">{b}</div>'
+                     for i, (_, m, b) in enumerate(tabs))
+    return (f'<div class="win" data-win><div class="bar"><div role="tablist" aria-label="Output and code">{bar}</div>'
             f'<span class="meta">{esc(tabs[0][1])}</span></div><div class="body">{panels}</div></div>')
 
 
-def code_block(code: str, lang: str) -> str:
-    return f'<pre class="code"><code>{highlight(code, lang)}</code></pre>'
-
-
-def ask_panel() -> str:
+def ask_panel():
     a, b = SNIPPETS["time_travel_2025Q1"], SNIPPETS["time_travel_2025Q2"]
     ans = lambda c: md_inline(c["answer"].split("\n\nThe data show")[0])
-    return (f'<div class="ask"><p class="q">{esc(a["question"])}</p>'
-            f'<div class="asof" role="radiogroup" aria-label="Ask as of"><span>Ask as of</span>'
+    return (f'<div class="ask"><p class="q">&gt; {esc(a["question"])}</p>'
+            f'<div class="asof" role="radiogroup" aria-label="Date the question is asked"><span>as of</span>'
             f'<button role="radio" aria-checked="true" data-asof="0">{a["as_of"]}</button>'
             f'<button role="radio" aria-checked="false" data-asof="1">{b["as_of"]}</button></div>'
             f'<div class="a" data-ans="0">{ans(a)}</div><div class="a" data-ans="1" hidden>{ans(b)}</div>'
-            f'<p class="note">Real answers from the analyst&rsquo;s eval runs. Same question, different date: it can only see '
-            f'what had been filed by then, so it can&rsquo;t cheat with hindsight.</p></div>')
+            f'<p class="note">Two real answers from eval runs. The analyst only sees filings made public by the date it is asked, so the same question gets a different, correct answer.</p></div>')
 
 
-def ratio_panel() -> str:
+def ratio_panel():
     c = SNIPPETS["multi_step_ratio"]
-    body = c["answer"].split("\n\nThe ratio dipped")[0]
-    return (f'<div class="ask"><p class="q">{esc(c["question"])}</p><div class="a">{md_inline(body)}</div>'
-            f'<p class="note">A real answer from an eval run. Every figure in it was checked against the data before it was shown.</p></div>')
+    return (f'<div class="ask"><p class="q">&gt; {esc(c["question"])}</p><div class="a">{md_inline(c["answer"].split(chr(10) + chr(10) + "The ratio dipped")[0])}</div>'
+            f'<p class="note">Every number in the answer was checked against the data before it was shown.</p></div>')
 
 
-def chart_panel(svg: str, caption: str) -> str:
-    return f'<figure class="live">{svg}<figcaption><span data-tipout>{esc(caption)}</span></figcaption></figure>'
+def spec(rows):
+    return '<dl class="spec">' + "".join(f"<div><dt>{esc(k)}</dt><dd>{v}</dd></div>" for k, v in rows) + "</dl>"
+
+
+def entries(items):
+    return '<ul class="entries">' + "".join(
+        f'<li><span class="yr">{esc(w)}</span><div><h3>{esc(t)} <span class="org">{esc(o)}</span></h3><p>{esc(d)}</p></div></li>'
+        for w, t, o, d in items) + "</ul>"
 
 
 # =============================================================================================== pages
-INDEX = [
-    ("2026", "Gigawatt Ledger", "#gigawatt-ledger", "AI spending from big tech to the power grid, with an AI analyst", "Python, SQL, Claude API", "/gigawatt-ledger/"),
-    ("2026", "Sundown", "#sundown", "How batteries carry U.S. grids after sunset", "Python, SQL, Airflow, Spark", "/sundown/"),
-    ("2026", "BMW engine and electronics tuning", "#bmw", "125 calibration parameters, 6 control modules", "C, Python", ""),
-    ("2025", "Campus energy research", "/#experience", "Dorm energy and shuttle ridership at UW–Madison", "Python", ""),
-    ("2023", "Donation web app", "/#experience", "Full-stack app for Seaside Sustainability", "Python, Node.js", ""),
-]
-
-
-def index_table():
-    body = "".join(
-        f'<tr><td class="y">{y}</td><td class="n"><a href="{a}">{esc(n)}</a></td><td class="d">{esc(d)}</td>'
-        f'<td class="s">{esc(s)}</td><td class="l">{f"<a href={chr(34)}{l}{chr(34)}>Live</a>" if l else ""}</td></tr>'
-        for y, n, a, d, s, l in INDEX)
-    return (f'<table class="index"><thead><tr><th>Year</th><th>Project</th><th class="d">What</th><th class="s">Built with</th><th></th></tr></thead>'
-            f'<tbody>{body}</tbody></table>')
-
-
-def project_cases(dom, capq, latest):
-    cap_now = latest.get("hyperscaler_capex_b", capq[-1][1])
-    cap_yoy = latest.get("hyperscaler_capex_yoy")
-    base = [v for m, v in dom if m.startswith(dom[0][0][:4])]
-    dom_add = sum(v for _, v in dom[-12:]) / 12 - sum(base) / len(base)
-    q = capq[-1][0]
-    gl = window("gl", [
-        ("Chart", "live, from the project's open dataset",
-         chart_panel(capex_chart(capq), f"Big tech capex per quarter, 2019 to {q[:4]} Q{q[-1]}. Hover a bar.")),
-        ("Time travel", "AI analyst, point-in-time data", ask_panel()),
-        ("Multi-step", "AI analyst, calculation", ratio_panel()),
-        ("Code", "ftp/verify.py", code_block(py_snippet(), "py")),
-    ])
-    sd = window("sd", [
-        ("Chart", "California, an average day",
-         chart_panel(duck_chart(), "Batteries charge on midday solar and discharge after sunset. Hover a bar.")),
-        ("SQL", "sql/analysis/06_net_peak_battery_share.sql", code_block(sql_snippet(), "sql")),
-    ])
-    bmw_fig = ('<figure class="photo"><img src="/photos/bmw.jpg" alt="The BMW" loading="lazy"></figure>' if (HERE / "photos" / "bmw.jpg").exists()
-               else ('<div class="slot banner">Photo of the car goes here<small>site/photos/bmw.jpg</small></div>' if PREVIEW else ""))
-    return f"""
-    <article class="case" id="gigawatt-ledger">
-      <aside class="meta">
-        <p class="yr">2026 – now</p>
-        <dl><dt>Role</dt><dd>Solo project</dd><dt>Built with</dt><dd>Python, SQL, Claude API, RAG, MCP, eval harness, GitHub Actions</dd></dl>
-        <p class="go"><a href="/gigawatt-ledger/">Open the dashboard</a><a href="/gigawatt-ledger/data/README.md">Open dataset</a></p>
-      </aside>
-      <div class="main">
-        <h2>Gigawatt Ledger</h2>
-        <p class="sub">Tracks AI spending from big tech&rsquo;s filings to the power grid</p>
-        <p>A daily pipeline joins SEC filings from 26 companies across the AI supply chain (cloud buyers, chips, servers,
-        power equipment, data-center landlords and utilities) with hourly electricity demand in five data-center regions,
-        weather removed. Every number keeps the date it became public, so any past day can be replayed without hindsight.</p>
-        <p>An AI analyst answers questions from the data and 4,600+ filing passages through 16 tools. Code checks every
-        number it writes before you see it, and an eval suite of 22 cases, prompt injection included, runs it end to end.</p>
-        {gl}
-        <dl class="nums">
-          <div><dt>Big tech capex, {q[:4]} Q{q[-1]}</dt><dd>${cap_now:.1f}B{f'<small>up {cap_yoy:.0f}% in a year</small>' if cap_yoy else ''}</dd></div>
-          <div><dt>Always-on load added in N. Virginia since 2019</dt><dd>+{dom_add:,.0f} MW<small>weather removed</small></dd></div>
-          <div><dt>Eval cases passed</dt><dd>22 of 22<small>three runs each</small></dd></div>
-        </dl>
-      </div>
-    </article>
-
-    <article class="case" id="sundown">
-      <aside class="meta">
-        <p class="yr">2026 – now</p>
-        <dl><dt>Role</dt><dd>Solo project</dd><dt>Built with</dt><dd>Python, SQL, Airflow, Spark, pytest, Plotly</dd></dl>
-        <p class="go"><a href="/sundown/">Open the dashboard</a></p>
-      </aside>
-      <div class="main">
-        <h2>Sundown</h2>
-        <p class="sub">How batteries carry U.S. grids through the evening peak</p>
-        <p>Every morning a pipeline pulls hourly data for the seven major U.S. grids into SQL with Airflow and Spark,
-        checks it, and rebuilds a live dashboard. Batteries now cover about a quarter of California&rsquo;s evening peak.</p>
-        <p>The quality checks and 59 tests caught 3 errors in the government&rsquo;s own source data. The carbon analysis
-        shows midday EV charging in California emits about 60% less CO&#8322; than overnight.</p>
-        {sd}
-        <dl class="nums">
-          <div><dt>California peak from batteries, last 30 days</dt><dd data-live="sd-share">25.4%</dd></div>
-          <div><dt>Hourly records validated</dt><dd data-live="sd-rows">587,104</dd></div>
-          <div><dt>Errors caught in source data</dt><dd>3</dd></div>
-        </dl>
-      </div>
-    </article>
-
-    <article class="case" id="bmw">
-      <aside class="meta">
-        <p class="yr">May – Aug 2026</p>
-        <dl><dt>Role</dt><dd>Personal project</dd><dt>Built with</dt><dd>C, Python, ECU calibration</dd></dl>
-      </aside>
-      <div class="main">
-        <h2>BMW engine and electronics tuning</h2>
-        <p class="sub">Reprogramming a car&rsquo;s computers by hand</p>
-        <p>Reprogrammed the engine control unit in C and Python, tuning 125 calibration parameters across ignition timing,
-        fuel delivery, boost and throttle response. Reconfigured 6 electronic control modules to add real-time G-force
-        telemetry and radar displays to the car&rsquo;s own screens.</p>
-        {bmw_fig}
-        <dl class="nums">
-          <div><dt>Calibration parameters tuned</dt><dd>125</dd></div>
-          <div><dt>Engine performance</dt><dd>+17%</dd></div>
-          <div><dt>Control modules reconfigured</dt><dd>6</dd></div>
-        </dl>
-      </div>
-    </article>"""
-
-
-def home(dom, capq, latest):
-    grid_hours, sec_points = latest.get("grid_hours"), latest.get("sec_data_points")
-    sel = "".join(
-        f'<li><a class="sel" href="/projects/{a}"><span class="sn">{esc(n)}</span><span class="sd">{esc(d)}</span><span class="sy">{y}</span></a></li>'
-        for y, n, a, d, _, _ in INDEX[:3])
-    readout = f"""
-    <table class="status" aria-label="Pipeline status">
-      <tr><th scope="row"><a href="/gigawatt-ledger/">gigawatt-ledger</a></th><td><i class="dot" data-live="gl-dot"></i><span data-live="gl-when">runs daily</span></td>
-          <td data-live="gl-what">{f"{grid_hours:,.0f} grid hours, {sec_points:,.0f} SEC data points" if grid_hours and sec_points else "SEC filings and hourly grid data"}</td></tr>
-      <tr><th scope="row"><a href="/sundown/">sundown</a></th><td><i class="dot" data-live="sd-dot"></i><span data-live="sd-when">runs daily</span></td>
-          <td data-live="sd-what">hourly data for 7 U.S. grids</td></tr>
-    </table>"""
+def home(H, L):
+    results = [
+        ("22 / 22", "eval cases passed by the Gigawatt Ledger AI analyst, three runs each, prompt injection included", "/projects/#gigawatt-ledger"),
+        (f"+{H['added']:,} MW", "weather-adjusted always-on load added in Northern Virginia since 2019, from 337,000+ grid hours", "/projects/#gigawatt-ledger"),
+        ("3", "errors found in the U.S. Energy Information Administration's published grid data by Sundown's quality checks", "/projects/#sundown"),
+        ('<span data-live="sd-rows">588,712</span>', "hourly records across 7 U.S. grids, validated and reloaded every morning", "/projects/#sundown"),
+        ("~40 / yr", "out-of-state transfer admits to UC Berkeley; studying data science and applied math", "/about/"),
+        ("16:09", "5K as a high school runner; CIF California state cross country qualifier", "/about/"),
+    ]
+    res = "".join(f'<tr><th scope="row">{v}</th><td><a href="{href}">{esc(t)}</a></td></tr>' for v, t, href in results)
     body = f"""
   <div class="hero">
     <h1>{PROFILE['name']}</h1>
-    <p class="lede">I study <b>data science and applied math at UC Berkeley</b> and build data pipelines and AI tools on public energy and financial data. Two of them are running right now.</p>
-    <p class="contact"><a href="mailto:{PROFILE['email']}">{PROFILE['email']}</a><a href="{PROFILE['linkedin']}">LinkedIn</a></p>
-    {trace(dom)}
-    <div class="tcap"><span>Northern Virginia&rsquo;s always-on electricity load, weather removed, monthly since {dom[0][0][:4]}</span><span><b>{dom[0][1]:,.0f} MW</b> to <b>{dom[-1][1]:,.0f} MW</b></span></div>
-    {readout}
+    <p class="lede">Data science and applied math at UC Berkeley. I build data pipelines and statistical models on public energy and financial data, and the AI tools that query them.</p>
+    <p class="links"><a href="mailto:{PROFILE['email']}">{PROFILE['email']}</a><a href="{PROFILE['linkedin']}">LinkedIn</a><a href="/projects/">Projects</a></p>
   </div>
 
-  <section id="work"><h2>Projects</h2><div>
-    <ul class="selected">{sel}</ul>
-    <p class="more"><a href="/projects/">All projects, with live data and code</a></p>
+  {fig("hero", 380, f"Overnight electricity load in Dominion, the Northern Virginia grid zone that serves the largest data-center market in the world. Dots are daily readings; the line is a weather-adjusted 30-day mean; the dashed line is a one-break linear trend fit by least squares. Growth went from <b>+{H['s1']:,} MW/yr</b> to <b>+{H['s2']:,} MW/yr</b> in {month_name(H['brk_label'])}. Hover for values.", 1, "wide")}
+  <p class="status"><i class="dot" data-live="gl-dot"></i><span data-live="gl-when">Updated daily</span> by the Gigawatt Ledger pipeline. <span data-live="gl-what"></span></p>
+
+  <section class="results"><h2>Selected results</h2><table>{res}</table></section>
+
+  <section class="work"><h2>Projects</h2><div>
+    <article class="card">
+      <div><h3><a href="/projects/#gigawatt-ledger">Gigawatt Ledger</a></h3>
+        <p>SEC filings from 26 AI-supply-chain companies joined to hourly grid demand in five data-center regions, stored point-in-time. An AI analyst answers questions over it, and code verifies every number it writes.</p>
+        <p class="tags">Python, SQL, Claude API, RAG, evals</p></div>
+      {fig("capex_mini", 150, "Big tech capex per quarter, $B.", None, "mini")}
+    </article>
+    <article class="card">
+      <div><h3><a href="/projects/#sundown">Sundown</a></h3>
+        <p>A daily pipeline for the seven major U.S. grids that measures how much of the evening peak batteries now carry, with automated quality checks on the government's source data.</p>
+        <p class="tags">Python, SQL, Airflow, Spark, pytest</p></div>
+      {fig("heat_mini", 150, "California battery output by hour (rows) and week (columns): blue charging, orange discharging.", None, "mini")}
+    </article>
+    <p class="more"><a href="/projects/">All projects, figures and code</a></p>
   </div></section>
 
-  <section class="about"><h2>About</h2><div>
-    <p>I like problems where the data is public but nobody has lined it up yet. My two main projects follow money and electricity: one traces AI spending from big tech&rsquo;s filings down to the power grid, the other measures how much batteries carry U.S. grids after sunset.</p>
-    <p>I grew up in Silicon Valley, raced cross country at the state championships in high school, and transferred to Berkeley from UW&ndash;Madison. Outside of code I work on cars and lead a team at Project Rishi.</p>
-    <p class="more"><a href="/about/">More about me</a></p>
-  </div></section>
-
-  <section id="experience"><h2>Experience</h2><ul class="list">{rows(EXPERIENCE)}</ul></section>
-  <section><h2>Leadership and athletics</h2><ul class="list">{rows(LEADERSHIP)}</ul></section>
-  <section><h2>Education</h2><ul class="list">{rows(EDUCATION)}</ul></section>
-  <section><h2>Skills</h2><dl class="skills">{"".join(f"<div><dt>{esc(k)}</dt><dd>{esc(v)}</dd></div>" for k, v in SKILLS)}</dl></section>"""
-    return layout(PROFILE["name"], "Data science and applied math at UC Berkeley. Data pipelines and AI tools on public energy and financial data.", body, "home")
+  <section><h2>Experience</h2>{entries(EXPERIENCE)}</section>
+  <section><h2>Leadership and athletics</h2>{entries(LEADERSHIP)}</section>
+  <section><h2>Education</h2>{entries(EDUCATION)}</section>
+  <section><h2>Skills</h2>{spec([(k, esc(v)) for k, v in SKILLS])}</section>"""
+    return layout(PROFILE["name"], "Data science and applied math at UC Berkeley. Data pipelines, statistical models and AI tools on public energy and financial data.",
+                  body, "home", {"hero": H, "capex": capex_series()})
 
 
-def projects_page(dom, capq, latest):
+def month_name(ym: str) -> str:
+    import calendar
+    y, m = ym.split("-")
+    return f"{calendar.month_name[int(m)]} {y}"
+
+
+def projects_page(H, L):
+    cap = capex_series()
+    q = cap["q"][-1]
+    cap_now = sum(cap["stack"][t][-1] for t in HYPERSCALERS)
+    ll = leadlag_series()
+    best = max(ll, key=lambda d: d["r"])
+    gl = window("gl", [
+        ("Time travel", "AI analyst, point-in-time", ask_panel()),
+        ("Multi-step", "AI analyst, calculation", ratio_panel()),
+        ("Code", "ftp/verify.py", f'<pre class="code"><code>{highlight(py_snippet(), "py")}</code></pre>'),
+    ])
+    sd = window("sd", [("SQL", "sql/analysis/06_net_peak_battery_share.sql", f'<pre class="code"><code>{highlight(sql_snippet(), "sql")}</code></pre>')])
+    heat_ctl = ('<div class="seg" role="radiogroup" aria-label="Grid"><button role="radio" aria-checked="true" data-region="CISO">California</button>'
+                '<button role="radio" aria-checked="false" data-region="ERCO">Texas</button></div>')
     body = f"""
   <div class="phead">
     <h1>Projects</h1>
-    <p class="lede">Things I&rsquo;ve built. The two data projects run every day on their own. Each one below has its live data, real output from the system and a piece of its code.</p>
+    <p class="lede">Two data systems that run every morning without me, and one car. Figures on this page are drawn from their current data.</p>
+    <p class="links"><a href="#gigawatt-ledger">Gigawatt Ledger</a><a href="#sundown">Sundown</a><a href="#bmw">BMW engine tuning</a></p>
   </div>
-  {index_table()}
-  {project_cases(dom, capq, latest)}"""
-    return layout(f"Projects | {PROFILE['name']}", "Gigawatt Ledger, Sundown and other projects by Utkarsh Agarwal, with live data and code.", body, "projects")
+
+  <article class="proj" id="gigawatt-ledger">
+    <header><h2>Gigawatt Ledger</h2><p class="sub">AI spending traced from big tech&rsquo;s filings to the power grid</p></header>
+    <div class="cols">
+      <div class="text">
+        <p>Each night the pipeline pulls SEC filings for 26 companies across the AI supply chain (cloud buyers, chip makers, server
+        and power-equipment suppliers, data-center landlords, utilities) and hourly electricity demand for five data-center regions.
+        Every value is stored with the date it became public, so any past day can be replayed exactly as it looked then.</p>
+        <p>Demand is weather-adjusted with a regression on month fixed effects and quadratic heating and cooling degree-days,
+        then split into growth regimes with a piecewise-linear trend whose breakpoints are chosen by BIC.</p>
+        <p>On top sits an AI analyst with 16 tools. A verifier checks every number in its answer against the tool outputs before
+        anything is shown, and an eval suite of 22 cases (time travel, multi-step math, unit traps, prompt injection) runs it end to end.</p>
+        <p class="links"><a href="/gigawatt-ledger/">Open the live dashboard</a><a href="/gigawatt-ledger/data/README.md">Open dataset</a></p>
+      </div>
+      {spec([("Companies", "26, from SEC EDGAR XBRL"), ("Grid data", "337,000+ hours, 5 regions"), ("Filing passages", "4,600+, BM25 search"),
+             ("Evals", "22 / 22, three runs each"), ("Tests", "63, run on every push"), ("Runs", "Daily, GitHub Actions")])}
+    </div>
+    <div class="m"><span>Weather model</span><code>load<sub>t</sub> = &alpha;<sub>month</sub> + &beta;<sub>1</sub>HDD<sub>t</sub> + &beta;<sub>2</sub>HDD<sub>t</sub><sup>2</sup> + &beta;<sub>3</sub>CDD<sub>t</sub> + &beta;<sub>4</sub>CDD<sub>t</sub><sup>2</sup> + &gamma;&middot;weekend<sub>t</sub> + &epsilon;<sub>t</sub></code></div>
+    {fig("capex", 330, f"Quarterly capital spending by the four largest cloud companies (stacked), against NVIDIA&rsquo;s quarterly revenue (line). {q[:4]} Q{q[-1]}: <b>${cap_now:.1f}B</b> of capex.", 2)}
+    <div class="pair">
+      {fig("zones", 300, "Weather-adjusted overnight load by data-center region, indexed to each region&rsquo;s first 12 months = 100.", 3)}
+      {fig("leadlag", 300, f"Correlation between capex growth and N. Virginia load growth when capex leads by k quarters. Shaded: &plusmn;2/&radic;n noise band. Strongest at k = {best['lag']:+d} (r = {best['r']:.2f}, n = {best['n']}).", 4)}
+    </div>
+    {gl}
+  </article>
+
+  <article class="proj" id="sundown">
+    <header><h2>Sundown</h2><p class="sub">How much of the evening peak batteries now carry on U.S. grids</p></header>
+    <div class="cols">
+      <div class="text">
+        <p>Every morning the pipeline pulls the previous day of hourly demand and generation by fuel for the seven major U.S. grids
+        from the EIA API, validates it, loads it into SQL, and rebuilds a dashboard. A Spark job recomputes the main metric
+        independently and must match the SQL result.</p>
+        <p>The headline metric is the battery share of the <i>net</i> peak: the hour each day when demand minus solar and wind is highest,
+        which is the hour the rest of the fleet struggles to cover. The quality checks have caught three errors in EIA&rsquo;s own published data.</p>
+        <p class="links"><a href="/sundown/">Open the live dashboard</a></p>
+      </div>
+      {spec([("Grids", "7 balancing authorities"), ("Records", '<span data-live="sd-rows">588,712</span> hourly rows'),
+             ("California net peak from batteries", '<span data-live="sd-share">25%</span>, last 30 days'), ("Tests", "59"), ("Runs", "Daily, Airflow and GitHub Actions")])}
+    </div>
+    {fig("heat", 300, "Battery output by hour of day (rows) and week (columns), MW. Blue is charging, orange is discharging. The midday blue band is solar being stored; the orange band is that energy coming back after sunset.", 5, "", heat_ctl)}
+    <div class="pair">
+      {fig("duck", 280, "California, an average day: demand (line), solar (shaded) and batteries (bars, below zero = charging), GW.", 6)}
+      {fig("net", 280, "Share of California&rsquo;s daily net peak supplied by batteries, 7-day mean, %.", 7)}
+    </div>
+    {fig("monthly", 280, "Energy discharged by batteries each month, by grid, GWh.", 8)}
+    {sd}
+  </article>
+
+  <article class="proj" id="bmw">
+    <header><h2>BMW engine and electronics tuning</h2><p class="sub">Personal project, 2026</p></header>
+    <div class="cols">
+      <div class="text">
+        <p>Reprogrammed the car&rsquo;s engine control unit in C and Python, tuning 125 calibration parameters across ignition timing,
+        fuel delivery, boost and throttle response. Reconfigured 6 electronic control modules to add live G-force telemetry and
+        radar displays to the car&rsquo;s own screens.</p>
+      </div>
+      {spec([("Parameters tuned", "125"), ("Engine performance", "+17%"), ("Modules reconfigured", "6"), ("Built with", "C, Python")])}
+    </div>
+    {'<figure class="photo"><img src="/photos/bmw.jpg" alt="The BMW" loading="lazy"></figure>' if (HERE / "photos" / "bmw.jpg").exists() else ""}
+  </article>"""
+    return layout(f"Projects | {PROFILE['name']}", "Gigawatt Ledger and Sundown: data pipelines, statistical models and an AI analyst on public energy and financial data.",
+                  body, "projects", {"capex": cap, "zones": zone_series(), "leadlag": ll})
 
 
 def about_page():
     have = [(f, c, s) for f, c, s in PHOTOS if (HERE / "photos" / f).exists()]
-    tiles = [f'<figure class="ph {s}"><img src="/photos/{f}" alt="{esc(c)}" loading="lazy"><figcaption>{esc(c)}</figcaption></figure>' for f, c, s in have]
+    tiles = [f'<figure class="ph {s}"><img src="/photos/{f}" alt="{esc(c or PROFILE["name"])}" loading="lazy"></figure>' for f, c, s in have]
     if PREVIEW:
-        tiles += [f'<div class="ph {s} slot"><span>{esc(c)}</span><small>site/photos/{f}</small></div>' for f, c, s in PHOTOS if (f, c, s) not in have]
+        tiles += [f'<div class="ph {s} slot"><small>site/photos/{f}</small></div>' for f, c, s in PHOTOS if (f, c, s) not in have]
     gallery = f'<div class="gallery">{"".join(tiles)}</div>' if tiles else ""
-    prompts = "".join(f'<div class="fill"><h3>{esc(t)}</h3><p>{esc(p)}</p></div>' for t, p in FILL_IN) if PREVIEW else ""
-    prs = "".join(f"<div><dt>{esc(k)}</dt><dd>{esc(v)}</dd></div>" for k, v in PRS)
+    prs = "".join(f"<tr><th scope='row'>{esc(k)}</th><td>{esc(v)}</td></tr>" for k, v in PRS)
     body = f"""
   <div class="phead">
     <h1>About</h1>
-    <p class="lede">I&rsquo;m Utkarsh. I grew up in Silicon Valley and study data science and applied math at UC Berkeley, class of 2028.</p>
   </div>
-  {gallery}
-  <section><h2>Background</h2><div class="prose">
-    <p>I was born in Mountain View and grew up around Mountain View, Cupertino and Los Altos, surrounded by people building
-    technology. I went to Saint Francis High School, where most of my time went into distance running.</p>
-    <p>I started college at UW&ndash;Madison in data science and economics and worked with faculty and PhD researchers on
-    campus energy use. In 2025 I came back to the Bay Area as a transfer to Berkeley, one of about 40 out-of-state transfer
-    admits a year.</p>
-    <p>Most of what I build sits where data meets the physical world: power grids, batteries, data centers, engines. I like
-    projects that keep running after I stop typing, and numbers I can check against the source.</p>
-  </div></section>
-  <section><h2>Running</h2><div>
+  <div class="about">
     <div class="prose">
-      <p>Running was my life in high school. I captained the varsity team at Saint Francis, qualified for the CIF California
-      state cross country championships, and won my age group at the 2022 San Francisco Half Marathon at 17. At my peak I was
-      running about 50 miles a week.</p>
+      <p>I grew up in Mountain View. In high school I was a distance runner: varsity captain at Saint Francis, a CIF California state
+      cross country qualifier, and the age-group winner at the 2022 San Francisco Half Marathon when I was 17.</p>
+      <p>I started college at Wisconsin in data science and economics, then transferred to Berkeley, which takes about 40 out-of-state
+      transfers a year. I study data science and applied math, and I lead internal development at Project Rishi, a 40-person group
+      building an education center in rural India.</p>
+      <p>The projects on this site run every morning on their own. When I&rsquo;m not working on them I&rsquo;m usually reprogramming a car.</p>
+      <p class="links"><a href="mailto:{PROFILE['email']}">{PROFILE['email']}</a><a href="{PROFILE['linkedin']}">LinkedIn</a></p>
     </div>
-    <dl class="nums prs">{prs}</dl>
-  </div></section>
-  <section><h2>India and Project Rishi</h2><div class="prose">
-    <p>I&rsquo;ve been to India about 14 times, mostly to see my grandparents in Delhi, and seeing how differently schools there
-    are resourced stayed with me. At Berkeley I joined Project Rishi&rsquo;s education team in my first semester and became
-    Director of Internal Development in 2026. I now lead a team of about 10 working on a coaching center in a rural village,
-    including the fundraising and budget. I&rsquo;m also taking Hindi at Berkeley.</p>
-  </div></section>
-  <section><h2>Cars</h2><div class="prose">
-    <p>I&rsquo;m into how cars work under the skin: engine software, control modules, infotainment, driver assistance and EV
-    drivetrains. I reprogrammed my BMW&rsquo;s engine computer myself, adjusting 125 calibration parameters, and added live
-    G-force telemetry and radar displays to its screens. More on the <a href="/projects/#bmw">projects page</a>.</p>
-  </div></section>
-  <section><h2>Now</h2><ul class="now">
-    <li><b>Building</b> Gigawatt Ledger and Sundown, which refresh themselves every morning.</li>
-    <li><b>Leading</b> internal development for Project Rishi.</li>
-    <li><b>Studying</b> data science and applied math at Berkeley, and Hindi.</li>
-    <li><b>Training</b> again: I built a home gym in my apartment and I&rsquo;m back to lifting and running.</li>
-    <li><b>Looking</b> for 2027 internships in data and AI engineering.</li>
-  </ul></section>
-  {f'<section><h2>To fill in</h2><div class="fills">{prompts}</div></section>' if prompts else ''}
-  <section><h2>Contact</h2><div class="prose">
-    <p>The best way to reach me is <a href="mailto:{PROFILE['email']}">{PROFILE['email']}</a>, or on <a href="{PROFILE['linkedin']}">LinkedIn</a>.</p>
-  </div></section>"""
-    return layout(f"About | {PROFILE['name']}", "About Utkarsh Agarwal: Silicon Valley native, data science and applied math at UC Berkeley, distance runner, car tinkerer.", body, "about")
+    <table class="prs"><caption>Personal records</caption>{prs}</table>
+  </div>
+  {gallery}"""
+    return layout(f"About | {PROFILE['name']}", "Utkarsh Agarwal: data science and applied math at UC Berkeley, former state-level distance runner.", body, "about", {})
 
 
 # =============================================================================================== layout
 CSS = r"""
-:root{
-  --bg:#ffffff;--ink:#15171b;--sec:#585e67;--mute:#8a9098;--rule:#e6e8eb;--panel:#f7f8fa;--panel2:#f0f2f5;
-  --accent:#2a4fd6;--bar:#cdd6f6;--ok:#1f8a4c;--kw:#2a4fd6;--str:#2c7a4b;--num:#b4561b;--com:#8a9098;
-  --sans:"Schibsted Grotesk",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace;
-}
-:root[data-theme=dark]{--bg:#0e1013;--ink:#e8eaee;--sec:#a4aab3;--mute:#737983;--rule:#23272e;--panel:#14171c;--panel2:#1a1e24;--accent:#8ea5ff;--bar:#2c3a68;--ok:#4cc27e;--kw:#8ea5ff;--str:#7fd1a0;--num:#f0a46b;--com:#6d737d}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e1013;--ink:#e8eaee;--sec:#a4aab3;--mute:#737983;--rule:#23272e;--panel:#14171c;--panel2:#1a1e24;--accent:#8ea5ff;--bar:#2c3a68;--ok:#4cc27e;--kw:#8ea5ff;--str:#7fd1a0;--num:#f0a46b;--com:#6d737d}}
+:root{--bg:#ffffff;--ink:#141619;--sec:#565c64;--mute:#868c94;--rule:#e4e6e9;--soft:#f5f6f7;--grid:#eef0f2;
+  --c1:#d9480f;--c2:#2a78d6;--c3:#1baf7a;--c4:#c98500;--c5:#9a4fd0;--neg:#2a78d6;--pos:#d9480f;--ok:#1d8a4e;
+  --kw:#2a6fd0;--str:#1f7a4a;--num:#b4561b;--com:#8a9098;
+  --sans:"Schibsted Grotesk",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+:root[data-theme=dark]{--bg:#101214;--ink:#e9ebee;--sec:#a5abb3;--mute:#737982;--rule:#24282e;--soft:#16191c;--grid:#1c2024;
+  --c1:#d95926;--c2:#3987e5;--c3:#199e70;--c4:#c98500;--c5:#9085e9;--neg:#3987e5;--pos:#d95926;--ok:#3fb879;--kw:#7fa6f0;--str:#7fd1a0;--num:#f0a46b;--com:#6d737d}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#101214;--ink:#e9ebee;--sec:#a5abb3;--mute:#737982;--rule:#24282e;--soft:#16191c;--grid:#1c2024;
+  --c1:#d95926;--c2:#3987e5;--c3:#199e70;--c4:#c98500;--c5:#9085e9;--neg:#3987e5;--pos:#d95926;--ok:#3fb879;--kw:#7fa6f0;--str:#7fd1a0;--num:#f0a46b;--com:#6d737d}}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:76px}
-body{margin:0;background:var(--bg);color:var(--ink);font:400 16.5px/1.62 var(--sans);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-.nums dd,.status,.tcap b,.index .y,.sel .sy,.row .when,.live figcaption,.asof button{font-variant-numeric:tabular-nums}
-::selection{background:color-mix(in srgb,var(--accent) 22%,transparent)}
-a{color:inherit;text-decoration:underline;text-decoration-color:var(--rule);text-decoration-thickness:1.5px;text-underline-offset:3px;transition:text-decoration-color .15s,color .15s}
-a:hover{text-decoration-color:var(--accent)}
-a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
-.wrap{max-width:1000px;margin:0 auto;padding:0 32px}
-
-header.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid transparent;transition:border-color .2s}
-header.top.scrolled{border-bottom-color:var(--rule)}
-.top .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
-.top .me{font-weight:650;text-decoration:none;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--sans);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+::selection{background:color-mix(in srgb,var(--c1) 25%,transparent)}
+a{color:inherit;text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--ink) 25%,transparent);text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{text-decoration-color:var(--c1);text-decoration-thickness:2px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--c1);outline-offset:2px}
+main{max-width:1080px;margin:0 auto;padding:0 40px}
+header.top{position:sticky;top:0;z-index:9;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.top .in{max-width:1080px;margin:0 auto;padding:0 40px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.top .me{display:flex;gap:10px;align-items:center;text-decoration:none;font-weight:640;letter-spacing:-.01em}
 .top .me svg{width:22px;height:22px;display:block;color:var(--ink)}
-.top nav{display:flex;gap:26px;align-items:center;font-size:15px}
-.top nav a{text-decoration:none;color:var(--sec);position:relative}
-.top nav a:hover,.top nav a[aria-current=page]{color:var(--ink)}
-.top nav a[aria-current=page]::after{content:"";position:absolute;left:0;right:0;bottom:-21px;height:2px;background:var(--ink)}
-#theme{font:inherit;font-size:14px;color:var(--sec);background:none;border:1px solid var(--rule);border-radius:7px;padding:3px 11px;cursor:pointer}
+.top nav{display:flex;gap:24px;align-items:center;font-size:15px}
+.top nav a{text-decoration:none;color:var(--sec)}.top nav a:hover,.top nav a[aria-current=page]{color:var(--ink)}
+.top nav a[aria-current=page]{box-shadow:inset 0 -2px 0 var(--ink);padding:17px 0}
+#theme{font:inherit;font-size:14px;color:var(--sec);background:none;border:1px solid var(--rule);border-radius:5px;padding:2px 10px;cursor:pointer}
 #theme:hover{color:var(--ink);border-color:var(--mute)}
 
-h1{font-size:clamp(44px,7.4vw,78px);line-height:.98;letter-spacing:-.045em;font-weight:720;margin:0}
-.lede{font-size:21px;line-height:1.5;color:var(--sec);max-width:31em;margin:22px 0 0;letter-spacing:-.005em}
-.lede b{color:var(--ink);font-weight:550}
-.hero,.phead{padding:88px 0 0}
-.contact{display:flex;gap:22px;margin-top:22px;font-size:15.5px}
-.trace{display:block;width:100%;height:170px;margin-top:64px;overflow:visible}
-.trace .line{fill:none;stroke:var(--accent);stroke-width:2;vector-effect:non-scaling-stroke;stroke-linejoin:round}
-.trace .tl,.chart .zl{stroke:var(--rule);stroke-width:1;vector-effect:non-scaling-stroke}
-svg .tk{fill:var(--mute);font:12px var(--sans)}
-@media (prefers-reduced-motion:no-preference){.trace .line{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 2.2s cubic-bezier(.4,0,.2,1) .25s forwards}}
-@keyframes draw{to{stroke-dashoffset:0}}
-.tcap{display:flex;justify-content:space-between;gap:24px;font-size:14px;color:var(--sec);margin-top:10px}
-.tcap b{color:var(--ink);font-weight:600}
-.status{width:100%;border-collapse:collapse;margin-top:36px;font:14px/1.4 var(--mono);color:var(--sec);border-top:1px solid var(--rule)}
-.status th,.status td{text-align:left;padding:11px 18px 11px 0;border-bottom:1px solid var(--rule);font-weight:400;white-space:nowrap}
-.status th{color:var(--ink);font-weight:500;width:200px}
-.status th a{text-decoration:none}.status th a:hover{text-decoration:underline}
-.status td:last-child{white-space:normal;width:100%}
-.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--mute);margin-right:9px;vertical-align:1px}
-.dot.ok{background:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 22%,transparent)}
+h1{font-size:61px;line-height:1;letter-spacing:-.04em;font-weight:700;margin:0}
+.hero{padding:72px 0 8px;max-width:760px}
+.phead{padding:72px 0 0;max-width:760px}
+.lede{font-size:20px;line-height:1.5;color:var(--sec);margin:18px 0 0}
+.links{display:flex;flex-wrap:wrap;gap:6px 22px;margin:18px 0 0;font-size:15px}
 
-section{display:grid;grid-template-columns:200px 1fr;gap:0 36px;margin-top:104px}
-section>h2{font-size:15px;font-weight:600;color:var(--sec);margin:4px 0 0;letter-spacing:0;position:sticky;top:88px;align-self:start}
-.about p,.prose p{font-size:19px;line-height:1.6;margin:0 0 16px;max-width:34em;letter-spacing:-.005em}
-.about p:last-child,.prose p:last-child{margin-bottom:0}
-p.more{font-size:16px;font-weight:550;margin-top:22px}
+.fig{margin:40px 0 0}
+.fig.wide{margin-top:44px}
+.plot{position:relative;width:100%;cursor:crosshair;touch-action:pan-y}
+.plot canvas{display:block;width:100%;height:100%}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font:500 12.5px/1.45 var(--sans);padding:6px 9px;border-radius:4px;white-space:nowrap;transform:translate(-50%,-100%);margin-top:-10px;z-index:2}
+.tip b{font-weight:650}
+.fig figcaption{font-size:13.5px;line-height:1.5;color:var(--sec);margin-top:12px;max-width:760px}
+.fig figcaption b{color:var(--ink);font-weight:620}
+.status{font-size:13.5px;color:var(--mute);margin:10px 0 0}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--mute);margin-right:8px;vertical-align:1px}
+.dot.ok{background:var(--ok)}
 
-.selected{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
-.sel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr) 60px;gap:24px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--rule);text-decoration:none}
-.sel .sn{font-size:20px;font-weight:650;letter-spacing:-.02em;text-decoration:underline;text-decoration-color:transparent;text-decoration-thickness:2px;text-underline-offset:4px;transition:text-decoration-color .15s}
-.sel .sd{color:var(--sec)}.sel .sy{color:var(--mute);text-align:right;font-size:14px}
-.sel:hover .sn{text-decoration-color:var(--accent)}
+section{margin-top:88px;display:grid;grid-template-columns:180px minmax(0,1fr);gap:0 40px}
+section.results{margin-top:72px}
+section>h2{font-size:15px;font-weight:620;margin:2px 0 0;color:var(--ink)}
+.results table{width:100%;border-collapse:collapse}
+.results th{font-size:25px;font-weight:680;letter-spacing:-.025em;text-align:left;white-space:nowrap;padding:12px 28px 12px 0;vertical-align:baseline;border-top:1px solid var(--rule)}
+.results td{padding:12px 0;border-top:1px solid var(--rule);color:var(--sec);vertical-align:baseline}
+.results td a{text-decoration:none}.results td a:hover{color:var(--ink);text-decoration:underline;text-decoration-color:var(--c1)}
+.results tr:last-child>*{border-bottom:1px solid var(--rule)}
 
-.list{list-style:none;padding:0;margin:0}
-.row{display:grid;grid-template-columns:1fr 170px;gap:24px;padding:0 0 26px;margin-bottom:26px;border-bottom:1px solid var(--rule)}
-.row:last-child{border-bottom:0;margin-bottom:0;padding-bottom:0}
-.row .when{order:2;text-align:right;font-size:14px;color:var(--mute);padding-top:3px}
-.row h3{font-size:18px;font-weight:620;letter-spacing:-.012em;margin:0;line-height:1.35}
-.row .org{color:var(--sec);margin:1px 0 8px}
-.row p{margin:0;max-width:38em}
-.skills{margin:0}
-.skills div{display:grid;grid-template-columns:170px 1fr;gap:24px;padding:12px 0;border-bottom:1px solid var(--rule)}
-.skills div:first-child{padding-top:0}.skills div:last-child{border-bottom:0}
-.skills dt{font-weight:600}.skills dd{margin:0;color:var(--sec)}
+.work .card{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:32px;padding:22px 0;border-top:1px solid var(--rule);align-items:start}
+.work .card:nth-of-type(2){border-bottom:1px solid var(--rule)}
+.work h3{font-size:20px;font-weight:660;letter-spacing:-.015em;margin:0 0 6px}
+.work h3 a{text-decoration:none}.work h3 a:hover{text-decoration:underline;text-decoration-color:var(--c1)}
+.work .card p{margin:0 0 8px;color:var(--sec);max-width:34em}
+.tags{font-size:13.5px;color:var(--mute)}
+.fig.mini{margin:4px 0 0}.fig.mini figcaption{font-size:12.5px;margin-top:6px;color:var(--mute)}
+.more{margin:18px 0 0;font-weight:560}
 
-.index{width:100%;border-collapse:collapse;margin-top:64px;font-size:15px}
-.index th{text-align:left;font-weight:500;color:var(--mute);font-size:13.5px;padding:0 16px 10px 0;border-bottom:1px solid var(--rule)}
-.index td{padding:14px 16px 14px 0;border-bottom:1px solid var(--rule);vertical-align:baseline}
-.index .y{color:var(--mute);width:64px}
-.index .n{font-weight:620;white-space:nowrap}.index .n a{text-decoration:none}.index .n a:hover{text-decoration:underline;text-decoration-color:var(--accent)}
-.index td.d{color:var(--sec)}.index td.s{color:var(--mute);white-space:nowrap}
-.index .l{text-align:right;padding-right:0;font-weight:550}
+.entries{list-style:none;margin:0;padding:0}
+.entries li{display:grid;grid-template-columns:72px minmax(0,1fr);gap:16px;padding:14px 0;border-top:1px solid var(--rule)}
+.entries li:last-child{border-bottom:1px solid var(--rule)}
+.entries .yr{color:var(--mute);font-size:14px;padding-top:2px}
+.entries h3{font-size:16.5px;font-weight:620;margin:0;letter-spacing:-.008em}
+.entries .org{font-weight:400;color:var(--sec)}
+.entries p{margin:3px 0 0;color:var(--sec);max-width:40em}
+.spec{margin:0;border-top:1px solid var(--rule)}
+.spec div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;padding:9px 0;border-bottom:1px solid var(--rule);font-size:15px}
+.spec dt{color:var(--sec)}.spec dd{margin:0}
 
-.case{display:grid;grid-template-columns:200px minmax(0,1fr);gap:0 36px;margin-top:120px;scroll-margin-top:80px}
-.case .meta{position:sticky;top:88px;align-self:start;font-size:14.5px}
-.case .yr{margin:8px 0 18px;color:var(--mute)}
-.case .meta dl{margin:0}.case .meta dt{color:var(--mute);font-size:13px;margin-top:12px}.case .meta dd{margin:2px 0 0;color:var(--sec)}
-.case .go{display:flex;flex-direction:column;gap:6px;margin-top:22px;font-weight:550}
-.case h2{font-size:42px;line-height:1.05;letter-spacing:-.035em;font-weight:700;margin:0}
-.case .sub{font-size:19px;color:var(--sec);margin:8px 0 20px}
-.case .main>p{margin:0 0 14px;max-width:38em}
+.proj{margin-top:104px;scroll-margin-top:72px}
+.proj+.proj{margin-top:136px}
+.proj header h2{font-size:39px;line-height:1.05;letter-spacing:-.03em;font-weight:690;margin:0}
+.proj .sub{font-size:18px;color:var(--sec);margin:8px 0 0}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:48px;margin-top:28px;align-items:start}
+.cols .text p{margin:0 0 14px;max-width:38em}
+.cols .spec{font-size:14.5px}.cols .spec div{grid-template-columns:minmax(0,1fr) auto;text-align:right}.cols .spec dt{text-align:left}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.m{margin:36px 0 0;padding:14px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);display:flex;gap:24px;align-items:baseline;overflow-x:auto}
+.m span{font-size:13.5px;color:var(--sec);white-space:nowrap}
+.m code{font:italic 17px/1.4 "STIX Two Text","Cambria Math","Times New Roman",serif;white-space:nowrap;color:var(--ink)}
+.m sub,.m sup{font-size:.7em;font-style:italic}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:5px;margin-bottom:10px;overflow:hidden}
+.seg button{font:500 13px var(--sans);color:var(--sec);background:none;border:0;padding:4px 12px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--rule)}
+.seg button[aria-checked=true]{background:var(--ink);color:var(--bg)}
 
-.win{margin:32px 0 8px;border:1px solid var(--rule);border-radius:12px;background:var(--panel);overflow:hidden}
-.win .bar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:0 16px 0 6px;border-bottom:1px solid var(--rule);background:var(--panel2)}
+.win{margin:48px 0 0;border:1px solid var(--rule);border-radius:7px;overflow:hidden}
+.win .bar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:0 14px 0 4px;border-bottom:1px solid var(--rule);background:var(--soft)}
 .win [role=tablist]{display:flex;overflow-x:auto;scrollbar-width:none}
-.win [role=tab]{font:500 14px var(--sans);color:var(--sec);background:none;border:0;padding:12px 12px;cursor:pointer;position:relative;white-space:nowrap}
+.win [role=tab]{font:500 14px var(--sans);color:var(--sec);background:none;border:0;padding:10px 12px;cursor:pointer;white-space:nowrap}
 .win [role=tab]:hover,.win [role=tab][aria-selected=true]{color:var(--ink)}
-.win [role=tab][aria-selected=true]::after{content:"";position:absolute;left:12px;right:12px;bottom:0;height:2px;background:var(--accent);border-radius:2px}
+.win [role=tab][aria-selected=true]{box-shadow:inset 0 -2px 0 var(--c1)}
 .win .bar .meta{font:12.5px var(--mono);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.win .body{padding:24px 26px;min-height:268px}
-@media (prefers-reduced-motion:no-preference){.win [role=tabpanel]{animation:fade .2s ease}}
-@keyframes fade{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
-.live{margin:0}.live svg{width:100%;height:196px;display:block;overflow:visible}
-.chart .b{fill:var(--bar)}.chart .hi{fill:var(--accent)}
-.chart rect{transition:opacity .12s;cursor:crosshair}.chart:hover rect{opacity:.5}.chart rect:hover{opacity:1}
-.live figcaption{margin-top:16px;font:13px var(--mono);color:var(--sec);min-height:1.4em}
-.code{margin:0;font:13px/1.7 var(--mono);color:var(--ink);overflow-x:auto;white-space:pre;tab-size:4}
-.hc{color:var(--com);font-style:italic}.hs{color:var(--str)}.hn{color:var(--num)}.hk{color:var(--kw);font-weight:500}
-.ask .q{margin:0 0 16px;font-weight:620;font-size:17px;letter-spacing:-.01em}
-.asof{display:flex;align-items:center;gap:6px;margin:0 0 18px;font-size:13.5px;color:var(--mute)}
-.asof span{margin-right:6px}
-.asof button{font:500 13px var(--mono);color:var(--sec);background:var(--bg);border:1px solid var(--rule);border-radius:6px;padding:4px 9px;cursor:pointer;transition:background .15s,color .15s}
+.win .body{padding:22px 24px}
+.code{margin:0;font:13px/1.7 var(--mono);overflow-x:auto;white-space:pre;tab-size:4}
+.hc{color:var(--com);font-style:italic}.hs{color:var(--str)}.hn{color:var(--num)}.hk{color:var(--kw)}
+.ask .q{margin:0 0 14px;font:500 14px var(--mono)}
+.asof{display:flex;align-items:center;gap:6px;margin:0 0 16px;font-size:13px;color:var(--mute)}
+.asof span{margin-right:4px}
+.asof button{font:500 12.5px var(--mono);color:var(--sec);background:none;border:1px solid var(--rule);border-radius:4px;padding:3px 8px;cursor:pointer}
 .asof button[aria-checked=true]{color:var(--bg);background:var(--ink);border-color:var(--ink)}
-.ask .a{border-left:2px solid var(--accent);padding-left:16px;font-size:15.5px}
-.ask .a p{margin:0 0 10px}.ask .a ul{margin:0 0 10px;padding-left:18px}.ask .a li{margin:3px 0}
-.ask .note{font-size:13.5px;color:var(--mute);margin:16px 0 0;max-width:44em}
-table.ans{border-collapse:collapse;margin:6px 0 12px;font-size:14.5px}
-table.ans th,table.ans td{padding:4px 22px 4px 0;border-bottom:1px solid var(--rule);text-align:left}
-table.ans th{font-weight:550;color:var(--sec)}
+.ask .a{border-left:2px solid var(--c1);padding-left:16px;font-size:15px}
+.ask .a p{margin:0 0 9px}.ask .a ul{margin:0 0 9px;padding-left:18px}
+.ask .note{font-size:13px;color:var(--mute);margin:14px 0 0;max-width:46em}
+table.ans{border-collapse:collapse;margin:4px 0 10px;font-size:14px}
+table.ans th,table.ans td{padding:3px 22px 3px 0;border-bottom:1px solid var(--rule);text-align:left}
+table.ans th{font-weight:560;color:var(--sec)}
+.photo{margin:32px 0 0}.photo img{width:100%;display:block;border-radius:3px}
 
-.nums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin:28px 0 0}
-.nums div{border-top:2px solid var(--ink);padding-top:10px}
-.nums dt{font-size:13.5px;color:var(--sec);line-height:1.35}
-.nums dd{margin:4px 0 0;font-size:28px;font-weight:680;letter-spacing:-.03em;line-height:1.1;white-space:nowrap}
-.nums small{display:block;font-size:13px;font-weight:450;color:var(--sec);letter-spacing:0;margin-top:3px}
-.photo{margin:28px 0 0}.photo img{width:100%;display:block;border-radius:12px}
-.slot{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:1.5px dashed var(--rule);border-radius:12px;color:var(--mute);font-size:14px;text-align:center;padding:20px}
-.slot.banner{aspect-ratio:16/7;margin-top:28px}.slot small{font:12px var(--mono)}
-
-.gallery{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:118px;gap:12px;margin-top:56px}
-.ph{margin:0;position:relative;border-radius:12px;overflow:hidden;background:var(--panel)}
+.about{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:64px;margin-top:32px;align-items:start}
+.prose p{font-size:19px;line-height:1.6;margin:0 0 16px;max-width:33em}
+.prs{border-collapse:collapse;width:100%}
+.prs caption{text-align:left;font-size:14px;font-weight:620;padding-bottom:8px}
+.prs th,.prs td{padding:10px 0;border-top:1px solid var(--rule);text-align:left;font-weight:400}
+.prs th{color:var(--sec);font-size:15px}.prs td{text-align:right;font-size:22px;font-weight:660;letter-spacing:-.02em}
+.prs tr:last-child>*{border-bottom:1px solid var(--rule)}
+.gallery{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:120px;gap:10px;margin-top:56px}
+.ph{margin:0;overflow:hidden;border-radius:3px;background:var(--soft)}
 .ph img{width:100%;height:100%;object-fit:cover;display:block}
-.ph figcaption{position:absolute;left:12px;bottom:10px;font-size:12.5px;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.55)}
-.ph.tall{grid-column:span 2;grid-row:span 3}.ph.wide{grid-column:span 4;grid-row:span 2}.ph.square{grid-column:span 2;grid-row:span 1}
-.ph.slot{background:none}
-.now{list-style:none;margin:0;padding:0}
-.now li{font-size:18px;padding:12px 0;border-bottom:1px solid var(--rule);max-width:36em}
-.now li:first-child{padding-top:0}.now li:last-child{border-bottom:0}
-.now b{font-weight:620;display:inline-block;min-width:92px}
-.prs{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:26px}
-.fills{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.fill{border:1.5px dashed var(--rule);border-radius:12px;padding:16px 18px}
-.fill h3{margin:0 0 4px;font-size:16px}.fill p{margin:0;color:var(--mute);font-size:14.5px}
+.ph.tall{grid-column:span 2;grid-row:span 3}.ph.wide{grid-column:span 4;grid-row:span 2}.ph.sq{grid-column:span 2}
+.ph.slot{background:none;border:1.5px dashed var(--rule);display:flex;align-items:center;justify-content:center;color:var(--mute);font:12px var(--mono)}
 
-footer{margin:128px 0 0;padding:28px 0 48px;border-top:1px solid var(--rule)}
-footer .wrap{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;font-size:14.5px;color:var(--sec)}
-footer .say{font-size:28px;letter-spacing:-.03em;font-weight:680;color:var(--ink);margin:0 0 10px}
-footer .say a{text-decoration-color:var(--accent)}
-footer p{margin:0}
-
-@media (max-width:860px){
-  .wrap{padding:0 22px}
-  .top .me span{display:none}
-  .top nav{gap:18px}
-  .hero,.phead{padding-top:56px}.lede{font-size:18.5px}
-  .trace{height:120px;margin-top:44px}.trace .tk{display:none}
-  section,.case{grid-template-columns:1fr;margin-top:76px}
-  section>h2{position:static;margin-bottom:18px}
-  .case .meta{position:static;order:2;margin-top:28px;padding-top:18px;border-top:1px solid var(--rule)}
-  .case .meta .yr{margin:0 0 4px}
-  .case .meta dl{display:grid;grid-template-columns:auto 1fr;gap:6px 16px}.case .meta dt,.case .meta dd{margin:0}
-  .case .go{flex-direction:row;gap:20px;margin-top:16px}
-  .live .tk{display:none}
-  .case h2{font-size:32px}
-  .row{grid-template-columns:1fr;gap:2px}.row .when{order:0;text-align:left}
-  .skills div{grid-template-columns:1fr;gap:2px}
-  .status th{width:auto}.status td:last-child{display:none}
-  .tcap{flex-direction:column;gap:2px}
-  .sel{grid-template-columns:1fr auto;gap:2px 12px}.sel .sd{grid-column:1/-1;grid-row:2}
-  .index th.d,.index th.s,.index td.d,.index td.s{display:none}
-  .win .bar .meta{display:none}.win .body{padding:18px 16px;min-height:0}.live svg{height:150px}
-  .nums,.prs{grid-template-columns:1fr 1fr}
-  .gallery{grid-template-columns:repeat(2,1fr);grid-auto-rows:110px}
-  .ph.tall{grid-column:span 1;grid-row:span 2}.ph.wide{grid-column:span 2;grid-row:span 2}.ph.square{grid-column:span 1}
-  .fills{grid-template-columns:1fr}
+footer{margin-top:120px;border-top:1px solid var(--rule)}
+footer .in{max-width:1080px;margin:0 auto;padding:24px 40px 44px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:14px;color:var(--sec)}
+footer a{color:var(--ink)}
+@media (max-width:880px){
+  main,.top .in,footer .in{padding-left:20px;padding-right:20px}
+  .top .me span{display:none}.top nav{gap:16px}
+  h1{font-size:44px}.hero,.phead{padding-top:48px}.lede{font-size:18px}
+  section{grid-template-columns:1fr;margin-top:64px}section>h2{margin-bottom:12px}
+  .results th{font-size:20px;padding-right:16px}
+  .work .card,.cols,.pair,.about{grid-template-columns:1fr;gap:20px}
+  .proj header h2{font-size:31px}
+  .win .bar .meta{display:none}.win .body{padding:16px}
+  .gallery{grid-template-columns:repeat(2,1fr)}.ph.tall{grid-column:span 1;grid-row:span 2}.ph.wide{grid-column:span 2}.ph.sq{grid-column:span 1}
 }
-@media print{header.top,#theme{display:none}.trace .line{animation:none;stroke-dasharray:none}}
 """
 
+# ------------------------------------------------------------------------------------------------ chart engine
 JS = r"""
 (() => {
-  const root = document.documentElement, btn = document.getElementById('theme');
-  const dark = () => root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-  const label = () => { btn.textContent = dark() ? 'Light' : 'Dark'; };
-  btn.onclick = () => { root.dataset.theme = dark() ? 'light' : 'dark'; try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {} label(); };
-  label();
-  const top = document.querySelector('header.top');
-  const onScroll = () => top.classList.toggle('scrolled', scrollY > 8);
-  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+const root = document.documentElement, FIG = JSON.parse(document.getElementById('figdata').textContent || '{}');
+const css = k => getComputedStyle(root).getPropertyValue(k).trim();
+const btn = document.getElementById('theme');
+const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+const lab = () => { btn.textContent = isDark() ? 'Light' : 'Dark'; };
+btn.onclick = () => { root.dataset.theme = isDark() ? 'light' : 'dark'; try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {} lab(); redrawAll(); };
+lab(); matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { lab(); redrawAll(); });
 
-  document.querySelectorAll('[data-win]').forEach(win => {
-    const tabs = [...win.querySelectorAll('[role=tab]')], meta = win.querySelector('.bar .meta');
-    const pick = (t, focus) => {
-      tabs.forEach(x => { const on = x === t; x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1;
-        const p = document.getElementById(x.getAttribute('aria-controls')); p.hidden = !on; if (on && meta) meta.textContent = p.dataset.meta || ''; });
-      if (focus) t.focus();
-    };
-    tabs.forEach((t, i) => {
-      t.onclick = () => pick(t);
-      t.onkeydown = e => { const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (d) { e.preventDefault(); pick(tabs[(i + d + tabs.length) % tabs.length], true); } };
-    });
-  });
-  document.querySelectorAll('.ask').forEach(box => {
-    const bs = box.querySelectorAll('[data-asof]');
-    bs.forEach(b => b.onclick = () => {
-      bs.forEach(x => x.setAttribute('aria-checked', x === b));
-      box.querySelectorAll('[data-ans]').forEach(a => a.hidden = a.dataset.ans !== b.dataset.asof);
-    });
-  });
-  document.querySelectorAll('figure.live').forEach(fig => {
-    const out = fig.querySelector('[data-tipout]'); if (!out) return; const base = out.textContent;
-    fig.querySelectorAll('[data-tip]').forEach(r => { r.onmouseenter = () => out.textContent = r.dataset.tip; });
-    fig.querySelector('svg').onmouseleave = () => out.textContent = base;
-  });
+const fmt = (v, d = 0) => v == null || isNaN(v) ? '–' : Number(v).toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: d });
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const dlabel = s => { const [y, m, d] = s.split('-'); return `${MON[+m - 1]} ${+d}, ${y}`; };
+const qlabel = q => `${q.slice(0, 4)} Q${q.slice(-1)}`;
+const ts = s => Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +(s.slice(8, 10) || 1));
+function nice(lo, hi, n = 5) {
+  const span = hi - lo || 1, step0 = span / n, p = Math.pow(10, Math.floor(Math.log10(step0)));
+  const step = [1, 2, 2.5, 5, 10].map(x => x * p).find(s => span / s <= n) || 10 * p;
+  const a = Math.floor(lo / step) * step, b = Math.ceil(hi / step) * step, t = [];
+  for (let v = a; v <= b + step / 2; v += step) t.push(+v.toFixed(10));
+  return { lo: a, hi: b, ticks: t };
+}
 
-  const $$ = k => document.querySelector(`[data-live="${k}"]`);
-  const ago = s => {
-    const t = Date.parse(String(s).replace(' UTC', 'Z').replace(' ', 'T')); if (!t) return null;
-    const h = (Date.now() - t) / 36e5;
-    return { h, text: h < 1 ? 'updated under an hour ago' : h < 48 ? `updated ${Math.round(h)} hours ago` : `updated ${Math.round(h / 24)} days ago` };
+const charts = [];
+function chart(el, draw, hover) {
+  const c = document.createElement('canvas'); el.appendChild(c);
+  const tip = document.createElement('div'); tip.className = 'tip'; tip.hidden = true; el.appendChild(tip);
+  const ch = { el, c, tip, draw, hover, mx: null };
+  ch.render = () => {
+    const dpr = window.devicePixelRatio || 1, W = el.clientWidth, H = el.clientHeight;
+    c.width = W * dpr; c.height = H * dpr; const g = c.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.clearRect(0, 0, W, H); g.font = `12px ${css('--sans')}`; g.textBaseline = 'middle';
+    ch.geo = draw(g, W, H);
+    if (ch.mx != null && hover) { const r = hover(g, ch.geo, ch.mx, ch.my, W, H); if (r) { tip.innerHTML = r.html; tip.style.left = r.x + 'px'; tip.style.top = r.y + 'px'; tip.hidden = false; } else tip.hidden = true; }
+    else tip.hidden = true;
   };
-  const mark = (who, when) => { const a = when && ago(when), w = $$(who + '-when'), d = $$(who + '-dot'); if (!a || !w) return; w.textContent = a.text; d && d.classList.toggle('ok', a.h < 36); };
-  const n = x => Number(x).toLocaleString('en-US', { maximumFractionDigits: 0 });
-  const set = (k, v) => { const e = $$(k); if (e) e.textContent = v; };
-  if ($$('gl-when')) {
-    fetch('/gigawatt-ledger/data/manifest.json', { cache: 'no-store' }).then(r => r.ok && r.json()).then(m => m && mark('gl', m.built_at)).catch(() => {});
-    fetch('/gigawatt-ledger/data/history.csv', { cache: 'no-store' }).then(r => r.ok && r.text()).then(t => {
-      if (!t) return; const v = {}; t.trim().split('\n').slice(1).forEach(l => { const [, k, x] = l.split(','); v[k] = x; });
-      if (v.grid_hours && v.sec_data_points) set('gl-what', `${n(v.grid_hours)} grid hours, ${n(v.sec_data_points)} SEC data points`);
-    }).catch(() => {});
-  }
-  if ($$('sd-when') || $$('sd-rows')) fetch('/sundown/status.json', { cache: 'no-store' }).then(r => r.ok && r.json()).then(s => {
-    if (!s) return; mark('sd', s.built_at);
-    if (s.rows) { set('sd-what', `${n(s.rows)} hourly records, ${s.grids || 7} grids`); set('sd-rows', n(s.rows)); }
-    if (s.ciso_battery_share_30d != null) set('sd-share', s.ciso_battery_share_30d + '%');
-  }).catch(() => {});
+  const move = e => { const r = c.getBoundingClientRect(), p = e.touches ? e.touches[0] : e; ch.mx = p.clientX - r.left; ch.my = p.clientY - r.top; ch.render(); };
+  c.addEventListener('mousemove', move); c.addEventListener('touchmove', move, { passive: true });
+  c.addEventListener('mouseleave', () => { ch.mx = null; ch.render(); });
+  new ResizeObserver(() => ch.render()).observe(el);
+  charts.push(ch); return ch;
+}
+function redrawAll() { charts.forEach(c => c.render()); }
+
+// shared axes: x is a numeric domain, y linear
+function frame(g, W, H, o) {
+  const P = { l: o.padL ?? 52, r: o.padR ?? 12, t: o.padT ?? 10, b: o.padB ?? 26 };
+  const X = v => P.l + (v - o.x0) / (o.x1 - o.x0) * (W - P.l - P.r);
+  const Y = v => P.t + (o.y.hi - v) / (o.y.hi - o.y.lo) * (H - P.t - P.b);
+  g.strokeStyle = css('--grid'); g.lineWidth = 1; g.fillStyle = css('--mute'); g.textAlign = 'right';
+  if (!o.noYAxis) o.y.ticks.forEach(t => { const y = Math.round(Y(t)) + .5; g.beginPath(); g.moveTo(P.l, y); g.lineTo(W - P.r, y); g.stroke(); g.fillText(o.yfmt ? o.yfmt(t) : fmt(t), P.l - 8, y); });
+  g.strokeStyle = css('--rule'); g.beginPath(); g.moveTo(P.l, Math.round(Y(o.y.lo)) + .5); g.lineTo(W - P.r, Math.round(Y(o.y.lo)) + .5); g.stroke();
+  g.textAlign = 'center'; g.fillStyle = css('--mute');
+  (o.xticks || []).forEach(([v, s]) => { const x = X(v); if (x < P.l - 1 || x > W - P.r + 1) return; g.fillText(s, x, H - P.b + 15); g.strokeStyle = css('--rule'); g.beginPath(); g.moveTo(Math.round(x) + .5, Y(o.y.lo)); g.lineTo(Math.round(x) + .5, Y(o.y.lo) + 4); g.stroke(); });
+  return { P, X, Y, W, H };
+}
+const line = (g, pts, color, w = 1.6, dash) => { g.strokeStyle = color; g.lineWidth = w; g.setLineDash(dash || []); g.lineJoin = 'round'; g.beginPath(); let on = false; pts.forEach(([x, y]) => { if (y == null || isNaN(y)) { on = false; return; } on ? g.lineTo(x, y) : g.moveTo(x, y); on = true; }); g.stroke(); g.setLineDash([]); };
+const cross = (g, f, x) => { g.strokeStyle = css('--mute'); g.lineWidth = 1; g.setLineDash([3, 3]); g.beginPath(); g.moveTo(Math.round(x) + .5, f.P.t); g.lineTo(Math.round(x) + .5, f.Y(f.y0 ?? 0) || f.H - f.P.b); g.stroke(); g.setLineDash([]); };
+const yearTicks = (a, b, step = 1) => { const out = []; for (let y = new Date(a).getUTCFullYear() + 1; y <= new Date(b).getUTCFullYear(); y += step) out.push([Date.UTC(y, 0, 1), String(y)]); return out; };
+
+// ---------------------------------------------------------------- figures
+const F = {};
+F.hero = el => {
+  const d = FIG.hero, t = d.dates.map(ts), x0 = t[0], x1 = t[t.length - 1];
+  const sorted = [...d.raw].sort((a, b) => a - b), ylo = sorted[Math.floor(sorted.length * .002)], yhi = sorted[Math.floor(sorted.length * .996)];
+  const y = nice(Math.min(ylo, ...d.adj) * .97, yhi);
+  const fit = d.fit.map(([s, v]) => [ts(s), v]), brk = ts(d.brk);
+  chart(el, (g, W, H) => {
+    const f = frame(g, W, H, { x0, x1, y, xticks: yearTicks(x0, x1), yfmt: v => fmt(v), padL: 52, padT: 24 }); g.fillStyle = css('--mute'); g.textAlign = 'left'; g.fillText('MW', 4, 8);
+    g.fillStyle = css('--mute'); g.globalAlpha = isDark() ? .5 : .38;
+    d.raw.forEach((v, i) => { if (v > y.hi) return; g.fillRect(f.X(t[i]) - .9, f.Y(v) - .9, 1.8, 1.8); }); g.globalAlpha = 1;
+    line(g, t.map((v, i) => [f.X(v), f.Y(d.adj[i])]), css('--c1'), 2);
+    line(g, fit.map(([a, b]) => [f.X(a), f.Y(b)]), css('--ink'), 1.3, [5, 4]);
+    const bx = f.X(brk); g.strokeStyle = css('--sec'); g.lineWidth = 1; g.beginPath(); g.moveTo(bx + .5, f.P.t + 4); g.lineTo(bx + .5, f.Y(y.lo)); g.stroke();
+    g.fillStyle = css('--ink'); g.textAlign = 'right'; g.font = `600 12.5px ${css('--sans')}`;
+    g.fillText(`+${fmt(d.s1)} MW/yr`, bx - 10, f.P.t + 14);
+    g.textAlign = 'left'; g.fillText(`+${fmt(d.s2)} MW/yr`, bx + 10, f.P.t + 14);
+    g.font = `12px ${css('--sans')}`; g.fillStyle = css('--sec'); g.fillText('trend break', bx + 10, f.P.t + 31);
+    return { f, t };
+  }, (g, { f, t }, mx) => {
+    const v = t[0] + (mx - f.P.l) / (f.W - f.P.l - f.P.r) * (t[t.length - 1] - t[0]);
+    let i = Math.max(0, Math.min(t.length - 1, Math.round((v - t[0]) / 864e5))); while (i > 0 && t[i] > v + 864e5) i--;
+    const x = f.X(t[i]); cross(g, { ...f, y0: y.lo }, x);
+    g.fillStyle = css('--c1'); g.beginPath(); g.arc(x, f.Y(d.adj[i]), 3.5, 0, 7); g.fill();
+    return { x, y: f.Y(Math.max(d.adj[i], Math.min(d.raw[i], y.hi))), html: `<b>${dlabel(d.dates[i])}</b><br>Daily ${fmt(d.raw[i])} MW<br>Weather-adjusted ${fmt(d.adj[i])} MW` };
+  });
+};
+
+function stackBars(el, d, mini) {
+  const n = d.q.length, keys = Object.keys(d.stack), cols = ['--c1', '--c2', '--c3', '--c4'];
+  const tot = d.q.map((_, i) => keys.reduce((s, k) => s + d.stack[k][i], 0));
+  const y = nice(0, Math.max(...tot, ...(d.nvda || []).filter(v => v)) * 1.02, mini ? 3 : 5);
+  chart(el, (g, W, H) => {
+    const xt = d.q.map((q, i) => [i + .5, q.slice(0, 4)]).filter((_, i) => d.q[i].endsWith('Q1') && (mini || W < 640 ? +d.q[i].slice(0, 4) % 2 === 1 : true));
+    const f = frame(g, W, H, { x0: 0, x1: n, y, xticks: xt, yfmt: v => '$' + fmt(v) + (v === y.ticks[y.ticks.length - 1] ? 'B' : ''), padL: mini ? 44 : 56, padR: mini ? 4 : 92 });
+    const bw = (f.X(1) - f.X(0)), gap = Math.min(2, bw * .2);
+    d.q.forEach((q, i) => { let acc = 0; keys.forEach((k, j) => { const v = d.stack[k][i]; g.fillStyle = css(cols[j]); g.fillRect(f.X(i) + gap / 2, f.Y(acc + v), bw - gap, f.Y(acc) - f.Y(acc + v) - (j ? .8 : 0)); acc += v; }); });
+    if (!mini && d.nvda) {
+      line(g, d.nvda.map((v, i) => [f.X(i + .5), v == null ? null : f.Y(v)]), css('--ink'), 1.8);
+      const li = d.nvda.length - 1; g.fillStyle = css('--ink'); g.textAlign = 'right'; g.font = `600 12px ${css('--sans')}`; g.fillText('NVIDIA revenue', f.X(li + .5) - 10, f.Y(d.nvda[li]) - 12); g.textAlign = 'left';
+      // direct labels on the last stack
+      let acc = 0; g.font = `12px ${css('--sans')}`;
+      keys.forEach((k, j) => { const v = d.stack[k][n - 1]; g.fillStyle = css('--sec'); g.fillText(d.names[j], f.X(n) + 8, f.Y(acc + v / 2) + (j === 3 ? 0 : 0)); acc += v; });
+    }
+    return { f, bw };
+  }, (g, { f }, mx) => {
+    const i = Math.floor((mx - f.P.l) / (f.X(1) - f.X(0))); if (i < 0 || i >= n) return null;
+    g.fillStyle = css('--ink'); g.globalAlpha = .08; g.fillRect(f.X(i), f.P.t, f.X(1) - f.X(0), f.Y(0) - f.P.t); g.globalAlpha = 1;
+    const rows = keys.map((k, j) => `${d.names[j]} $${fmt(d.stack[k][i], 1)}B`).join('<br>');
+    return { x: f.X(i + .5), y: f.Y(tot[i]), html: `<b>${qlabel(d.q[i])}: $${fmt(tot[i], 1)}B capex</b>${mini ? '' : '<br>' + rows + (d.nvda && d.nvda[i] ? `<br>NVIDIA revenue $${fmt(d.nvda[i], 1)}B` : '')}` };
+  });
+}
+F.capex = el => stackBars(el, FIG.capex, false);
+F.capex_mini = el => stackBars(el, FIG.capex, true);
+
+function multiLine(el, xs, series, o) {
+  const t = xs.map(ts), all = series.flatMap(s => s.v.filter(v => v != null));
+  const y = nice(Math.min(...all, o.floor ?? Infinity), Math.max(...all), 5);
+  const cols = ['--c1', '--c2', '--c3', '--c4', '--c5'];
+  chart(el, (g, W, H) => {
+    const short = t[t.length - 1] - t[0] < 2.2 * 365 * 864e5;
+    const xt = short ? xs.map((s, i) => [t[i], MON[+s.slice(5, 7) - 1] + (s.slice(5, 7) === '01' ? ' ' + s.slice(2, 4) : '')]).filter((_, i) => i % 2 === 0) : yearTicks(t[0], t[t.length - 1], o.ystep || 1);
+    const f = frame(g, W, H, { x0: t[0], x1: t[t.length - 1], y, xticks: xt, yfmt: o.yfmt, padR: o.padR ?? 124, padL: o.padL ?? 44 });
+    if (o.ref != null) { g.strokeStyle = css('--mute'); g.setLineDash([2, 3]); g.beginPath(); g.moveTo(f.P.l, f.Y(o.ref) + .5); g.lineTo(f.W - f.P.r, f.Y(o.ref) + .5); g.stroke(); g.setLineDash([]); }
+    const ends = [];
+    series.forEach((s, j) => {
+      line(g, s.v.map((v, i) => [f.X(t[i]), v == null ? null : f.Y(v)]), css(s.color || cols[j]), j === 0 ? 2.2 : 1.6);
+      let li = s.v.length - 1; while (li > 0 && s.v[li] == null) li--; ends.push({ y: f.Y(s.v[li]), name: s.name, c: s.color || cols[j], v: s.v[li] });
+    });
+    ends.sort((a, b) => a.y - b.y); for (let k = 1; k < ends.length; k++) if (ends[k].y - ends[k - 1].y < 14) ends[k].y = ends[k - 1].y + 14;
+    g.textAlign = 'left'; ends.forEach(e => { g.fillStyle = css(e.c); g.fillRect(f.W - f.P.r + 8, e.y - 1, 8, 2); g.fillStyle = css('--ink'); g.font = `12px ${css('--sans')}`; g.fillText(e.name, f.W - f.P.r + 20, e.y); });
+    return { f, t };
+  }, (g, { f, t }, mx) => {
+    const v = t[0] + (mx - f.P.l) / (f.W - f.P.l - f.P.r) * (t[t.length - 1] - t[0]);
+    let i = 0; t.forEach((tt, k) => { if (Math.abs(tt - v) < Math.abs(t[i] - v)) i = k; });
+    const x = f.X(t[i]); cross(g, { ...f, y0: y.lo }, x);
+    series.forEach((s, j) => { if (s.v[i] == null) return; g.fillStyle = css(s.color || cols[j]); g.beginPath(); g.arc(x, f.Y(s.v[i]), 3, 0, 7); g.fill(); });
+    return { x, y: f.P.t + 8, html: `<b>${o.xlab(xs[i])}</b><br>` + series.filter(s => s.v[i] != null).map(s => `${s.name} ${o.vfmt(s.v[i])}`).join('<br>') };
+  });
+}
+F.zones = el => { const d = FIG.zones; multiLine(el, d.months.map(m => m + '-15'), d.series, { ref: 100, xlab: s => `${MON[+s.slice(5, 7) - 1]} ${s.slice(0, 4)}`, vfmt: v => fmt(v, 1), ystep: 2 }); };
+
+F.leadlag = el => {
+  const d = FIG.leadlag, n = d.length, y = nice(Math.min(0, ...d.map(r => r.r), ...d.map(r => -r.band)), Math.max(...d.map(r => r.r), ...d.map(r => r.band)), 4);
+  chart(el, (g, W, H) => {
+    const f = frame(g, W, H, { x0: 0, x1: n, y, xticks: d.map((r, i) => [i + .5, (r.lag > 0 ? '+' : '') + r.lag]), yfmt: v => fmt(v, 1), padL: 40, padR: 8 });
+    g.fillStyle = css('--mute'); g.globalAlpha = .14;
+    d.forEach((r, i) => g.fillRect(f.X(i), f.Y(r.band), f.X(1) - f.X(0), f.Y(-r.band) - f.Y(r.band))); g.globalAlpha = 1;
+    const best = d.reduce((a, b) => b.r > a.r ? b : a);
+    d.forEach((r, i) => { g.fillStyle = r === best ? css('--c1') : css('--sec'); const bw = (f.X(1) - f.X(0)) * .46; const y0 = f.Y(0), y1 = f.Y(r.r); g.fillRect(f.X(i + .5) - bw / 2, Math.min(y0, y1), bw, Math.abs(y1 - y0)); });
+    g.strokeStyle = css('--ink'); g.beginPath(); g.moveTo(f.P.l, Math.round(f.Y(0)) + .5); g.lineTo(f.W - f.P.r, Math.round(f.Y(0)) + .5); g.stroke();
+    return { f };
+  }, (g, { f }, mx) => {
+    const i = Math.floor((mx - f.P.l) / (f.X(1) - f.X(0))); if (i < 0 || i >= n) return null; const r = d[i];
+    return { x: f.X(i + .5), y: f.Y(Math.max(r.r, r.band)), html: `<b>k = ${r.lag > 0 ? '+' : ''}${r.lag}</b><br>r = ${fmt(r.r, 3)}, n = ${r.n}<br>noise band &plusmn;${fmt(r.band, 3)}` };
+  });
+};
+
+// ---------------------------------------------------------------- Sundown (live from status.json)
+let SD = null; const sdWait = [];
+fetch('/sundown/status.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(s => { SD = s; sdWait.forEach(f => f()); }).catch(() => {});
+const whenSD = fn => SD ? fn() : sdWait.push(fn);
+function heat(el, region, mini) {
+  const st = { region };
+  const ch = chart(el, (g, W, H) => {
+    const h = SD && SD.charts && SD.charts.heatmap[st.region]; if (!h) { g.fillStyle = css('--mute'); g.fillText('Loading live data…', 8, H / 2); return null; }
+    const z = h.z, nw = z.length, P = mini ? { l: 0, r: 0, t: 0, b: 0 } : { l: 64, r: 4, t: 6, b: 24 };
+    const cw = (W - P.l - P.r) / nw, rh = (H - P.t - P.b) / 24;
+    const mx = Math.max(...z.flat().map(Math.abs)) * .8;
+    const pos = css('--pos'), neg = css('--neg');
+    for (let w = 0; w < nw; w++) for (let hr = 0; hr < 24; hr++) {
+      const v = z[w][hr]; if (v == null) continue; const a = Math.min(1, Math.abs(v) / mx);
+      g.fillStyle = v >= 0 ? pos : neg; g.globalAlpha = .06 + .94 * Math.pow(a, .8);
+      g.fillRect(P.l + w * cw, P.t + hr * rh, Math.ceil(cw) + .3, Math.ceil(rh) + .3);
+    }
+    g.globalAlpha = 1;
+    if (!mini) {
+      g.fillStyle = css('--mute'); g.textAlign = 'right';
+      [[0, 'midnight'], [6, '6 am'], [12, 'noon'], [18, '6 pm']].forEach(([hr, s]) => g.fillText(s, P.l - 8, P.t + (hr + .5) * rh));
+      g.textAlign = 'center'; h.weeks.forEach((wk, w) => { if (wk.slice(8, 10) <= '07') g.fillText(MON[+wk.slice(5, 7) - 1], P.l + (w + .5) * cw, H - 8); });
+    }
+    return { P, cw, rh, h, W, H };
+  }, mini ? null : (g, geo, mx, my) => {
+    if (!geo) return null; const w = Math.floor((mx - geo.P.l) / geo.cw), hr = Math.floor((my - geo.P.t) / geo.rh);
+    if (w < 0 || hr < 0 || w >= geo.h.z.length || hr > 23) return null; const v = geo.h.z[w][hr];
+    g.strokeStyle = css('--ink'); g.lineWidth = 1.5; g.strokeRect(geo.P.l + w * geo.cw, geo.P.t + hr * geo.rh, geo.cw, geo.rh);
+    return { x: geo.P.l + (w + .5) * geo.cw, y: geo.P.t + hr * geo.rh, html: `<b>Week of ${dlabel(geo.h.weeks[w])}, ${hr}:00</b><br>${v >= 0 ? 'Discharging' : 'Charging'} ${fmt(Math.abs(v))} MW` };
+  });
+  whenSD(() => ch.render());
+  return { ch, st };
+}
+F.heat = el => {
+  const h = heat(el, 'CISO');
+  const seg = el.parentElement.querySelectorAll('[data-region]');
+  seg.forEach(b => b.onclick = () => { seg.forEach(x => x.setAttribute('aria-checked', x === b)); h.st.region = b.dataset.region; h.ch.render(); });
+};
+F.heat_mini = el => heat(el, 'CISO', true);
+F.duck = el => {
+  const ch = chart(el, (g, W, H) => {
+    const d = SD && SD.charts && SD.charts.duck.CISO; if (!d) return null;
+    const y = nice(Math.min(0, ...d.battery) * 1.1, Math.max(...d.demand) * 1.05, 5);
+    const f = frame(g, W, H, { x0: 0, x1: 24, y, xticks: [[0.5, 'midnight'], [6.5, '6 am'], [12.5, 'noon'], [18.5, '6 pm']], yfmt: v => fmt(v), padL: 36, padR: 8 });
+    g.fillStyle = css('--c4'); g.globalAlpha = .22; g.beginPath(); g.moveTo(f.X(.5), f.Y(0)); d.solar.forEach((v, i) => g.lineTo(f.X(i + .5), f.Y(Math.max(0, v)))); g.lineTo(f.X(23.5), f.Y(0)); g.fill(); g.globalAlpha = 1;
+    const bw = (f.X(1) - f.X(0)) * .62;
+    d.battery.forEach((v, i) => { g.fillStyle = v >= 0 ? css('--pos') : css('--neg'); g.fillRect(f.X(i + .5) - bw / 2, Math.min(f.Y(0), f.Y(v)), bw, Math.abs(f.Y(v) - f.Y(0))); });
+    line(g, d.demand.map((v, i) => [f.X(i + .5), f.Y(v)]), css('--ink'), 1.8);
+    g.fillStyle = css('--sec'); g.textAlign = 'left'; g.fillText('demand', f.X(1), f.Y(d.demand[1]) - 10);
+    const si = d.solar.indexOf(Math.max(...d.solar)); g.fillText('solar', f.X(si + .5) - 14, f.Y(d.solar[si] / 2));
+    return { f, d };
+  }, (g, geo, mx) => {
+    if (!geo) return null; const { f, d } = geo, i = Math.floor((mx - f.P.l) / (f.X(1) - f.X(0))); if (i < 0 || i > 23) return null;
+    cross(g, { ...f, y0: 0 }, f.X(i + .5));
+    return { x: f.X(i + .5), y: f.P.t + 6, html: `<b>${i}:00</b><br>Demand ${fmt(d.demand[i], 1)} GW<br>Solar ${fmt(d.solar[i], 1)} GW<br>Batteries ${d.battery[i] >= 0 ? '+' : ''}${fmt(d.battery[i], 1)} GW` };
+  });
+  whenSD(() => ch.render());
+};
+F.net = el => {
+  const ch = chart(el, (g, W, H) => {
+    const n = SD && SD.charts && SD.charts.net; if (!n || !n.day) return null;
+    const t = n.day.map(ts), v = n.share_7d, y = nice(0, Math.max(...v.filter(x => x != null)) * 1.08, 4);
+    const xt = n.day.map((s, i) => [t[i], MON[+s.slice(5, 7) - 1]]).filter(([_, __], i) => n.day[i].slice(8, 10) === '01' && +n.day[i].slice(5, 7) % 2 === 1);
+    const f = frame(g, W, H, { x0: t[0], x1: t[t.length - 1], y, xticks: xt, yfmt: x => fmt(x) + '%', padL: 40, padR: 8 });
+    g.fillStyle = css('--c1'); g.globalAlpha = .12; g.beginPath(); g.moveTo(f.X(t[0]), f.Y(0)); v.forEach((x, i) => x != null && g.lineTo(f.X(t[i]), f.Y(x))); g.lineTo(f.X(t[t.length - 1]), f.Y(0)); g.fill(); g.globalAlpha = 1;
+    line(g, v.map((x, i) => [f.X(t[i]), x == null ? null : f.Y(x)]), css('--c1'), 2);
+    return { f, t, v, days: n.day };
+  }, (g, geo, mx) => {
+    if (!geo) return null; const { f, t, v, days } = geo; const tv = t[0] + (mx - f.P.l) / (f.W - f.P.l - f.P.r) * (t[t.length - 1] - t[0]);
+    const i = Math.max(0, Math.min(t.length - 1, Math.round((tv - t[0]) / 864e5))); if (v[i] == null) return null;
+    cross(g, { ...f, y0: 0 }, f.X(t[i])); g.fillStyle = css('--c1'); g.beginPath(); g.arc(f.X(t[i]), f.Y(v[i]), 3.5, 0, 7); g.fill();
+    return { x: f.X(t[i]), y: f.Y(v[i]), html: `<b>${dlabel(days[i])}</b><br>${fmt(v[i], 1)}% of net peak` };
+  });
+  whenSD(() => ch.render());
+};
+F.monthly = el => {
+  const names = { CISO: 'California', ERCO: 'Texas', ISNE: 'New England', MISO: 'Midwest', SWPP: 'Great Plains', NYIS: 'New York', PJM: 'Mid-Atlantic' };
+  let built = false;
+  whenSD(() => {
+    const m = SD && SD.charts && SD.charts.monthly; if (!m || built) return; built = true;
+    const months = [...new Set(m.month)].sort();
+    const regs = [...new Set(m.region_code)].map(r => ({ r, v: months.map(mo => { const i = m.month.findIndex((x, k) => x === mo && m.region_code[k] === r); return i < 0 ? null : m.discharge_mwh[i] / 1e3; }) }))
+      .sort((a, b) => Math.max(...b.v.filter(x => x != null)) - Math.max(...a.v.filter(x => x != null)));
+    const full = months.slice(1, -1);
+    multiLine(el, full.map(x => x + '-15'), regs.slice(0, 5).map(s => ({ name: names[s.r] || s.r, v: s.v.slice(1, -1) })),
+      { xlab: s => `${MON[+s.slice(5, 7) - 1]} ${s.slice(0, 4)}`, vfmt: v => fmt(v) + ' GWh', yfmt: v => fmt(v), padL: 48, padR: 110, floor: 0 });
+  });
+};
+
+document.querySelectorAll('[data-fig]').forEach(el => { const f = F[el.dataset.fig]; if (f) f(el); });
+
+// tabs, as-of toggles, sticky header, live status
+document.querySelectorAll('[data-win]').forEach(win => {
+  const tabs = [...win.querySelectorAll('[role=tab]')], meta = win.querySelector('.bar .meta');
+  const pick = (t, focus) => { tabs.forEach(x => { const on = x === t; x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1; const p = document.getElementById(x.getAttribute('aria-controls')); p.hidden = !on; if (on && meta) meta.textContent = p.dataset.meta || ''; }); if (focus) t.focus(); };
+  tabs.forEach((t, i) => { t.onclick = () => pick(t); t.onkeydown = e => { const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (d) { e.preventDefault(); pick(tabs[(i + d + tabs.length) % tabs.length], true); } }; });
+});
+document.querySelectorAll('.ask').forEach(box => { const bs = box.querySelectorAll('[data-asof]'); bs.forEach(b => b.onclick = () => { bs.forEach(x => x.setAttribute('aria-checked', x === b)); box.querySelectorAll('[data-ans]').forEach(a => a.hidden = a.dataset.ans !== b.dataset.asof); }); });
+const $$ = k => document.querySelectorAll(`[data-live="${k}"]`);
+const set = (k, v) => $$(k).forEach(e => e.textContent = v);
+const ago = s => { const t = Date.parse(String(s).replace(' UTC', 'Z').replace(' ', 'T')); if (!t) return null; const h = (Date.now() - t) / 36e5; return { h, text: h < 1 ? 'Updated under an hour ago' : h < 48 ? `Updated ${Math.round(h)} hours ago` : `Updated ${Math.round(h / 24)} days ago` }; };
+if ($$('gl-when').length) {
+  fetch('/gigawatt-ledger/data/manifest.json', { cache: 'no-store' }).then(r => r.ok && r.json()).then(m => { const a = m && ago(m.built_at); if (a) { set('gl-when', a.text); $$('gl-dot').forEach(d => d.classList.toggle('ok', a.h < 36)); } }).catch(() => {});
+  fetch('/gigawatt-ledger/data/history.csv', { cache: 'no-store' }).then(r => r.ok && r.text()).then(t => { if (!t) return; const v = {}; t.trim().split('\n').slice(1).forEach(l => { const [, k, x] = l.split(','); v[k] = x; }); if (v.grid_hours && v.sec_data_points) set('gl-what', `${fmt(v.grid_hours)} grid hours and ${fmt(v.sec_data_points)} SEC data points.`); }).catch(() => {});
+}
+whenSD(() => { if (!SD) return; if (SD.rows) set('sd-rows', fmt(SD.rows)); if (SD.ciso_battery_share_30d != null) set('sd-share', fmt(SD.ciso_battery_share_30d, 1) + '%'); });
 })();
 """
 
+
 # Logo: a U whose right side rises straight into the A; the crossbar carries the accent colour.
-# The A's foot is cut flat on the U's baseline by the clip rectangle.
 _UA = ("M9 12 V33 C9 45 15 51 23 51 C31 51 35 45 37 37 L45 12 L58.4 56", "M41.2 32.5 H48.4")
 _G = ("<g transform='translate(7 7.5) scale(.78)' stroke-width='5.4' fill='none' stroke-linejoin='miter' stroke-miterlimit='3'>"
       "<clipPath id='uaclip'><rect x='0' y='0' width='64' height='53.7'/></clipPath>"
       "<path d='{a}' stroke='{fg}' clip-path='url(#uaclip)'/><path d='{b}' stroke='{acc}'/></g>")
 
 
-def logo_svg(bg: str, fg: str, acc: str) -> str:
+def logo_svg(bg, fg, acc):
     return (f"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='{bg}'/>"
             + _G.format(a=_UA[0], b=_UA[1], fg=fg, acc=acc) + "</svg>")
 
 
-MARK = logo_svg("currentColor", "var(--bg)", "var(--accent)").replace("<svg xmlns='http://www.w3.org/2000/svg'", "<svg aria-hidden='true'")
-FAVICON = "data:image/svg+xml," + logo_svg("#15171b", "#ffffff", "#5b7bff").replace("<", "%3C").replace(">", "%3E").replace("#", "%23").replace(" ", "%20")
+MARK = logo_svg("currentColor", "var(--bg)", "var(--c1)").replace("<svg xmlns='http://www.w3.org/2000/svg'", "<svg aria-hidden='true'")
+FAVICON = "data:image/svg+xml," + logo_svg("#141619", "#ffffff", "#e8622c").replace("<", "%3C").replace(">", "%3E").replace("#", "%23").replace(" ", "%20")
 
 
-def layout(title: str, desc: str, body: str, page: str) -> str:
+def layout(title, desc, body, page, figdata):
     cur = lambda p: ' aria-current="page"' if p == page else ""
+    data = json.dumps(figdata, separators=(",", ":")).replace("</", "<\\/")
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -767,24 +884,25 @@ def layout(title: str, desc: str, body: str, page: str) -> str:
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(desc)}">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0e1013" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#101214" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="{FAVICON}">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..800;1,400..600&family=IBM+Plex+Mono:wght@400;500&family=STIX+Two+Text:ital@1&display=swap" rel="stylesheet">
 <script>try{{const t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script>
 <style>{CSS}</style>
 </head>
 <body>
-<header class="top"><div class="wrap">
+<header class="top"><div class="in">
   <a class="me" href="/" aria-label="{PROFILE['name']}, home">{MARK}<span>{PROFILE['name']}</span></a>
-  <nav><a href="/projects/"{cur('projects')}>Projects</a><a href="/about/"{cur('about')}>About</a><a href="mailto:{PROFILE['email']}">Contact</a><button id="theme" type="button">Dark</button></nav>
+  <nav><a href="/projects/"{cur('projects')}>Projects</a><a href="/about/"{cur('about')}>About</a><a href="mailto:{PROFILE['email']}">Email</a><button id="theme" type="button">Dark</button></nav>
 </div></header>
-<main class="wrap">{body}
+<main>{body}
 </main>
-<footer id="contact"><div class="wrap">
-  <div><p class="say"><a href="mailto:{PROFILE['email']}">{PROFILE['email']}</a></p><a href="{PROFILE['linkedin']}">LinkedIn</a></div>
-  <p>Charts on this site are drawn from my own pipelines&rsquo; data: U.S. EIA, SEC EDGAR and Open-Meteo.</p>
+<footer><div class="in">
+  <span><a href="mailto:{PROFILE['email']}">{PROFILE['email']}</a> &nbsp; <a href="{PROFILE['linkedin']}">LinkedIn</a></span>
+  <span>Figures drawn in the browser from my pipelines&rsquo; data: U.S. EIA, SEC EDGAR, Open-Meteo.</span>
 </div></footer>
+<script id="figdata" type="application/json">{data}</script>
 <script>{JS}</script>
 </body>
 </html>
@@ -793,14 +911,14 @@ def layout(title: str, desc: str, body: str, page: str) -> str:
 
 # =============================================================================================== build
 def build() -> Path:
-    dom, capq, latest = load_series()
+    H, L = hero_series(), latest()
     pub = HERE / ("preview" if PREVIEW else "public")
     if pub.exists():
         shutil.rmtree(pub)
     (pub / "projects").mkdir(parents=True)
     (pub / "about").mkdir()
-    (pub / "index.html").write_text(home(dom, capq, latest))
-    (pub / "projects" / "index.html").write_text(projects_page(dom, capq, latest))
+    (pub / "index.html").write_text(home(H, L))
+    (pub / "projects" / "index.html").write_text(projects_page(H, L))
     (pub / "about" / "index.html").write_text(about_page())
     photos = [p for p in (HERE / "photos").glob("*") if p.suffix.lower() in {".jpg", ".jpeg", ".png", ".webp"}]
     if photos:
@@ -808,8 +926,6 @@ def build() -> Path:
         for p in photos:
             shutil.copy2(p, pub / "photos" / p.name)
     (pub / "README.md").write_text("Personal site of Utkarsh Agarwal. These pages are built and published automatically.\n")
-    if (HERE / "CNAME").exists():
-        (pub / "CNAME").write_text((HERE / "CNAME").read_text().strip() + "\n")
     redirect = ('<!DOCTYPE html><meta charset="utf-8"><title>Moved</title><meta http-equiv="refresh" content="0; url={u}">'
                 '<link rel="canonical" href="{u}"><a href="{u}">This page moved here.</a>')
     for old, new in [("follow-the-power", "/gigawatt-ledger/"), ("grid-pulse", "/sundown/")]:
