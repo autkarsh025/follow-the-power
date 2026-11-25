@@ -721,10 +721,21 @@ JS = r"""
 })();
 """
 
-MARK = ('<svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="currentColor"/>'
-        '<polyline points="6,22 11,19 15,21 20,13 26,9" fill="none" stroke="var(--bg)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/></svg>')
-FAVICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315171b'/%3E"
-           "%3Cpolyline points='6,22 11,19 15,21 20,13 26,9' fill='none' stroke='%23ffffff' stroke-width='2.6' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E")
+# Logo: a U whose right side rises straight into the A; the crossbar carries the accent colour.
+# The A's foot is cut flat on the U's baseline by the clip rectangle.
+_UA = ("M9 12 V33 C9 45 15 51 23 51 C31 51 35 45 37 37 L45 12 L58.4 56", "M41.2 32.5 H48.4")
+_G = ("<g transform='translate(7 7.5) scale(.78)' stroke-width='5.4' fill='none' stroke-linejoin='miter' stroke-miterlimit='3'>"
+      "<clipPath id='uaclip'><rect x='0' y='0' width='64' height='53.7'/></clipPath>"
+      "<path d='{a}' stroke='{fg}' clip-path='url(#uaclip)'/><path d='{b}' stroke='{acc}'/></g>")
+
+
+def logo_svg(bg: str, fg: str, acc: str) -> str:
+    return (f"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='{bg}'/>"
+            + _G.format(a=_UA[0], b=_UA[1], fg=fg, acc=acc) + "</svg>")
+
+
+MARK = logo_svg("currentColor", "var(--bg)", "var(--accent)").replace("<svg xmlns='http://www.w3.org/2000/svg'", "<svg aria-hidden='true'")
+FAVICON = "data:image/svg+xml," + logo_svg("#15171b", "#ffffff", "#5b7bff").replace("<", "%3C").replace(">", "%3E").replace("#", "%23").replace(" ", "%20")
 
 
 def layout(title: str, desc: str, body: str, page: str) -> str:
