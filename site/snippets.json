@@ -1,0 +1,23 @@
+{
+ "time_travel_2025Q1": {
+  "id": "time_travel_2025Q1",
+  "question": "What is NVIDIA's most recent quarterly revenue and its year-over-year growth?",
+  "answer": "NVIDIA's most recent reported quarter in the data is **2024Q4**, with revenue of **$39.33B**, up **77.9% year over year**.\n\n- Growth has slowed each quarter, though it is still high. It was 122.4% in 2024Q2 ($30.04B) and 93.6% in 2024Q3 ($35.08B).\n- Calendar 2025Q1 has no NVIDIA revenue figure as of today (2025-05-27), so 2024Q4 is the latest available.\n- Hyperscaler capex for 2025Q1 is already public at $71.9B, up 62.3% year over year. That is a demand signal, not NVIDIA's own result.",
+  "as_of": "2025-05-27",
+  "passed": true
+ },
+ "time_travel_2025Q2": {
+  "id": "time_travel_2025Q2",
+  "question": "What is NVIDIA's most recent quarterly revenue and its year-over-year growth?",
+  "answer": "NVIDIA's most recent reported quarter in my data is **2025Q1** (calendar quarter). Revenue was **$44.06 billion**, up **69.2% year over year**.\n\nGrowth has slowed in each of the last four quarters:\n\n| Quarter | Growth |\n|---|---|\n| 2024Q2 | 122.4% |\n| 2024Q3 | 93.6% |\n| 2024Q4 | 77.9% |\n| 2025Q1 | 69.2% |\n\nRevenue itself kept rising each quarter, from $30.04 billion in 2024Q2 to $44.06 billion in 2025Q1. Growth is slowing partly because the year-ago comparisons are getting harder.\n\nThe data shows no restatements for NVIDIA. The figures use calendar quarters, which may not match NVIDIA's own fiscal quarter labels.",
+  "as_of": "2025-08-26",
+  "passed": true
+ },
+ "multi_step_ratio": {
+  "id": "multi_step_ratio",
+  "question": "In 2026Q2, how many dollars did the four hyperscalers spend on capex for every dollar of NVIDIA revenue?",
+  "answer": "In 2026Q2, the four hyperscalers (Microsoft, Alphabet, Amazon and Meta) spent about **$1.72 of capex for every $1 of NVIDIA revenue**.\n\n- Hyperscaler capex in 2026Q2 was $165.05B.\n- NVIDIA revenue in 2026Q2 was $96.22B.\n- $165.05B \u00f7 $96.22B = 1.7153, which rounds to 1.72.\n\nRecent quarters for comparison:\n- 2025Q4: $118.63B \u00f7 $68.13B = 1.7412.\n- 2026Q1: $129.75B \u00f7 $81.61B = 1.5899.\n- 2026Q2: 1.7153.\n\nThe ratio dipped in 2026Q1 and rebounded in 2026Q2. It has stayed in a fairly narrow band of roughly 1.6 to 1.7 dollars of capex per dollar of NVIDIA revenue.\n\nYear over year in 2026Q2, NVIDIA revenue grew 105.9% and hyperscaler capex grew 87.0%.\n\n**Caveats:**\n- The ratio is only a rough comparison. Capex also pays for buildings, power and non-NVIDIA chips, and NVIDIA sells to buyers other than these four companies.\n- The restatement check showed no revisions to these figures.",
+  "as_of": null,
+  "passed": true
+ }
+}
