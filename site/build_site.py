@@ -493,7 +493,8 @@ CSS = r"""
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e1013;--ink:#e8eaee;--sec:#a4aab3;--mute:#737983;--rule:#23272e;--panel:#14171c;--panel2:#1a1e24;--accent:#8ea5ff;--bar:#2c3a68;--ok:#4cc27e;--kw:#8ea5ff;--str:#7fd1a0;--num:#f0a46b;--com:#6d737d}}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:76px}
-body{margin:0;background:var(--bg);color:var(--ink);font:400 16.5px/1.62 var(--sans);-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums;text-rendering:optimizeLegibility}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16.5px/1.62 var(--sans);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.nums dd,.status,.tcap b,.index .y,.sel .sy,.row .when,.live figcaption,.asof button{font-variant-numeric:tabular-nums}
 ::selection{background:color-mix(in srgb,var(--accent) 22%,transparent)}
 a{color:inherit;text-decoration:underline;text-decoration-color:var(--rule);text-decoration-thickness:1.5px;text-underline-offset:3px;transition:text-decoration-color .15s,color .15s}
 a:hover{text-decoration-color:var(--accent)}
