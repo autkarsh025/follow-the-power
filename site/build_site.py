@@ -68,17 +68,17 @@ SKILLS = [
 # (shown as labelled empty slots only in --preview builds).
 PHOTOS = [
     ("me.jpg", "Portrait", "tall"),
-    ("running.jpg", "Racing for UW–Madison", "wide"),
+    ("running.jpg", "Racing cross country", "wide"),
     ("bmw.jpg", "The BMW", "square"),
     ("berkeley.jpg", "Berkeley", "square"),
 ]
 # Prompts for things only Utkarsh can write. Rendered only in --preview builds.
 FILL_IN = [
-    ("Where I'm from", "Where you grew up and anything about it you'd want someone to know."),
-    ("Running", "Favourite race, a PR you're proud of, whether you still run and where."),
-    ("The car", "Which BMW, why you started tuning it, the best part of the project."),
-    ("Lately", "Books, music, a sport, anything you're into right now."),
+    ("The car", "Which BMW you tuned, and the best part of the project."),
+    ("Anything else", "Books, music, a favourite place in the Bay Area, anything you'd want someone to know."),
 ]
+# Running personal records (as Utkarsh reports them).
+PRS = [("Mile", "4:28"), ("3,200 m", "9:31"), ("5K", "16:09"), ("Half marathon", "1:19")]
 
 
 # =============================================================================================== data
@@ -420,7 +420,7 @@ def home(dom, capq, latest):
 
   <section class="about"><h2>About</h2><div>
     <p>I like problems where the data is public but nobody has lined it up yet. My two main projects follow money and electricity: one traces AI spending from big tech&rsquo;s filings down to the power grid, the other measures how much batteries carry U.S. grids after sunset.</p>
-    <p>I transferred to Berkeley from UW&ndash;Madison, where I ran Division I cross country and track. Outside of code I work on cars.</p>
+    <p>I grew up in Silicon Valley, raced cross country at the state championships in high school, and transferred to Berkeley from UW&ndash;Madison. Outside of code I work on cars and lead a team at Project Rishi.</p>
     <p class="more"><a href="/about/">More about me</a></p>
   </div></section>
 
@@ -449,37 +449,53 @@ def about_page():
         tiles += [f'<div class="ph {s} slot"><span>{esc(c)}</span><small>site/photos/{f}</small></div>' for f, c, s in PHOTOS if (f, c, s) not in have]
     gallery = f'<div class="gallery">{"".join(tiles)}</div>' if tiles else ""
     prompts = "".join(f'<div class="fill"><h3>{esc(t)}</h3><p>{esc(p)}</p></div>' for t, p in FILL_IN) if PREVIEW else ""
+    prs = "".join(f"<div><dt>{esc(k)}</dt><dd>{esc(v)}</dd></div>" for k, v in PRS)
     body = f"""
   <div class="phead">
     <h1>About</h1>
-    <p class="lede">I&rsquo;m Utkarsh. I study data science and applied math at UC Berkeley and expect to graduate in May 2028.</p>
+    <p class="lede">I&rsquo;m Utkarsh. I grew up in Silicon Valley and study data science and applied math at UC Berkeley, class of 2028.</p>
   </div>
   {gallery}
   <section><h2>Background</h2><div class="prose">
-    <p>I started college at UW&ndash;Madison in data science and economics, where I ran Division I cross country and track and worked
-    with faculty and PhD researchers on campus energy use. In 2025 I transferred to Berkeley as an out-of-state transfer admit,
-    one of about 40 a year.</p>
+    <p>I was born in Mountain View and grew up around Mountain View, Cupertino and Los Altos, surrounded by people building
+    technology. I went to Saint Francis High School, where most of my time went into distance running.</p>
+    <p>I started college at UW&ndash;Madison in data science and economics and worked with faculty and PhD researchers on
+    campus energy use. In 2025 I came back to the Bay Area as a transfer to Berkeley, one of about 40 out-of-state transfer
+    admits a year.</p>
     <p>Most of what I build sits where data meets the physical world: power grids, batteries, data centers, engines. I like
     projects that keep running after I stop typing, and numbers I can check against the source.</p>
   </div></section>
-  <section><h2>Now</h2><ul class="now">
-    <li><b>Building</b> Gigawatt Ledger and Sundown, which refresh themselves every morning.</li>
-    <li><b>Leading</b> internal development for Project Rishi, a 40-member Berkeley group building a rural educational coaching center.</li>
-    <li><b>Studying</b> data science and applied math at Berkeley.</li>
-    <li><b>Looking</b> for 2027 internships in data and AI engineering.</li>
-  </ul></section>
-  <section><h2>Running</h2><div class="prose">
-    <p>I captained my high school varsity team as its top runner, then ran Division I cross country and track at UW&ndash;Madison.</p>
+  <section><h2>Running</h2><div>
+    <div class="prose">
+      <p>Running was my life in high school. I captained the varsity team at Saint Francis, qualified for the CIF California
+      state cross country championships, and won my age group at the 2022 San Francisco Half Marathon at 17. At my peak I was
+      running about 50 miles a week.</p>
+    </div>
+    <dl class="nums prs">{prs}</dl>
+  </div></section>
+  <section><h2>India and Project Rishi</h2><div class="prose">
+    <p>I&rsquo;ve been to India about 14 times, mostly to see my grandparents in Delhi, and seeing how differently schools there
+    are resourced stayed with me. At Berkeley I joined Project Rishi&rsquo;s education team in my first semester and became
+    Director of Internal Development in 2026. I now lead a team of about 10 working on a coaching center in a rural village,
+    including the fundraising and budget. I&rsquo;m also taking Hindi at Berkeley.</p>
   </div></section>
   <section><h2>Cars</h2><div class="prose">
-    <p>I tune my BMW myself: I reprogrammed its engine computer, adjusting 125 calibration parameters, and added live
+    <p>I&rsquo;m into how cars work under the skin: engine software, control modules, infotainment, driver assistance and EV
+    drivetrains. I reprogrammed my BMW&rsquo;s engine computer myself, adjusting 125 calibration parameters, and added live
     G-force telemetry and radar displays to its screens. More on the <a href="/projects/#bmw">projects page</a>.</p>
   </div></section>
+  <section><h2>Now</h2><ul class="now">
+    <li><b>Building</b> Gigawatt Ledger and Sundown, which refresh themselves every morning.</li>
+    <li><b>Leading</b> internal development for Project Rishi.</li>
+    <li><b>Studying</b> data science and applied math at Berkeley, and Hindi.</li>
+    <li><b>Training</b> again: I built a home gym in my apartment and I&rsquo;m back to lifting and running.</li>
+    <li><b>Looking</b> for 2027 internships in data and AI engineering.</li>
+  </ul></section>
   {f'<section><h2>To fill in</h2><div class="fills">{prompts}</div></section>' if prompts else ''}
   <section><h2>Contact</h2><div class="prose">
     <p>The best way to reach me is <a href="mailto:{PROFILE['email']}">{PROFILE['email']}</a>, or on <a href="{PROFILE['linkedin']}">LinkedIn</a>.</p>
   </div></section>"""
-    return layout(f"About | {PROFILE['name']}", "About Utkarsh Agarwal: data science and applied math at UC Berkeley, Division I runner, car tinkerer.", body, "about")
+    return layout(f"About | {PROFILE['name']}", "About Utkarsh Agarwal: Silicon Valley native, data science and applied math at UC Berkeley, distance runner, car tinkerer.", body, "about")
 
 
 # =============================================================================================== layout
@@ -621,7 +637,8 @@ table.ans th{font-weight:550;color:var(--sec)}
 .now{list-style:none;margin:0;padding:0}
 .now li{font-size:18px;padding:12px 0;border-bottom:1px solid var(--rule);max-width:36em}
 .now li:first-child{padding-top:0}.now li:last-child{border-bottom:0}
-.now b{font-weight:620;display:inline-block;min-width:88px}
+.now b{font-weight:620;display:inline-block;min-width:92px}
+.prs{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:26px}
 .fills{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .fill{border:1.5px dashed var(--rule);border-radius:12px;padding:16px 18px}
 .fill h3{margin:0 0 4px;font-size:16px}.fill p{margin:0;color:var(--mute);font-size:14.5px}
@@ -653,7 +670,7 @@ footer p{margin:0}
   .sel{grid-template-columns:1fr auto;gap:2px 12px}.sel .sd{grid-column:1/-1;grid-row:2}
   .index th.d,.index th.s,.index td.d,.index td.s{display:none}
   .win .bar .meta{display:none}.win .body{padding:18px 16px;min-height:0}.live svg{height:150px}
-  .nums{grid-template-columns:1fr 1fr}
+  .nums,.prs{grid-template-columns:1fr 1fr}
   .gallery{grid-template-columns:repeat(2,1fr);grid-auto-rows:110px}
   .ph.tall{grid-column:span 1;grid-row:span 2}.ph.wide{grid-column:span 2;grid-row:span 2}.ph.square{grid-column:span 1}
   .fills{grid-template-columns:1fr}
