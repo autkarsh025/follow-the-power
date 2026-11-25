@@ -1,227 +1,227 @@
 run_at,check_id,subject,severity,passed,value,detail
-2026-11-25 16:25:00,coverage_30d,AEP,warn,1,0.9639,96.4% of hours present (30 days to latest hour)
-2026-11-25 16:25:00,coverage_30d,CE,warn,1,0.9639,96.4% of hours present (30 days to latest hour)
-2026-11-25 16:25:00,coverage_30d,DOM,warn,1,0.9639,96.4% of hours present (30 days to latest hour)
-2026-11-25 16:25:00,coverage_30d,FWES,warn,1,0.9972,99.7% of hours present (30 days to latest hour)
-2026-11-25 16:25:00,coverage_30d,NCEN,warn,1,1.0,100.0% of hours present (30 days to latest hour)
-2026-11-25 16:25:00,filing_freshness_days,AEP capex,warn,0,204.0,latest filing 2026-05-05
-2026-11-25 16:25:00,filing_freshness_days,AEP revenue,warn,0,204.0,latest filing 2026-05-05
-2026-11-25 16:25:00,filing_freshness_days,AMD gross_profit,warn,1,21.0,latest filing 2026-11-04
-2026-11-25 16:25:00,filing_freshness_days,AMD revenue,warn,1,21.0,latest filing 2026-11-04
-2026-11-25 16:25:00,filing_freshness_days,AMZN capex,warn,1,26.0,latest filing 2026-10-30
-2026-11-25 16:25:00,filing_freshness_days,AMZN revenue,warn,1,26.0,latest filing 2026-10-30
-2026-11-25 16:25:00,filing_freshness_days,ANET gross_profit,warn,1,21.0,latest filing 2026-11-04
-2026-11-25 16:25:00,filing_freshness_days,ANET revenue,warn,1,21.0,latest filing 2026-11-04
-2026-11-25 16:25:00,filing_freshness_days,AVGO gross_profit,warn,1,76.0,latest filing 2026-09-10
-2026-11-25 16:25:00,filing_freshness_days,AVGO revenue,warn,1,76.0,latest filing 2026-09-10
-2026-11-25 16:25:00,filing_freshness_days,CEG revenue,warn,1,111.0,latest filing 2026-08-06
-2026-11-25 16:25:00,filing_freshness_days,CRWV capex,warn,1,13.0,latest filing 2026-11-12
-2026-11-25 16:25:00,filing_freshness_days,CRWV revenue,warn,1,13.0,latest filing 2026-11-12
-2026-11-25 16:25:00,filing_freshness_days,D capex,warn,0,2395.0,latest filing 2020-05-05
-2026-11-25 16:25:00,filing_freshness_days,D revenue,warn,0,208.0,latest filing 2026-05-01
-2026-11-25 16:25:00,filing_freshness_days,DELL gross_profit,warn,1,78.0,latest filing 2026-09-08
-2026-11-25 16:25:00,filing_freshness_days,DELL revenue,warn,1,78.0,latest filing 2026-09-08
-2026-11-25 16:25:00,filing_freshness_days,DLR capex,warn,0,208.0,latest filing 2026-05-01
-2026-11-25 16:25:00,filing_freshness_days,DLR revenue,warn,0,208.0,latest filing 2026-05-01
-2026-11-25 16:25:00,filing_freshness_days,EQIX capex,warn,0,210.0,latest filing 2026-04-29
-2026-11-25 16:25:00,filing_freshness_days,EQIX revenue,warn,1,28.0,latest filing 2026-10-28
-2026-11-25 16:25:00,filing_freshness_days,ETN revenue,warn,1,22.0,latest filing 2026-11-03
-2026-11-25 16:25:00,filing_freshness_days,GEV revenue,warn,1,28.0,latest filing 2026-10-28
-2026-11-25 16:25:00,filing_freshness_days,GOOGL capex,warn,1,27.0,latest filing 2026-10-29
-2026-11-25 16:25:00,filing_freshness_days,GOOGL revenue,warn,1,27.0,latest filing 2026-10-29
-2026-11-25 16:25:00,filing_freshness_days,INTC gross_profit,warn,1,26.0,latest filing 2026-10-30
-2026-11-25 16:25:00,filing_freshness_days,INTC revenue,warn,1,26.0,latest filing 2026-10-30
-2026-11-25 16:25:00,filing_freshness_days,META capex,warn,1,34.0,latest filing 2026-10-22
-2026-11-25 16:25:00,filing_freshness_days,META revenue,warn,1,34.0,latest filing 2026-10-22
-2026-11-25 16:25:00,filing_freshness_days,MRVL gross_profit,warn,1,89.0,latest filing 2026-08-28
-2026-11-25 16:25:00,filing_freshness_days,MRVL revenue,warn,1,89.0,latest filing 2026-08-28
-2026-11-25 16:25:00,filing_freshness_days,MSFT capex,warn,1,28.0,latest filing 2026-10-28
-2026-11-25 16:25:00,filing_freshness_days,MSFT revenue,warn,1,28.0,latest filing 2026-10-28
-2026-11-25 16:25:00,filing_freshness_days,MU gross_profit,warn,1,47.0,latest filing 2026-10-09
-2026-11-25 16:25:00,filing_freshness_days,MU revenue,warn,1,47.0,latest filing 2026-10-09
-2026-11-25 16:25:00,filing_freshness_days,NEE revenue,warn,0,216.0,latest filing 2026-04-23
-2026-11-25 16:25:00,filing_freshness_days,NVDA gross_profit,warn,1,91.0,latest filing 2026-08-26
-2026-11-25 16:25:00,filing_freshness_days,NVDA revenue,warn,1,91.0,latest filing 2026-08-26
-2026-11-25 16:25:00,filing_freshness_days,ORCL capex,warn,1,75.0,latest filing 2026-09-11
-2026-11-25 16:25:00,filing_freshness_days,ORCL revenue,warn,1,75.0,latest filing 2026-09-11
-2026-11-25 16:25:00,filing_freshness_days,SMCI gross_profit,warn,1,19.0,latest filing 2026-11-06
-2026-11-25 16:25:00,filing_freshness_days,SMCI revenue,warn,1,19.0,latest filing 2026-11-06
-2026-11-25 16:25:00,filing_freshness_days,SO capex,warn,0,209.0,latest filing 2026-04-30
-2026-11-25 16:25:00,filing_freshness_days,SO revenue,warn,0,209.0,latest filing 2026-04-30
-2026-11-25 16:25:00,filing_freshness_days,VRT revenue,warn,1,28.0,latest filing 2026-10-28
-2026-11-25 16:25:00,filing_freshness_days,VST revenue,warn,1,16.0,latest filing 2026-11-09
-2026-11-25 16:25:00,freshness_hours,AEP,warn,1,35.4168,latest hour 2026-11-24 05:00 UTC
-2026-11-25 16:25:00,freshness_hours,CE,warn,1,35.4168,latest hour 2026-11-24 05:00 UTC
-2026-11-25 16:25:00,freshness_hours,DOM,warn,1,35.4168,latest hour 2026-11-24 05:00 UTC
-2026-11-25 16:25:00,freshness_hours,FWES,warn,1,34.4168,latest hour 2026-11-24 06:00 UTC
-2026-11-25 16:25:00,freshness_hours,NCEN,warn,1,34.4168,latest hour 2026-11-24 06:00 UTC
-2026-11-25 16:25:00,gap_hours_total,AEP,warn,1,293.0,293 missing hours since 2019-01-01
-2026-11-25 16:25:00,gap_hours_total,CE,warn,1,293.0,293 missing hours since 2019-01-01
-2026-11-25 16:25:00,gap_hours_total,DOM,warn,1,293.0,293 missing hours since 2019-01-01
-2026-11-25 16:25:00,gap_hours_total,FWES,warn,1,189.0,189 missing hours since 2019-05-27
-2026-11-25 16:25:00,gap_hours_total,NCEN,warn,1,175.0,175 missing hours since 2019-05-27
-2026-11-25 16:25:00,has_data,AEP,warn,1,68929.0,"68,929 hours"
-2026-11-25 16:25:00,has_data,AEP capex,warn,1,6.0,6 quarters
-2026-11-25 16:25:00,has_data,AEP revenue,warn,1,31.0,29 quarters
-2026-11-25 16:25:00,has_data,AEP weather,warn,1,2880.0,2880 days
-2026-11-25 16:25:00,has_data,AMD gross_profit,warn,1,31.0,31 quarters
-2026-11-25 16:25:00,has_data,AMD revenue,warn,1,31.0,31 quarters
-2026-11-25 16:25:00,has_data,AMZN capex,warn,1,31.0,31 quarters
-2026-11-25 16:25:00,has_data,AMZN revenue,warn,1,31.0,31 quarters
-2026-11-25 16:25:00,has_data,ANET gross_profit,warn,1,35.0,31 quarters
-2026-11-25 16:25:00,has_data,ANET revenue,warn,1,34.0,31 quarters
-2026-11-25 16:25:00,has_data,AVGO gross_profit,warn,1,31.0,31 quarters
-2026-11-25 16:25:00,has_data,AVGO revenue,warn,1,31.0,31 quarters
-2026-11-25 16:25:00,has_data,AZ sales,warn,1,93.0,93 months
-2026-11-25 16:25:00,has_data,CE,warn,1,68929.0,"68,929 hours"
-2026-11-25 16:25:00,has_data,CE weather,warn,1,2880.0,2880 days
-2026-11-25 16:25:00,has_data,CEG revenue,warn,1,22.0,22 quarters
-2026-11-25 16:25:00,has_data,CRWV capex,warn,1,14.0,11 quarters
-2026-11-25 16:25:00,has_data,CRWV revenue,warn,1,14.0,11 quarters
-2026-11-25 16:25:00,has_data,D capex,warn,1,5.0,5 quarters
-2026-11-25 16:25:00,has_data,D revenue,warn,1,41.0,29 quarters
-2026-11-25 16:25:00,has_data,DELL gross_profit,warn,1,46.0,34 quarters
-2026-11-25 16:25:00,has_data,DELL revenue,warn,1,40.0,34 quarters
-2026-11-25 16:25:00,has_data,DLR capex,warn,1,29.0,29 quarters
-2026-11-25 16:25:00,has_data,DLR revenue,warn,1,29.0,29 quarters
-2026-11-25 16:25:00,has_data,DOM,critical,1,68929.0,"68,929 hours"
-2026-11-25 16:25:00,has_data,DOM weather,warn,1,2880.0,2880 days
-2026-11-25 16:25:00,has_data,EQIX capex,warn,1,32.0,28 quarters
-2026-11-25 16:25:00,has_data,EQIX revenue,warn,1,36.0,31 quarters
-2026-11-25 16:25:00,has_data,ETN revenue,warn,1,31.0,31 quarters
-2026-11-25 16:25:00,has_data,FWES,warn,1,65524.0,"65,524 hours"
-2026-11-25 16:25:00,has_data,FWES weather,warn,1,2880.0,2880 days
-2026-11-25 16:25:00,has_data,GA sales,warn,1,93.0,93 months
-2026-11-25 16:25:00,has_data,GEV revenue,warn,1,15.0,15 quarters
-2026-11-25 16:25:00,has_data,GOOGL capex,warn,1,31.0,31 quarters
-2026-11-25 16:25:00,has_data,GOOGL revenue,warn,1,30.0,30 quarters
-2026-11-25 16:25:00,has_data,INTC gross_profit,warn,1,31.0,31 quarters
-2026-11-25 16:25:00,has_data,INTC revenue,warn,1,31.0,31 quarters
-2026-11-25 16:25:00,has_data,META capex,warn,1,39.0,31 quarters
-2026-11-25 16:25:00,has_data,META revenue,warn,1,31.0,31 quarters
-2026-11-25 16:25:00,has_data,MRVL gross_profit,warn,1,30.0,26 quarters
-2026-11-25 16:25:00,has_data,MRVL revenue,warn,1,30.0,26 quarters
-2026-11-25 16:25:00,has_data,MSFT capex,warn,1,33.0,33 quarters
-2026-11-25 16:25:00,has_data,MSFT revenue,warn,1,33.0,33 quarters
-2026-11-25 16:25:00,has_data,MU gross_profit,warn,1,32.0,32 quarters
-2026-11-25 16:25:00,has_data,MU revenue,warn,1,32.0,32 quarters
-2026-11-25 16:25:00,has_data,NCEN,warn,1,65538.0,"65,538 hours"
-2026-11-25 16:25:00,has_data,NCEN weather,warn,1,2880.0,2880 days
-2026-11-25 16:25:00,has_data,NEE capex,warn,0,0.0,no quarters parsed from SEC XBRL
-2026-11-25 16:25:00,has_data,NEE revenue,warn,1,29.0,29 quarters
-2026-11-25 16:25:00,has_data,NVDA gross_profit,warn,1,34.0,34 quarters
-2026-11-25 16:25:00,has_data,NVDA revenue,critical,1,34.0,34 quarters
-2026-11-25 16:25:00,has_data,OH sales,warn,1,93.0,93 months
-2026-11-25 16:25:00,has_data,OR sales,warn,1,93.0,93 months
-2026-11-25 16:25:00,has_data,ORCL capex,warn,1,33.0,33 quarters
-2026-11-25 16:25:00,has_data,ORCL revenue,warn,1,33.0,33 quarters
-2026-11-25 16:25:00,has_data,SMCI gross_profit,warn,1,33.0,33 quarters
-2026-11-25 16:25:00,has_data,SMCI revenue,warn,1,33.0,33 quarters
-2026-11-25 16:25:00,has_data,SO capex,warn,1,30.0,29 quarters
-2026-11-25 16:25:00,has_data,SO revenue,warn,1,29.0,29 quarters
-2026-11-25 16:25:00,has_data,TX sales,warn,1,93.0,93 months
-2026-11-25 16:25:00,has_data,VA sales,warn,1,93.0,93 months
-2026-11-25 16:25:00,has_data,VRT revenue,warn,1,31.0,31 quarters
-2026-11-25 16:25:00,has_data,VST revenue,warn,1,31.0,31 quarters
-2026-11-25 16:25:00,hourly_jumps_40pct,AEP,warn,1,2.0,2 hour-to-hour jumps over 40%
-2026-11-25 16:25:00,hourly_jumps_40pct,CE,warn,1,4.0,4 hour-to-hour jumps over 40%
-2026-11-25 16:25:00,hourly_jumps_40pct,DOM,warn,1,2.0,2 hour-to-hour jumps over 40%
-2026-11-25 16:25:00,hourly_jumps_40pct,FWES,warn,1,0.0,0 hour-to-hour jumps over 40%
-2026-11-25 16:25:00,hourly_jumps_40pct,NCEN,warn,1,0.0,0 hour-to-hour jumps over 40%
-2026-11-25 16:25:00,implausible_values,AEP,warn,1,0.0,"0 hours outside 0.25x-2.5x the median (14,732 MW)"
-2026-11-25 16:25:00,implausible_values,CE,warn,1,2.0,"2 hours outside 0.25x-2.5x the median (10,404 MW)"
-2026-11-25 16:25:00,implausible_values,DOM,warn,1,2.0,"2 hours outside 0.25x-2.5x the median (13,111 MW)"
-2026-11-25 16:25:00,implausible_values,FWES,warn,0,29.0,"29 hours outside 0.25x-2.5x the median (5,400 MW)"
-2026-11-25 16:25:00,implausible_values,NCEN,warn,1,0.0,"0 hours outside 0.25x-2.5x the median (13,541 MW)"
-2026-11-25 16:25:00,non_positive_values,AEP capex,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,AEP revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,AMD gross_profit,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,AMD revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,AMZN capex,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,AMZN revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,ANET gross_profit,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,ANET revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,AVGO gross_profit,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,AVGO revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,CEG revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,CRWV capex,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,CRWV revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,D capex,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,D revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,DELL gross_profit,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,DELL revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,DLR capex,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,DLR revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,EQIX capex,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,EQIX revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,ETN revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,GEV revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,GOOGL capex,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,GOOGL revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,INTC gross_profit,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,INTC revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,META capex,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,META revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,MRVL gross_profit,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,MRVL revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,MSFT capex,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,MSFT revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,MU gross_profit,warn,0,4.0,4 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,MU revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,NEE revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,NVDA gross_profit,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,NVDA revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,ORCL capex,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,ORCL revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,SMCI gross_profit,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,SMCI revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,SO capex,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,SO revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,VRT revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,non_positive_values,VST revenue,warn,1,0.0,0 quarters <= 0
-2026-11-25 16:25:00,quarter_continuity,AEP capex,warn,0,4.0,4 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,AEP revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,AMD gross_profit,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,AMD revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,AMZN capex,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,AMZN revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,ANET gross_profit,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,ANET revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,AVGO gross_profit,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,AVGO revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,CEG revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,CRWV capex,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,CRWV revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,D capex,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,D revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,DELL gross_profit,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,DELL revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,DLR capex,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,DLR revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,EQIX capex,warn,0,1.0,1 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,EQIX revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,ETN revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,GEV revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,GOOGL capex,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,GOOGL revenue,warn,0,1.0,1 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,INTC gross_profit,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,INTC revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,META capex,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,META revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,MRVL gross_profit,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,MRVL revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,MSFT capex,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,MSFT revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,MU gross_profit,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,MU revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,NEE revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,NVDA gross_profit,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,NVDA revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,ORCL capex,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,ORCL revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,SMCI gross_profit,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,SMCI revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,SO capex,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,SO revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,VRT revenue,warn,1,0.0,0 past fiscal years missing a quarter
-2026-11-25 16:25:00,quarter_continuity,VST revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,coverage_30d,AEP,warn,1,0.9639,96.4% of hours present (30 days to latest hour)
+2026-11-25 22:11:18,coverage_30d,CE,warn,1,0.9639,96.4% of hours present (30 days to latest hour)
+2026-11-25 22:11:18,coverage_30d,DOM,warn,1,0.9639,96.4% of hours present (30 days to latest hour)
+2026-11-25 22:11:18,coverage_30d,FWES,warn,1,0.9972,99.7% of hours present (30 days to latest hour)
+2026-11-25 22:11:18,coverage_30d,NCEN,warn,1,1.0,100.0% of hours present (30 days to latest hour)
+2026-11-25 22:11:18,filing_freshness_days,AEP capex,warn,0,204.0,latest filing 2026-05-05
+2026-11-25 22:11:18,filing_freshness_days,AEP revenue,warn,0,204.0,latest filing 2026-05-05
+2026-11-25 22:11:18,filing_freshness_days,AMD gross_profit,warn,1,21.0,latest filing 2026-11-04
+2026-11-25 22:11:18,filing_freshness_days,AMD revenue,warn,1,21.0,latest filing 2026-11-04
+2026-11-25 22:11:18,filing_freshness_days,AMZN capex,warn,1,26.0,latest filing 2026-10-30
+2026-11-25 22:11:18,filing_freshness_days,AMZN revenue,warn,1,26.0,latest filing 2026-10-30
+2026-11-25 22:11:18,filing_freshness_days,ANET gross_profit,warn,1,21.0,latest filing 2026-11-04
+2026-11-25 22:11:18,filing_freshness_days,ANET revenue,warn,1,21.0,latest filing 2026-11-04
+2026-11-25 22:11:18,filing_freshness_days,AVGO gross_profit,warn,1,76.0,latest filing 2026-09-10
+2026-11-25 22:11:18,filing_freshness_days,AVGO revenue,warn,1,76.0,latest filing 2026-09-10
+2026-11-25 22:11:18,filing_freshness_days,CEG revenue,warn,1,111.0,latest filing 2026-08-06
+2026-11-25 22:11:18,filing_freshness_days,CRWV capex,warn,1,13.0,latest filing 2026-11-12
+2026-11-25 22:11:18,filing_freshness_days,CRWV revenue,warn,1,13.0,latest filing 2026-11-12
+2026-11-25 22:11:18,filing_freshness_days,D capex,warn,0,2395.0,latest filing 2020-05-05
+2026-11-25 22:11:18,filing_freshness_days,D revenue,warn,0,208.0,latest filing 2026-05-01
+2026-11-25 22:11:18,filing_freshness_days,DELL gross_profit,warn,1,78.0,latest filing 2026-09-08
+2026-11-25 22:11:18,filing_freshness_days,DELL revenue,warn,1,78.0,latest filing 2026-09-08
+2026-11-25 22:11:18,filing_freshness_days,DLR capex,warn,0,208.0,latest filing 2026-05-01
+2026-11-25 22:11:18,filing_freshness_days,DLR revenue,warn,0,208.0,latest filing 2026-05-01
+2026-11-25 22:11:18,filing_freshness_days,EQIX capex,warn,0,210.0,latest filing 2026-04-29
+2026-11-25 22:11:18,filing_freshness_days,EQIX revenue,warn,1,28.0,latest filing 2026-10-28
+2026-11-25 22:11:18,filing_freshness_days,ETN revenue,warn,1,22.0,latest filing 2026-11-03
+2026-11-25 22:11:18,filing_freshness_days,GEV revenue,warn,1,28.0,latest filing 2026-10-28
+2026-11-25 22:11:18,filing_freshness_days,GOOGL capex,warn,1,27.0,latest filing 2026-10-29
+2026-11-25 22:11:18,filing_freshness_days,GOOGL revenue,warn,1,27.0,latest filing 2026-10-29
+2026-11-25 22:11:18,filing_freshness_days,INTC gross_profit,warn,1,26.0,latest filing 2026-10-30
+2026-11-25 22:11:18,filing_freshness_days,INTC revenue,warn,1,26.0,latest filing 2026-10-30
+2026-11-25 22:11:18,filing_freshness_days,META capex,warn,1,34.0,latest filing 2026-10-22
+2026-11-25 22:11:18,filing_freshness_days,META revenue,warn,1,34.0,latest filing 2026-10-22
+2026-11-25 22:11:18,filing_freshness_days,MRVL gross_profit,warn,1,89.0,latest filing 2026-08-28
+2026-11-25 22:11:18,filing_freshness_days,MRVL revenue,warn,1,89.0,latest filing 2026-08-28
+2026-11-25 22:11:18,filing_freshness_days,MSFT capex,warn,1,28.0,latest filing 2026-10-28
+2026-11-25 22:11:18,filing_freshness_days,MSFT revenue,warn,1,28.0,latest filing 2026-10-28
+2026-11-25 22:11:18,filing_freshness_days,MU gross_profit,warn,1,47.0,latest filing 2026-10-09
+2026-11-25 22:11:18,filing_freshness_days,MU revenue,warn,1,47.0,latest filing 2026-10-09
+2026-11-25 22:11:18,filing_freshness_days,NEE revenue,warn,0,216.0,latest filing 2026-04-23
+2026-11-25 22:11:18,filing_freshness_days,NVDA gross_profit,warn,1,91.0,latest filing 2026-08-26
+2026-11-25 22:11:18,filing_freshness_days,NVDA revenue,warn,1,91.0,latest filing 2026-08-26
+2026-11-25 22:11:18,filing_freshness_days,ORCL capex,warn,1,75.0,latest filing 2026-09-11
+2026-11-25 22:11:18,filing_freshness_days,ORCL revenue,warn,1,75.0,latest filing 2026-09-11
+2026-11-25 22:11:18,filing_freshness_days,SMCI gross_profit,warn,1,19.0,latest filing 2026-11-06
+2026-11-25 22:11:18,filing_freshness_days,SMCI revenue,warn,1,19.0,latest filing 2026-11-06
+2026-11-25 22:11:18,filing_freshness_days,SO capex,warn,0,209.0,latest filing 2026-04-30
+2026-11-25 22:11:18,filing_freshness_days,SO revenue,warn,0,209.0,latest filing 2026-04-30
+2026-11-25 22:11:18,filing_freshness_days,VRT revenue,warn,1,28.0,latest filing 2026-10-28
+2026-11-25 22:11:18,filing_freshness_days,VST revenue,warn,1,16.0,latest filing 2026-11-09
+2026-11-25 22:11:18,freshness_hours,AEP,warn,1,41.1884,latest hour 2026-11-24 05:00 UTC
+2026-11-25 22:11:18,freshness_hours,CE,warn,1,41.1884,latest hour 2026-11-24 05:00 UTC
+2026-11-25 22:11:18,freshness_hours,DOM,warn,1,41.1884,latest hour 2026-11-24 05:00 UTC
+2026-11-25 22:11:18,freshness_hours,FWES,warn,1,40.1884,latest hour 2026-11-24 06:00 UTC
+2026-11-25 22:11:18,freshness_hours,NCEN,warn,1,40.1884,latest hour 2026-11-24 06:00 UTC
+2026-11-25 22:11:18,gap_hours_total,AEP,warn,1,293.0,293 missing hours since 2019-01-01
+2026-11-25 22:11:18,gap_hours_total,CE,warn,1,293.0,293 missing hours since 2019-01-01
+2026-11-25 22:11:18,gap_hours_total,DOM,warn,1,293.0,293 missing hours since 2019-01-01
+2026-11-25 22:11:18,gap_hours_total,FWES,warn,1,189.0,189 missing hours since 2019-05-27
+2026-11-25 22:11:18,gap_hours_total,NCEN,warn,1,175.0,175 missing hours since 2019-05-27
+2026-11-25 22:11:18,has_data,AEP,warn,1,68929.0,"68,929 hours"
+2026-11-25 22:11:18,has_data,AEP capex,warn,1,6.0,6 quarters
+2026-11-25 22:11:18,has_data,AEP revenue,warn,1,31.0,29 quarters
+2026-11-25 22:11:18,has_data,AEP weather,warn,1,2880.0,2880 days
+2026-11-25 22:11:18,has_data,AMD gross_profit,warn,1,31.0,31 quarters
+2026-11-25 22:11:18,has_data,AMD revenue,warn,1,31.0,31 quarters
+2026-11-25 22:11:18,has_data,AMZN capex,warn,1,31.0,31 quarters
+2026-11-25 22:11:18,has_data,AMZN revenue,warn,1,31.0,31 quarters
+2026-11-25 22:11:18,has_data,ANET gross_profit,warn,1,35.0,31 quarters
+2026-11-25 22:11:18,has_data,ANET revenue,warn,1,34.0,31 quarters
+2026-11-25 22:11:18,has_data,AVGO gross_profit,warn,1,31.0,31 quarters
+2026-11-25 22:11:18,has_data,AVGO revenue,warn,1,31.0,31 quarters
+2026-11-25 22:11:18,has_data,AZ sales,warn,1,93.0,93 months
+2026-11-25 22:11:18,has_data,CE,warn,1,68929.0,"68,929 hours"
+2026-11-25 22:11:18,has_data,CE weather,warn,1,2880.0,2880 days
+2026-11-25 22:11:18,has_data,CEG revenue,warn,1,22.0,22 quarters
+2026-11-25 22:11:18,has_data,CRWV capex,warn,1,14.0,11 quarters
+2026-11-25 22:11:18,has_data,CRWV revenue,warn,1,14.0,11 quarters
+2026-11-25 22:11:18,has_data,D capex,warn,1,5.0,5 quarters
+2026-11-25 22:11:18,has_data,D revenue,warn,1,41.0,29 quarters
+2026-11-25 22:11:18,has_data,DELL gross_profit,warn,1,46.0,34 quarters
+2026-11-25 22:11:18,has_data,DELL revenue,warn,1,40.0,34 quarters
+2026-11-25 22:11:18,has_data,DLR capex,warn,1,29.0,29 quarters
+2026-11-25 22:11:18,has_data,DLR revenue,warn,1,29.0,29 quarters
+2026-11-25 22:11:18,has_data,DOM,critical,1,68929.0,"68,929 hours"
+2026-11-25 22:11:18,has_data,DOM weather,warn,1,2880.0,2880 days
+2026-11-25 22:11:18,has_data,EQIX capex,warn,1,32.0,28 quarters
+2026-11-25 22:11:18,has_data,EQIX revenue,warn,1,36.0,31 quarters
+2026-11-25 22:11:18,has_data,ETN revenue,warn,1,31.0,31 quarters
+2026-11-25 22:11:18,has_data,FWES,warn,1,65524.0,"65,524 hours"
+2026-11-25 22:11:18,has_data,FWES weather,warn,1,2880.0,2880 days
+2026-11-25 22:11:18,has_data,GA sales,warn,1,93.0,93 months
+2026-11-25 22:11:18,has_data,GEV revenue,warn,1,15.0,15 quarters
+2026-11-25 22:11:18,has_data,GOOGL capex,warn,1,31.0,31 quarters
+2026-11-25 22:11:18,has_data,GOOGL revenue,warn,1,30.0,30 quarters
+2026-11-25 22:11:18,has_data,INTC gross_profit,warn,1,31.0,31 quarters
+2026-11-25 22:11:18,has_data,INTC revenue,warn,1,31.0,31 quarters
+2026-11-25 22:11:18,has_data,META capex,warn,1,39.0,31 quarters
+2026-11-25 22:11:18,has_data,META revenue,warn,1,31.0,31 quarters
+2026-11-25 22:11:18,has_data,MRVL gross_profit,warn,1,30.0,26 quarters
+2026-11-25 22:11:18,has_data,MRVL revenue,warn,1,30.0,26 quarters
+2026-11-25 22:11:18,has_data,MSFT capex,warn,1,33.0,33 quarters
+2026-11-25 22:11:18,has_data,MSFT revenue,warn,1,33.0,33 quarters
+2026-11-25 22:11:18,has_data,MU gross_profit,warn,1,32.0,32 quarters
+2026-11-25 22:11:18,has_data,MU revenue,warn,1,32.0,32 quarters
+2026-11-25 22:11:18,has_data,NCEN,warn,1,65538.0,"65,538 hours"
+2026-11-25 22:11:18,has_data,NCEN weather,warn,1,2880.0,2880 days
+2026-11-25 22:11:18,has_data,NEE capex,warn,0,0.0,no quarters parsed from SEC XBRL
+2026-11-25 22:11:18,has_data,NEE revenue,warn,1,29.0,29 quarters
+2026-11-25 22:11:18,has_data,NVDA gross_profit,warn,1,34.0,34 quarters
+2026-11-25 22:11:18,has_data,NVDA revenue,critical,1,34.0,34 quarters
+2026-11-25 22:11:18,has_data,OH sales,warn,1,93.0,93 months
+2026-11-25 22:11:18,has_data,OR sales,warn,1,93.0,93 months
+2026-11-25 22:11:18,has_data,ORCL capex,warn,1,33.0,33 quarters
+2026-11-25 22:11:18,has_data,ORCL revenue,warn,1,33.0,33 quarters
+2026-11-25 22:11:18,has_data,SMCI gross_profit,warn,1,33.0,33 quarters
+2026-11-25 22:11:18,has_data,SMCI revenue,warn,1,33.0,33 quarters
+2026-11-25 22:11:18,has_data,SO capex,warn,1,30.0,29 quarters
+2026-11-25 22:11:18,has_data,SO revenue,warn,1,29.0,29 quarters
+2026-11-25 22:11:18,has_data,TX sales,warn,1,93.0,93 months
+2026-11-25 22:11:18,has_data,VA sales,warn,1,93.0,93 months
+2026-11-25 22:11:18,has_data,VRT revenue,warn,1,31.0,31 quarters
+2026-11-25 22:11:18,has_data,VST revenue,warn,1,31.0,31 quarters
+2026-11-25 22:11:18,hourly_jumps_40pct,AEP,warn,1,2.0,2 hour-to-hour jumps over 40%
+2026-11-25 22:11:18,hourly_jumps_40pct,CE,warn,1,4.0,4 hour-to-hour jumps over 40%
+2026-11-25 22:11:18,hourly_jumps_40pct,DOM,warn,1,2.0,2 hour-to-hour jumps over 40%
+2026-11-25 22:11:18,hourly_jumps_40pct,FWES,warn,1,0.0,0 hour-to-hour jumps over 40%
+2026-11-25 22:11:18,hourly_jumps_40pct,NCEN,warn,1,0.0,0 hour-to-hour jumps over 40%
+2026-11-25 22:11:18,implausible_values,AEP,warn,1,0.0,"0 hours outside 0.25x-2.5x the median (14,732 MW)"
+2026-11-25 22:11:18,implausible_values,CE,warn,1,2.0,"2 hours outside 0.25x-2.5x the median (10,404 MW)"
+2026-11-25 22:11:18,implausible_values,DOM,warn,1,2.0,"2 hours outside 0.25x-2.5x the median (13,111 MW)"
+2026-11-25 22:11:18,implausible_values,FWES,warn,0,29.0,"29 hours outside 0.25x-2.5x the median (5,400 MW)"
+2026-11-25 22:11:18,implausible_values,NCEN,warn,1,0.0,"0 hours outside 0.25x-2.5x the median (13,541 MW)"
+2026-11-25 22:11:18,non_positive_values,AEP capex,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,AEP revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,AMD gross_profit,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,AMD revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,AMZN capex,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,AMZN revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,ANET gross_profit,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,ANET revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,AVGO gross_profit,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,AVGO revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,CEG revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,CRWV capex,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,CRWV revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,D capex,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,D revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,DELL gross_profit,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,DELL revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,DLR capex,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,DLR revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,EQIX capex,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,EQIX revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,ETN revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,GEV revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,GOOGL capex,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,GOOGL revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,INTC gross_profit,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,INTC revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,META capex,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,META revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,MRVL gross_profit,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,MRVL revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,MSFT capex,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,MSFT revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,MU gross_profit,warn,0,4.0,4 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,MU revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,NEE revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,NVDA gross_profit,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,NVDA revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,ORCL capex,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,ORCL revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,SMCI gross_profit,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,SMCI revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,SO capex,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,SO revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,VRT revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,non_positive_values,VST revenue,warn,1,0.0,0 quarters <= 0
+2026-11-25 22:11:18,quarter_continuity,AEP capex,warn,0,4.0,4 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,AEP revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,AMD gross_profit,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,AMD revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,AMZN capex,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,AMZN revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,ANET gross_profit,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,ANET revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,AVGO gross_profit,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,AVGO revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,CEG revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,CRWV capex,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,CRWV revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,D capex,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,D revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,DELL gross_profit,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,DELL revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,DLR capex,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,DLR revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,EQIX capex,warn,0,1.0,1 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,EQIX revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,ETN revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,GEV revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,GOOGL capex,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,GOOGL revenue,warn,0,1.0,1 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,INTC gross_profit,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,INTC revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,META capex,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,META revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,MRVL gross_profit,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,MRVL revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,MSFT capex,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,MSFT revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,MU gross_profit,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,MU revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,NEE revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,NVDA gross_profit,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,NVDA revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,ORCL capex,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,ORCL revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,SMCI gross_profit,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,SMCI revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,SO capex,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,SO revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,VRT revenue,warn,1,0.0,0 past fiscal years missing a quarter
+2026-11-25 22:11:18,quarter_continuity,VST revenue,warn,1,0.0,0 past fiscal years missing a quarter
