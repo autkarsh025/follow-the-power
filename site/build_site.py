@@ -766,7 +766,7 @@ function heat(el, region, mini) {
     if (!mini) {
       g.fillStyle = css('--mute'); g.textAlign = 'right';
       [[0, 'midnight'], [6, '6 am'], [12, 'noon'], [18, '6 pm']].forEach(([hr, s]) => g.fillText(s, P.l - 8, P.t + (hr + .5) * rh));
-      g.textAlign = 'center'; h.weeks.forEach((wk, w) => { if (wk.slice(8, 10) <= '07') g.fillText(MON[+wk.slice(5, 7) - 1], P.l + (w + .5) * cw, H - 8); });
+      g.textAlign = 'center'; const every = cw * 4.35 < 34 ? 2 : 1; h.weeks.forEach((wk, w) => { if (wk.slice(8, 10) <= '07' && (+wk.slice(5, 7)) % every === 0) g.fillText(MON[+wk.slice(5, 7) - 1], P.l + (w + .5) * cw, H - 8); });
     }
     return { P, cw, rh, h, W, H };
   }, mini ? null : (g, geo, mx, my) => {
