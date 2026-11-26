@@ -46,7 +46,7 @@ EXPERIENCE = [
      "Built a full-stack Python and Node.js web app with an integrated donation system."),
 ]
 LEADERSHIP = [
-    ("2025–", "Director of Internal Development", "Project Rishi, UC Berkeley",
+    ("2025–", "Project Lead", "Project Rishi, UC Berkeley",
      "Lead a team of 10 in a 40-member organization building an education center in rural India; own the grant applications and budget."),
     ("2019–23", "Varsity captain, cross country and track", "Saint Francis High School",
      "CIF California state cross country qualifier. 4:28 mile, 16:09 5K."),
@@ -431,7 +431,7 @@ def about_page():
       <p>I grew up in Mountain View. In high school I was a distance runner: varsity captain at Saint Francis, a CIF California state
       cross country qualifier, and the age-group winner at the 2022 San Francisco Half Marathon when I was 17.</p>
       <p>I started college at Wisconsin in data science and economics, then transferred to Berkeley, which takes about 40 out-of-state
-      transfers a year. I study data science and applied math, and I lead internal development at Project Rishi, a 40-person group
+      transfers a year. I study data science and applied math, and I am a project lead at Project Rishi, a 40-person group
       building an education center in rural India.</p>
       <p>The projects on this site run every morning on their own. When I&rsquo;m not working on them I&rsquo;m usually reprogramming a car.</p>
       <p class="links"><a href="mailto:{PROFILE['email']}">{PROFILE['email']}</a><a href="{PROFILE['linkedin']}">LinkedIn</a></p>
