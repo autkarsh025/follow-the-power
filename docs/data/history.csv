@@ -29,3 +29,13 @@ run_date,metric,value
 2026-11-25,hyperscaler_capex_yoy,107.6
 2026-11-25,nvda_revenue_b,96.22
 2026-11-25,sec_data_points,1379.0
+2026-11-26,AEP_normalized_12m_growth,9.91
+2026-11-26,CE_normalized_12m_growth,2.54
+2026-11-26,DOM_normalized_12m_growth,8.72
+2026-11-26,FWES_normalized_12m_growth,1.68
+2026-11-26,NCEN_normalized_12m_growth,4.02
+2026-11-26,grid_hours,337849.0
+2026-11-26,hyperscaler_capex_b,201.92
+2026-11-26,hyperscaler_capex_yoy,107.6
+2026-11-26,nvda_revenue_b,96.22
+2026-11-26,sec_data_points,1379.0
