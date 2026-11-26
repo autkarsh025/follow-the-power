@@ -506,7 +506,7 @@ header.top{position:sticky;top:0;z-index:9;background:color-mix(in srgb,var(--bg
 .top nav>a,.top nav .dd>a{text-decoration:none;color:var(--sec)}.top nav>a:hover,.top nav .dd>a:hover,.top nav a[aria-current=page]{color:var(--ink)}
 .top nav a[aria-current=page]{box-shadow:inset 0 -2px 0 var(--ink);padding:17px 0}
 .dd{position:relative}
-.dd .menu{position:absolute;right:-16px;top:100%;margin-top:6px;width:320px;background:var(--bg);border:1px solid var(--rule);border-radius:6px;padding:6px;box-shadow:0 10px 30px -12px rgba(0,0,0,.25);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .15s,transform .15s,visibility 0s .15s}
+.dd .menu{position:absolute;right:-16px;top:100%;margin-top:6px;width:360px;background:var(--bg);border:1px solid var(--rule);border-radius:6px;padding:6px;box-shadow:0 10px 30px -12px rgba(0,0,0,.25);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .15s,transform .15s,visibility 0s .15s}
 .dd::after{content:"";position:absolute;left:-10px;right:-10px;top:100%;height:12px}
 .dd:hover .menu,.dd:focus-within .menu{opacity:1;visibility:visible;transform:none;transition:opacity .15s,transform .15s}
 .dd .menu>a{display:block;padding:9px 10px;border-radius:4px;text-decoration:none;color:var(--ink)}
@@ -514,7 +514,7 @@ header.top{position:sticky;top:0;z-index:9;background:color-mix(in srgb,var(--bg
 .dd .menu b{display:block;font-weight:560;font-size:14.5px}
 .dd .menu span{display:block;font-size:13px;color:var(--sec);margin-top:1px}
 .dd .menu p{margin:4px 0 0;padding:9px 10px 4px;border-top:1px solid var(--rule);display:flex;gap:16px;font-size:13px}
-.dd .menu p a{color:var(--sec)}.dd .menu p a:hover{color:var(--ink)}
+.dd .menu p a{color:var(--sec);white-space:nowrap}.dd .menu p a:hover{color:var(--ink)}
 .top nav .dd>a{display:inline-block}
 #theme{font:inherit;font-size:14px;color:var(--sec);background:none;border:1px solid var(--rule);border-radius:5px;padding:2px 10px;cursor:pointer}
 #theme:hover{color:var(--ink);border-color:var(--mute)}
