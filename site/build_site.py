@@ -447,7 +447,7 @@ CSS = r"""
 :root{--bg:#ffffff;--ink:#141619;--sec:#565c64;--mute:#868c94;--rule:#e4e6e9;--soft:#f5f6f7;--grid:#eef0f2;
   --c1:#d9480f;--c2:#2a78d6;--c3:#1baf7a;--c4:#c98500;--c5:#9a4fd0;--neg:#2a78d6;--pos:#d9480f;--ok:#1d8a4e;
   --kw:#2a6fd0;--str:#1f7a4a;--num:#b4561b;--com:#8a9098;
-  --sans:"Schibsted Grotesk",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+  --sans:"IBM Plex Sans",system-ui,sans-serif;--serif:"Source Serif 4",Georgia,serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
 :root[data-theme=dark]{--bg:#101214;--ink:#e9ebee;--sec:#a5abb3;--mute:#737982;--rule:#24282e;--soft:#16191c;--grid:#1c2024;
   --c1:#d95926;--c2:#3987e5;--c3:#199e70;--c4:#c98500;--c5:#9085e9;--neg:#3987e5;--pos:#d95926;--ok:#3fb879;--kw:#7fa6f0;--str:#7fd1a0;--num:#f0a46b;--com:#6d737d}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#101214;--ink:#e9ebee;--sec:#a5abb3;--mute:#737982;--rule:#24282e;--soft:#16191c;--grid:#1c2024;
@@ -470,10 +470,10 @@ header.top{position:sticky;top:0;z-index:9;background:color-mix(in srgb,var(--bg
 #theme{font:inherit;font-size:14px;color:var(--sec);background:none;border:1px solid var(--rule);border-radius:5px;padding:2px 10px;cursor:pointer}
 #theme:hover{color:var(--ink);border-color:var(--mute)}
 
-h1{font-size:61px;line-height:1;letter-spacing:-.04em;font-weight:700;margin:0}
+h1{font:500 64px/1 var(--serif);letter-spacing:-.022em;margin:0}
 .hero{padding:72px 0 8px;max-width:760px}
 .phead{padding:72px 0 0;max-width:760px}
-.lede{font-size:20px;line-height:1.5;color:var(--sec);margin:18px 0 0}
+.lede{font:400 21px/1.5 var(--serif);color:var(--sec);margin:18px 0 0}
 .links{display:flex;flex-wrap:wrap;gap:6px 22px;margin:18px 0 0;font-size:15px}
 
 .fig{margin:40px 0 0}
@@ -492,16 +492,17 @@ section{margin-top:88px;display:grid;grid-template-columns:180px minmax(0,1fr);g
 section.results{margin-top:72px}
 section>h2{font-size:15px;font-weight:620;margin:2px 0 0;color:var(--ink)}
 .results table{width:100%;border-collapse:collapse}
-.results th{font-size:25px;font-weight:680;letter-spacing:-.025em;text-align:left;white-space:nowrap;padding:12px 28px 12px 0;vertical-align:baseline;border-top:1px solid var(--rule)}
+.results th{font:500 26px/1.2 var(--serif);letter-spacing:-.012em;text-align:left;white-space:nowrap;padding:12px 28px 12px 0;vertical-align:baseline;border-top:1px solid var(--rule)}
 .results td{padding:12px 0;border-top:1px solid var(--rule);color:var(--sec);vertical-align:baseline}
 .results td a{text-decoration:none}.results td a:hover{color:var(--ink);text-decoration:underline;text-decoration-color:var(--c1)}
 .results tr:last-child>*{border-bottom:1px solid var(--rule)}
 
 .work .card{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:32px;padding:22px 0;border-top:1px solid var(--rule);align-items:start}
 .work .card:nth-of-type(2){border-bottom:1px solid var(--rule)}
-.work h3{font-size:20px;font-weight:660;letter-spacing:-.015em;margin:0 0 6px}
+.work h3{font:500 23px/1.2 var(--serif);letter-spacing:-.01em;margin:0 0 6px}
 .work h3 a{text-decoration:none}.work h3 a:hover{text-decoration:underline;text-decoration-color:var(--c1)}
-.work .card p{margin:0 0 8px;color:var(--sec);max-width:34em}
+.work .card p{margin:0 0 8px;color:var(--sec);max-width:34em;font:16.5px/1.6 var(--serif)}
+.work .card p.tags{font:13.5px/1.5 var(--sans)}
 .tags{font-size:13.5px;color:var(--mute)}
 .fig.mini{margin:4px 0 0}.fig.mini figcaption{font-size:12.5px;margin-top:6px;color:var(--mute)}
 .more{margin:18px 0 0;font-weight:560}
@@ -512,22 +513,23 @@ section>h2{font-size:15px;font-weight:620;margin:2px 0 0;color:var(--ink)}
 .entries .yr{color:var(--mute);font-size:14px;padding-top:2px}
 .entries h3{font-size:16.5px;font-weight:620;margin:0;letter-spacing:-.008em}
 .entries .org{font-weight:400;color:var(--sec)}
-.entries p{margin:3px 0 0;color:var(--sec);max-width:40em}
+.entries p{margin:3px 0 0;color:var(--sec);max-width:40em;font:16px/1.6 var(--serif)}
 .spec{margin:0;border-top:1px solid var(--rule)}
 .spec div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;padding:9px 0;border-bottom:1px solid var(--rule);font-size:15px}
 .spec dt{color:var(--sec)}.spec dd{margin:0}
 
 .proj{margin-top:104px;scroll-margin-top:72px}
 .proj+.proj{margin-top:136px}
-.proj header h2{font-size:39px;line-height:1.05;letter-spacing:-.03em;font-weight:690;margin:0}
-.proj .sub{font-size:18px;color:var(--sec);margin:8px 0 0}
+.proj header h2{font:500 44px/1.05 var(--serif);letter-spacing:-.018em;margin:0}
+.proj .sub{font:italic 400 19px/1.4 var(--serif);color:var(--sec);margin:8px 0 0}
 .cols{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:48px;margin-top:28px;align-items:start}
-.cols .text p{margin:0 0 14px;max-width:38em}
+.cols .text p{margin:0 0 14px;max-width:38em;font:17px/1.65 var(--serif)}
+.cols .text p.links{font:15px var(--sans)}
 .cols .spec{font-size:14.5px}.cols .spec div{grid-template-columns:minmax(0,1fr) auto;text-align:right}.cols .spec dt{text-align:left}
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:40px}
 .m{margin:36px 0 0;padding:14px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);display:flex;gap:24px;align-items:baseline;overflow-x:auto}
 .m span{font-size:13.5px;color:var(--sec);white-space:nowrap}
-.m code{font:italic 17px/1.4 "STIX Two Text","Cambria Math","Times New Roman",serif;white-space:nowrap;color:var(--ink)}
+.m code{font:italic 18px/1.4 var(--serif);white-space:nowrap;color:var(--ink)}
 .m sub,.m sup{font-size:.7em;font-style:italic}
 .seg{display:inline-flex;border:1px solid var(--rule);border-radius:5px;margin-bottom:10px;overflow:hidden}
 .seg button{font:500 13px var(--sans);color:var(--sec);background:none;border:0;padding:4px 12px;cursor:pointer}
@@ -549,7 +551,7 @@ section>h2{font-size:15px;font-weight:620;margin:2px 0 0;color:var(--ink)}
 .asof span{margin-right:4px}
 .asof button{font:500 12.5px var(--mono);color:var(--sec);background:none;border:1px solid var(--rule);border-radius:4px;padding:3px 8px;cursor:pointer}
 .asof button[aria-checked=true]{color:var(--bg);background:var(--ink);border-color:var(--ink)}
-.ask .a{border-left:2px solid var(--c1);padding-left:16px;font-size:15px}
+.ask .a{border-left:2px solid var(--c1);padding-left:16px;font:16px/1.6 var(--serif)}
 .ask .a p{margin:0 0 9px}.ask .a ul{margin:0 0 9px;padding-left:18px}
 .ask .note{font-size:13px;color:var(--mute);margin:14px 0 0;max-width:46em}
 table.ans{border-collapse:collapse;margin:4px 0 10px;font-size:14px}
@@ -558,11 +560,12 @@ table.ans th{font-weight:560;color:var(--sec)}
 .photo{margin:32px 0 0}.photo img{width:100%;display:block;border-radius:3px}
 
 .about{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:64px;margin-top:32px;align-items:start}
-.prose p{font-size:19px;line-height:1.6;margin:0 0 16px;max-width:33em}
+.prose p{font:400 19.5px/1.62 var(--serif);margin:0 0 16px;max-width:33em}
+.prose p.links{font:15px var(--sans)}
 .prs{border-collapse:collapse;width:100%}
 .prs caption{text-align:left;font-size:14px;font-weight:620;padding-bottom:8px}
 .prs th,.prs td{padding:10px 0;border-top:1px solid var(--rule);text-align:left;font-weight:400}
-.prs th{color:var(--sec);font-size:15px}.prs td{text-align:right;font-size:22px;font-weight:660;letter-spacing:-.02em}
+.prs th{color:var(--sec);font-size:15px}.prs td{text-align:right;font:500 24px/1.2 var(--serif)}
 .prs tr:last-child>*{border-bottom:1px solid var(--rule)}
 .gallery{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:120px;gap:10px;margin-top:56px}
 .ph{margin:0;overflow:hidden;border-radius:3px;background:var(--soft)}
@@ -576,11 +579,11 @@ footer a{color:var(--ink)}
 @media (max-width:880px){
   main,.top .in,footer .in{padding-left:20px;padding-right:20px}
   .top .me span{display:none}.top nav{gap:16px}
-  h1{font-size:44px}.hero,.phead{padding-top:48px}.lede{font-size:18px}
+  h1{font-size:46px}.hero,.phead{padding-top:48px}.lede{font-size:18px}
   section{grid-template-columns:1fr;margin-top:64px}section>h2{margin-bottom:12px}
   .results th{font-size:20px;padding-right:16px}
   .work .card,.cols,.pair,.about{grid-template-columns:1fr;gap:20px}
-  .proj header h2{font-size:31px}
+  .proj header h2{font-size:34px}
   .win .bar .meta{display:none}.win .body{padding:16px}
   .gallery{grid-template-columns:repeat(2,1fr)}.ph.tall{grid-column:span 1;grid-row:span 2}.ph.wide{grid-column:span 2}.ph.sq{grid-column:span 1}
 }
@@ -661,7 +664,7 @@ F.hero = el => {
     line(g, t.map((v, i) => [f.X(v), f.Y(d.adj[i])]), css('--c1'), 2);
     line(g, fit.map(([a, b]) => [f.X(a), f.Y(b)]), css('--ink'), 1.3, [5, 4]);
     const bx = f.X(brk); g.strokeStyle = css('--sec'); g.lineWidth = 1; g.beginPath(); g.moveTo(bx + .5, f.P.t + 4); g.lineTo(bx + .5, f.Y(y.lo)); g.stroke();
-    g.fillStyle = css('--ink'); g.textAlign = 'right'; g.font = `600 12.5px ${css('--sans')}`;
+    g.fillStyle = css('--ink'); g.textAlign = 'right'; g.font = `500 12.5px ${css('--sans')}`;
     g.fillText(`+${fmt(d.s1)} MW/yr`, bx - 10, f.P.t + 14);
     g.textAlign = 'left'; g.fillText(`+${fmt(d.s2)} MW/yr`, bx + 10, f.P.t + 14);
     g.font = `12px ${css('--sans')}`; g.fillStyle = css('--sec'); g.fillText('trend break', bx + 10, f.P.t + 31);
@@ -835,6 +838,7 @@ F.monthly = el => {
 };
 
 document.querySelectorAll('[data-fig]').forEach(el => { const f = F[el.dataset.fig]; if (f) f(el); });
+if (document.fonts) document.fonts.ready.then(redrawAll);
 
 // tabs, as-of toggles, sticky header, live status
 document.querySelectorAll('[data-win]').forEach(win => {
@@ -887,7 +891,7 @@ def layout(title, desc, body, page, figdata):
 <meta name="theme-color" content="#101214" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="{FAVICON}">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..800;1,400..600&family=IBM+Plex+Mono:wght@400;500&family=STIX+Two+Text:ital@1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400;1,8..60,500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>try{{const t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script>
 <style>{CSS}</style>
 </head>
