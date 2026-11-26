@@ -278,6 +278,44 @@ def entries(items):
 
 
 # =============================================================================================== pages
+def reel(H):
+    """The home page figure: five real figures that rotate, each drawing itself in, caption swapping with it."""
+    cap = capex_series()
+    q = cap["q"][-1]
+    cap_now = sum(cap["stack"][t][-1] for t in HYPERSCALERS)
+    z = zone_series()
+    top = max(z["series"], key=lambda s_: next(v for v in reversed(s_["v"]) if v is not None))
+    top_v = next(v for v in reversed(top["v"]) if v is not None)
+    slides = [
+        ("hero", "Northern Virginia load",
+         f"Overnight electricity load in Dominion, the Northern Virginia grid zone that serves the largest data-center market in the world. "
+         f"Dots are daily readings; the line is a weather-adjusted 30-day mean; the dashed line is a one-break linear trend fit by least squares. "
+         f"Growth went from <b>+{H['s1']:,} MW/yr</b> to <b>+{H['s2']:,} MW/yr</b> in {month_name(H['brk_label'])}."),
+        ("capex", "Big tech capex",
+         f"Quarterly capital spending by Microsoft, Alphabet, Amazon and Meta (stacked) against NVIDIA&rsquo;s quarterly revenue (line). "
+         f"{q[:4]} Q{q[-1]}: <b>${cap_now:.1f}B</b> of capex in one quarter."),
+        ("zones", "Five regions",
+         f"Weather-adjusted overnight load in five data-center regions, indexed to each region&rsquo;s first 12 months = 100. "
+         f"{top['name']} is up <b>{top_v - 100:.0f}%</b>."),
+        ("heat", "Battery heatmap",
+         "California battery output by hour of day (rows) and week (columns). Blue is charging on midday solar; orange is discharging after sunset. "
+         "Refreshed every morning by Sundown."),
+        ("duck", "A day on the grid",
+         "California on an average day: demand (line), solar (shaded) and batteries (bars; below zero is charging), in GW. "
+         "Batteries soak up the solar peak and return it in the evening."),
+    ]
+    tabs = "".join(f'<button role="tab" id="rt{i}" aria-controls="rp{i}" aria-selected="{str(i == 0).lower()}" tabindex="{0 if i == 0 else -1}" data-cap="{esc(c, quote=True)}">'
+                   f'<span>{i + 1}</span>{esc(n)}</button>' for i, (_, n, c) in enumerate(slides))
+    panels = "".join(f'<div class="slide{" on" if i == 0 else ""}" role="tabpanel" id="rp{i}" aria-labelledby="rt{i}"><div class="plot" data-fig="{f}" style="height:100%"></div></div>'
+                     for i, (f, _, _) in enumerate(slides))
+    return (f'<figure class="reel" data-reel aria-roledescription="carousel" aria-label="Figures from my pipelines">'
+            f'<div class="reel-bar"><div role="tablist" aria-label="Choose a figure">{tabs}</div>'
+            f'<button class="pause" type="button" aria-pressed="false">Pause</button></div>'
+            f'<div class="prog" aria-hidden="true"><i></i></div>'
+            f'<div class="stage">{panels}</div>'
+            f'<figcaption aria-live="polite"><b>Figure <span class="n">1</span>.</b> <span class="t">{slides[0][2]}</span> Hover for values.</figcaption></figure>')
+
+
 def home(H, L):
     results = [
         ("22 / 22", "eval cases passed by the Gigawatt Ledger AI analyst, three runs each, prompt injection included", "/projects/#gigawatt-ledger"),
@@ -295,8 +333,8 @@ def home(H, L):
     <p class="links"><a href="mailto:{PROFILE['email']}">{PROFILE['email']}</a><a href="{PROFILE['linkedin']}">LinkedIn</a><a href="/projects/">Projects</a></p>
   </div>
 
-  {fig("hero", 380, f"Overnight electricity load in Dominion, the Northern Virginia grid zone that serves the largest data-center market in the world. Dots are daily readings; the line is a weather-adjusted 30-day mean; the dashed line is a one-break linear trend fit by least squares. Growth went from <b>+{H['s1']:,} MW/yr</b> to <b>+{H['s2']:,} MW/yr</b> in {month_name(H['brk_label'])}. Hover for values.", 1, "wide")}
-  <p class="status"><i class="dot" data-live="gl-dot"></i><span data-live="gl-when">Updated daily</span> by the Gigawatt Ledger pipeline. <span data-live="gl-what"></span></p>
+  {reel(H)}
+  <p class="status"><i class="dot" data-live="gl-dot"></i><span data-live="gl-when">Updated daily</span> by the Gigawatt Ledger and Sundown pipelines. <span data-live="gl-what"></span></p>
 
   <section class="results"><h2>Selected results</h2><table>{res}</table></section>
 
@@ -321,7 +359,7 @@ def home(H, L):
   <section><h2>Education</h2>{entries(EDUCATION)}</section>
   <section><h2>Skills</h2>{spec([(k, esc(v)) for k, v in SKILLS])}</section>"""
     return layout(PROFILE["name"], "Data science and applied math at UC Berkeley. Data pipelines, statistical models and AI tools on public energy and financial data.",
-                  body, "home", {"hero": H, "capex": capex_series()})
+                  body, "home", {"hero": H, "capex": capex_series(), "zones": zone_series()})
 
 
 def month_name(ym: str) -> str:
@@ -463,7 +501,7 @@ main{max-width:1080px;margin:0 auto;padding:0 40px}
 header.top{position:sticky;top:0;z-index:9;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
 .top .in{max-width:1080px;margin:0 auto;padding:0 40px;height:56px;display:flex;align-items:center;justify-content:space-between}
 .top .me{display:flex;gap:10px;align-items:center;text-decoration:none;font-weight:640;letter-spacing:-.01em}
-.top .me svg{width:22px;height:22px;display:block;color:var(--ink)}
+.top .me svg{width:28px;height:28px;display:block;color:var(--ink)}
 .top nav{display:flex;gap:24px;align-items:center;font-size:15px}
 .top nav a{text-decoration:none;color:var(--sec)}.top nav a:hover,.top nav a[aria-current=page]{color:var(--ink)}
 .top nav a[aria-current=page]{box-shadow:inset 0 -2px 0 var(--ink);padding:17px 0}
@@ -476,6 +514,23 @@ h1{font:500 64px/1 var(--serif);letter-spacing:-.022em;margin:0}
 .lede{font:400 21px/1.5 var(--serif);color:var(--sec);margin:18px 0 0}
 .links{display:flex;flex-wrap:wrap;gap:6px 22px;margin:18px 0 0;font-size:15px}
 
+.reel{margin:44px 0 0}
+.reel-bar{display:flex;justify-content:space-between;align-items:center;gap:16px;border-bottom:1px solid var(--rule)}
+.reel [role=tablist]{display:flex;overflow-x:auto;scrollbar-width:none}
+.reel [role=tab]{font:500 14px var(--sans);color:var(--sec);background:none;border:0;padding:10px 16px 10px 0;margin-right:6px;cursor:pointer;white-space:nowrap}
+.reel [role=tab] span{display:inline-block;min-width:1.4em;color:var(--mute);font-variant-numeric:tabular-nums}
+.reel [role=tab]:hover,.reel [role=tab][aria-selected=true]{color:var(--ink)}
+.reel [role=tab][aria-selected=true] span{color:var(--c1)}
+.reel .pause{font:500 13px var(--sans);color:var(--sec);background:none;border:1px solid var(--rule);border-radius:5px;padding:2px 10px;cursor:pointer;flex:none}
+.reel .pause:hover{color:var(--ink);border-color:var(--mute)}
+.prog{height:2px;background:transparent;margin-top:-1px}
+.prog i{display:block;height:2px;width:0;background:var(--c1)}
+.stage{position:relative;height:380px;margin-top:22px}
+.slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .45s ease,visibility 0s linear .45s}
+.slide.on{opacity:1;visibility:visible;transition:opacity .45s ease}
+.reel figcaption{font-size:13.5px;line-height:1.5;color:var(--sec);margin-top:12px;max-width:760px;min-height:4.5em}
+.reel figcaption b{color:var(--ink);font-weight:600}
+@media (prefers-reduced-motion:reduce){.slide,.slide.on{transition:none}}
 .fig{margin:40px 0 0}
 .fig.wide{margin-top:44px}
 .plot{position:relative;width:100%;cursor:crosshair;touch-action:pan-y}
@@ -578,8 +633,8 @@ footer .in{max-width:1080px;margin:0 auto;padding:24px 40px 44px;display:flex;ju
 footer a{color:var(--ink)}
 @media (max-width:880px){
   main,.top .in,footer .in{padding-left:20px;padding-right:20px}
-  .top .me span{display:none}.top nav{gap:16px}
-  h1{font-size:46px}.hero,.phead{padding-top:48px}.lede{font-size:18px}
+  .top nav{gap:16px}
+  h1{font-size:46px}.stage{height:300px}.reel [role=tab]{padding-right:10px;font-size:13.5px}.hero,.phead{padding-top:48px}.lede{font-size:18px}
   section{grid-template-columns:1fr;margin-top:64px}section>h2{margin-bottom:12px}
   .results th{font-size:20px;padding-right:16px}
   .work .card,.cols,.pair,.about{grid-template-columns:1fr;gap:20px}
@@ -617,12 +672,18 @@ const charts = [];
 function chart(el, draw, hover) {
   const c = document.createElement('canvas'); el.appendChild(c);
   const tip = document.createElement('div'); tip.className = 'tip'; tip.hidden = true; el.appendChild(tip);
-  const ch = { el, c, tip, draw, hover, mx: null };
+  const ch = { el, c, tip, draw, hover, mx: null, reveal: 1 }; el._chart = ch;
   ch.render = () => {
     const dpr = window.devicePixelRatio || 1, W = el.clientWidth, H = el.clientHeight;
     c.width = W * dpr; c.height = H * dpr; const g = c.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0);
     g.clearRect(0, 0, W, H); g.font = `12px ${css('--sans')}`; g.textBaseline = 'middle';
     ch.geo = draw(g, W, H);
+    if (ch.reveal < 1) {
+      const P = ch.geo ? (ch.geo.f ? ch.geo.f.P : ch.geo.P) : null, pl = P ? P.l : 0, pr = P ? P.r : 0, pb = P ? P.b : 0;
+      const x = pl + (W - pl - pr) * ch.reveal;
+      g.fillStyle = css('--bg'); g.fillRect(x, 0, W - x, H - pb);
+      g.fillStyle = css('--c1'); g.fillRect(Math.round(x), 0, 1.5, H - pb);
+    }
     if (ch.mx != null && hover) { const r = hover(g, ch.geo, ch.mx, ch.my, W, H); if (r) { tip.innerHTML = r.html; tip.style.left = r.x + 'px'; tip.style.top = r.y + 'px'; tip.hidden = false; } else tip.hidden = true; }
     else tip.hidden = true;
   };
@@ -633,6 +694,13 @@ function chart(el, draw, hover) {
   charts.push(ch); return ch;
 }
 function redrawAll() { charts.forEach(c => c.render()); }
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function sweep(ch, ms = 1300) {
+  if (!ch || reduced) { if (ch) { ch.reveal = 1; ch.render(); } return; }
+  const t0 = performance.now();
+  const step = now => { const k = Math.min(1, (now - t0) / ms); ch.reveal = 1 - Math.pow(1 - k, 3); ch.render(); if (k < 1) requestAnimationFrame(step); };
+  ch.reveal = 0; requestAnimationFrame(step);
+}
 
 // shared axes: x is a numeric domain, y linear
 function frame(g, W, H, o) {
@@ -840,6 +908,37 @@ F.monthly = el => {
 document.querySelectorAll('[data-fig]').forEach(el => { const f = F[el.dataset.fig]; if (f) f(el); });
 if (document.fonts) document.fonts.ready.then(redrawAll);
 
+// home reel: rotate figures, sweep each in, swap the caption; pause on hover, focus or button
+document.querySelectorAll('[data-reel]').forEach(reel => {
+  const tabs = [...reel.querySelectorAll('[role=tab]')], slides = [...reel.querySelectorAll('.slide')];
+  const bar = reel.querySelector('.prog i'), cap = reel.querySelector('figcaption .t'), num = reel.querySelector('figcaption .n'), pauseBtn = reel.querySelector('.pause');
+  const DWELL = 7000; let i = 0, timer = null, userPaused = reduced, hovering = false;
+  const show = (k, focus) => {
+    i = (k + slides.length) % slides.length;
+    tabs.forEach((t, j) => { const on = j === i; t.setAttribute('aria-selected', on); t.tabIndex = on ? 0 : -1; slides[j].classList.toggle('on', on); slides[j].setAttribute('aria-hidden', !on); });
+    cap.innerHTML = tabs[i].dataset.cap; num.textContent = i + 1;
+    sweep(slides[i].querySelector('.plot')._chart);
+    if (focus) tabs[i].focus();
+    arm();
+  };
+  const arm = () => {
+    clearTimeout(timer); bar.style.transition = 'none'; bar.style.width = '0';
+    if (userPaused || hovering) return;
+    void bar.offsetWidth; bar.style.transition = `width ${DWELL}ms linear`; bar.style.width = '100%';
+    timer = setTimeout(() => show(i + 1), DWELL);
+  };
+  tabs.forEach((t, j) => { t.onclick = () => show(j); t.onkeydown = e => { const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (d) { e.preventDefault(); show(i + d, true); } }; });
+  pauseBtn.onclick = () => { userPaused = !userPaused; pauseBtn.setAttribute('aria-pressed', userPaused); pauseBtn.textContent = userPaused ? 'Play' : 'Pause'; arm(); };
+  if (reduced) { pauseBtn.textContent = 'Play'; pauseBtn.setAttribute('aria-pressed', 'true'); }
+  reel.addEventListener('mouseenter', () => { hovering = true; arm(); });
+  reel.addEventListener('mouseleave', () => { hovering = false; arm(); });
+  reel.addEventListener('focusin', () => { hovering = true; arm(); });
+  reel.addEventListener('focusout', e => { if (!reel.contains(e.relatedTarget)) { hovering = false; arm(); } });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) clearTimeout(timer); else arm(); });
+  const first = slides[0].querySelector('.plot')._chart; if (!reduced && first) first.reveal = 0; (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => sweep(first, 1800));
+  arm();
+});
+
 // tabs, as-of toggles, sticky header, live status
 document.querySelectorAll('[data-win]').forEach(win => {
   const tabs = [...win.querySelectorAll('[role=tab]')], meta = win.querySelector('.bar .meta');
@@ -897,8 +996,8 @@ def layout(title, desc, body, page, figdata):
 </head>
 <body>
 <header class="top"><div class="in">
-  <a class="me" href="/" aria-label="{PROFILE['name']}, home">{MARK}<span>{PROFILE['name']}</span></a>
-  <nav><a href="/projects/"{cur('projects')}>Projects</a><a href="/about/"{cur('about')}>About</a><a href="mailto:{PROFILE['email']}">Email</a><button id="theme" type="button">Dark</button></nav>
+  <a class="me" href="/" aria-label="{PROFILE['name']}, home">{MARK}</a>
+  <nav><a href="/"{cur('home')}>Home</a><a href="/projects/"{cur('projects')}>Projects</a><a href="/about/"{cur('about')}>About</a><a href="mailto:{PROFILE['email']}">Email</a><button id="theme" type="button">Dark</button></nav>
 </div></header>
 <main>{body}
 </main>
