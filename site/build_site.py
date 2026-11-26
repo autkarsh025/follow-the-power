@@ -428,7 +428,7 @@ def projects_page(H, L):
       {spec([("Grids", "7 balancing authorities"), ("Records", '<span data-live="sd-rows">588,712</span> hourly rows'),
              ("California net peak from batteries", '<span data-live="sd-share">25%</span>, last 30 days'), ("Tests", "59"), ("Runs", "Daily, Airflow and GitHub Actions")])}
     </div>
-    {fig("heat", 300, "Battery output by hour of day (rows) and week (columns), MW. Blue is charging, orange is discharging. The midday blue band is solar being stored; the orange band is that energy coming back after sunset.", 5, "", heat_ctl)}
+    {fig("heat", 330, "Battery output by hour of day (rows) and week (columns), MW. Blue is charging, orange is discharging. The midday blue band is solar being stored; the orange band is that energy coming back after sunset.", 5, "", heat_ctl)}
     <div class="pair">
       {fig("duck", 280, "California, an average day: demand (line), solar (shaded) and batteries (bars, below zero = charging), GW.", 6)}
       {fig("net", 280, "Share of California&rsquo;s daily net peak supplied by batteries, 7-day mean, %.", 7)}
@@ -503,8 +503,19 @@ header.top{position:sticky;top:0;z-index:9;background:color-mix(in srgb,var(--bg
 .top .me{display:flex;gap:10px;align-items:center;text-decoration:none;font-weight:640;letter-spacing:-.01em}
 .top .me svg{width:28px;height:28px;display:block;color:var(--ink)}
 .top nav{display:flex;gap:24px;align-items:center;font-size:15px}
-.top nav a{text-decoration:none;color:var(--sec)}.top nav a:hover,.top nav a[aria-current=page]{color:var(--ink)}
+.top nav>a,.top nav .dd>a{text-decoration:none;color:var(--sec)}.top nav>a:hover,.top nav .dd>a:hover,.top nav a[aria-current=page]{color:var(--ink)}
 .top nav a[aria-current=page]{box-shadow:inset 0 -2px 0 var(--ink);padding:17px 0}
+.dd{position:relative}
+.dd .menu{position:absolute;right:-16px;top:100%;margin-top:6px;width:320px;background:var(--bg);border:1px solid var(--rule);border-radius:6px;padding:6px;box-shadow:0 10px 30px -12px rgba(0,0,0,.25);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .15s,transform .15s,visibility 0s .15s}
+.dd::after{content:"";position:absolute;left:-10px;right:-10px;top:100%;height:12px}
+.dd:hover .menu,.dd:focus-within .menu{opacity:1;visibility:visible;transform:none;transition:opacity .15s,transform .15s}
+.dd .menu>a{display:block;padding:9px 10px;border-radius:4px;text-decoration:none;color:var(--ink)}
+.dd .menu>a:hover,.dd .menu>a:focus-visible{background:var(--soft)}
+.dd .menu b{display:block;font-weight:560;font-size:14.5px}
+.dd .menu span{display:block;font-size:13px;color:var(--sec);margin-top:1px}
+.dd .menu p{margin:4px 0 0;padding:9px 10px 4px;border-top:1px solid var(--rule);display:flex;gap:16px;font-size:13px}
+.dd .menu p a{color:var(--sec)}.dd .menu p a:hover{color:var(--ink)}
+.top nav .dd>a{display:inline-block}
 #theme{font:inherit;font-size:14px;color:var(--sec);background:none;border:1px solid var(--rule);border-radius:5px;padding:2px 10px;cursor:pointer}
 #theme:hover{color:var(--ink);border-color:var(--mute)}
 
@@ -633,7 +644,7 @@ footer .in{max-width:1080px;margin:0 auto;padding:24px 40px 44px;display:flex;ju
 footer a{color:var(--ink)}
 @media (max-width:880px){
   main,.top .in,footer .in{padding-left:20px;padding-right:20px}
-  .top nav{gap:16px}
+  .top nav{gap:16px}.dd .menu{display:none}
   h1{font-size:46px}.stage{height:300px}.reel [role=tab]{padding-right:10px;font-size:13.5px}.hero,.phead{padding-top:48px}.lede{font-size:18px}
   section{grid-template-columns:1fr;margin-top:64px}section>h2{margin-bottom:12px}
   .results th{font-size:20px;padding-right:16px}
@@ -820,31 +831,61 @@ F.leadlag = el => {
 let SD = null; const sdWait = [];
 fetch('/sundown/status.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(s => { SD = s; sdWait.forEach(f => f()); }).catch(() => {});
 const whenSD = fn => SD ? fn() : sdWait.push(fn);
+// diverging ramps (bg -> light -> mid -> deep); charging and discharging each get their own hue
+const RAMPS = {
+  light: { neg: ['#ffffff', '#c9dcf4', '#5b95dd', '#1f5fbf', '#0b3170'], pos: ['#ffffff', '#fbd6bb', '#f08a4b', '#d9480f', '#7f2604'] },
+  dark:  { neg: ['#101214', '#14273f', '#2a5ea5', '#5a9be8', '#bcd8fb'], pos: ['#101214', '#3b1d0f', '#a8431a', '#e8692f', '#ffc9a3'] },
+};
+const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+function ramp(stops, a) {
+  const x = Math.max(0, Math.min(1, a)) * (stops.length - 1), i = Math.min(stops.length - 2, Math.floor(x)), t = x - i;
+  const p = hex(stops[i]), q = hex(stops[i + 1]); return [0, 1, 2].map(k => Math.round(p[k] + (q[k] - p[k]) * t));
+}
 function heat(el, region, mini) {
-  const st = { region };
+  const st = { region }; let cache = null;
   const ch = chart(el, (g, W, H) => {
     const h = SD && SD.charts && SD.charts.heatmap[st.region]; if (!h) { g.fillStyle = css('--mute'); g.fillText('Loading live data…', 8, H / 2); return null; }
-    const z = h.z, nw = z.length, P = mini ? { l: 0, r: 0, t: 0, b: 0 } : { l: 64, r: 4, t: 6, b: 24 };
-    const cw = (W - P.l - P.r) / nw, rh = (H - P.t - P.b) / 24;
-    const mx = Math.max(...z.flat().map(Math.abs)) * .8;
-    const pos = css('--pos'), neg = css('--neg');
-    for (let w = 0; w < nw; w++) for (let hr = 0; hr < 24; hr++) {
-      const v = z[w][hr]; if (v == null) continue; const a = Math.min(1, Math.abs(v) / mx);
-      g.fillStyle = v >= 0 ? pos : neg; g.globalAlpha = .06 + .94 * Math.pow(a, .8);
-      g.fillRect(P.l + w * cw, P.t + hr * rh, Math.ceil(cw) + .3, Math.ceil(rh) + .3);
+    const z = h.z, nw = z.length, legend = !mini && W > 420;
+    const P = mini ? { l: 0, r: 0, t: 0, b: 0 } : { l: 64, r: 4, t: 4, b: legend ? 50 : 24 };
+    const pw = W - P.l - P.r, ph = H - P.t - P.b, cw = pw / nw, rh = ph / 24;
+    const abs = z.flat().filter(v => v != null).map(Math.abs).sort((a, b) => a - b), mx = abs[Math.floor(abs.length * .97)] || 1;
+    const R = RAMPS[isDark() ? 'dark' : 'light'], key = st.region + (isDark() ? 'd' : 'l');
+    if (!cache || cache.key !== key) {
+      // one pixel per (week, hour), smoothed when scaled up: reads like a spectrogram, not a grid of tiles
+      const off = document.createElement('canvas'); off.width = nw; off.height = 24; const ox = off.getContext('2d'), im = ox.createImageData(nw, 24);
+      for (let w = 0; w < nw; w++) for (let hr = 0; hr < 24; hr++) {
+        const v = z[w][hr] ?? 0, c = ramp(v >= 0 ? R.pos : R.neg, Math.pow(Math.abs(v) / mx, .75)), o = (hr * nw + w) * 4;
+        im.data[o] = c[0]; im.data[o + 1] = c[1]; im.data[o + 2] = c[2]; im.data[o + 3] = 255;
+      }
+      ox.putImageData(im, 0, 0); cache = { key, off };
     }
-    g.globalAlpha = 1;
+    g.save(); g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
+    if (!mini) { g.beginPath(); g.roundRect ? g.roundRect(P.l, P.t, pw, ph, 3) : g.rect(P.l, P.t, pw, ph); g.clip(); }
+    g.drawImage(cache.off, 0, 0, nw, 24, P.l - cw / 2, P.t - rh / 2, pw + cw, ph + rh); g.restore();
     if (!mini) {
+      // quiet hour guides at 6 am, noon, 6 pm
+      g.strokeStyle = isDark() ? 'rgba(255,255,255,.18)' : 'rgba(0,0,0,.14)'; g.lineWidth = 1; g.setLineDash([2, 4]);
+      [6, 12, 18].forEach(hr => { const y = Math.round(P.t + hr * rh) + .5; g.beginPath(); g.moveTo(P.l, y); g.lineTo(P.l + pw, y); g.stroke(); }); g.setLineDash([]);
       g.fillStyle = css('--mute'); g.textAlign = 'right';
-      [[0, 'midnight'], [6, '6 am'], [12, 'noon'], [18, '6 pm']].forEach(([hr, s]) => g.fillText(s, P.l - 8, P.t + (hr + .5) * rh));
-      g.textAlign = 'center'; const every = cw * 4.35 < 34 ? 2 : 1; h.weeks.forEach((wk, w) => { if (wk.slice(8, 10) <= '07' && (+wk.slice(5, 7)) % every === 0) g.fillText(MON[+wk.slice(5, 7) - 1], P.l + (w + .5) * cw, H - 8); });
+      [[0, 'midnight'], [6, '6 am'], [12, 'noon'], [18, '6 pm']].forEach(([hr, s]) => g.fillText(s, P.l - 10, P.t + hr * rh + (hr ? 0 : 7)));
+      g.textAlign = 'center'; const every = cw * 4.35 < 34 ? 2 : 1;
+      h.weeks.forEach((wk, w) => { if (wk.slice(8, 10) <= '07' && (+wk.slice(5, 7)) % every === 0) g.fillText(MON[+wk.slice(5, 7) - 1], P.l + (w + .5) * cw, P.t + ph + 14); });
+      if (legend) {
+        const ly = H - 9, bw = Math.min(200, pw * .32), half = bw / 2;
+        const lt = 'Charging', rt = `Discharging   scale \u00b1${fmt(mx)} MW`;
+        const rw = g.measureText(rt).width, x1 = P.l + pw - rw - 10 - bw, x0 = x1 - g.measureText(lt).width - 10;
+        g.fillStyle = css('--sec'); g.textAlign = 'left'; g.fillText(lt, x0, ly); g.fillText(rt, x1 + bw + 10, ly);
+        for (let k = 0; k < bw; k++) { const t = (k - half) / half, c = ramp(t >= 0 ? R.pos : R.neg, Math.pow(Math.abs(t), .75)); g.fillStyle = `rgb(${c})`; g.fillRect(x1 + k, ly - 4, 1.2, 8); }
+        g.strokeStyle = css('--ink'); g.lineWidth = 1; g.beginPath(); g.moveTo(x1 + half + .5, ly - 7); g.lineTo(x1 + half + .5, ly + 7); g.stroke();
+      }
     }
     return { P, cw, rh, h, W, H };
   }, mini ? null : (g, geo, mx, my) => {
     if (!geo) return null; const w = Math.floor((mx - geo.P.l) / geo.cw), hr = Math.floor((my - geo.P.t) / geo.rh);
     if (w < 0 || hr < 0 || w >= geo.h.z.length || hr > 23) return null; const v = geo.h.z[w][hr];
-    g.strokeStyle = css('--ink'); g.lineWidth = 1.5; g.strokeRect(geo.P.l + w * geo.cw, geo.P.t + hr * geo.rh, geo.cw, geo.rh);
-    return { x: geo.P.l + (w + .5) * geo.cw, y: geo.P.t + hr * geo.rh, html: `<b>Week of ${dlabel(geo.h.weeks[w])}, ${hr}:00</b><br>${v >= 0 ? 'Discharging' : 'Charging'} ${fmt(Math.abs(v))} MW` };
+    const x = geo.P.l + (w + .5) * geo.cw, y = geo.P.t + (hr + .5) * geo.rh;
+    g.strokeStyle = css('--ink'); g.lineWidth = 1.5; g.beginPath(); g.arc(x, y, 5, 0, 7); g.stroke();
+    return { x, y: y - 6, html: `<b>Week of ${dlabel(geo.h.weeks[w])}, ${hr}:00</b><br>${v >= 0 ? 'Discharging' : 'Charging'} ${fmt(Math.abs(v))} MW` };
   });
   whenSD(() => ch.render());
   return { ch, st };
@@ -997,7 +1038,12 @@ def layout(title, desc, body, page, figdata):
 <body>
 <header class="top"><div class="in">
   <a class="me" href="/" aria-label="{PROFILE['name']}, home">{MARK}</a>
-  <nav><a href="/"{cur('home')}>Home</a><a href="/projects/"{cur('projects')}>Projects</a><a href="/about/"{cur('about')}>About</a><a href="mailto:{PROFILE['email']}">Email</a><button id="theme" type="button">Dark</button></nav>
+  <nav><a href="/"{cur('home')}>Home</a><div class="dd"><a href="/projects/"{cur('projects')} aria-haspopup="true">Projects</a><div class="menu">
+    <a href="/projects/#gigawatt-ledger"><b>Gigawatt Ledger</b><span>AI spending from filings to the power grid</span></a>
+    <a href="/projects/#sundown"><b>Sundown</b><span>Batteries on U.S. grids after sunset</span></a>
+    <a href="/projects/#bmw"><b>BMW engine tuning</b><span>125 calibration parameters, 6 modules</span></a>
+    <p><a href="/gigawatt-ledger/">Gigawatt Ledger dashboard</a><a href="/sundown/">Sundown dashboard</a></p>
+  </div></div><a href="/about/"{cur('about')}>About</a><a href="mailto:{PROFILE['email']}">Email</a><button id="theme" type="button">Dark</button></nav>
 </div></header>
 <main>{body}
 </main>
