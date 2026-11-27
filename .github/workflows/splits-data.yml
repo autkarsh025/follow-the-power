@@ -1,0 +1,26 @@
+name: splits-data
+# Builds the small percentile tables for the Splits page from open marathon results (CC BY 4.0).
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pandas numpy openpyxl
+      - run: python site/splits/build_data.py
+      - name: Commit data
+        run: |
+          git config user.name "splits data bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add site/splits/data.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Splits: rebuild race distributions"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && exit 0; sleep 5; done
+          exit 1
