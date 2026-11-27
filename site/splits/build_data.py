@@ -66,7 +66,7 @@ def normalize(df: pd.DataFrame, name: str) -> pd.DataFrame:
     cols = list(df.columns)
     print(f"[{name}] {len(df):,} rows; columns: {cols}")
     print(df.head(3).to_string()[:1500])
-    tcol = pick(cols, r"^full$", r"^chip", r"nettime", r"^net", r"chiptime", r"finish", r"^time$", r"officialtime", r"gun", r"time")
+    tcol = pick(cols, r"^full$", r"^fulltime$", r"^chip", r"nettime", r"^net", r"chiptime", r"finish", r"^time$", r"officialtime", r"gun", r"time")
     gcol = pick(cols, r"^gender", r"^sex", r"^mf$", r"^g$", r"category")
     acol = pick(cols, r"^age$", r"agegroup", r"^ag$", r"age")
     ycol = pick(cols, r"^year$", r"racedate", r"year")
