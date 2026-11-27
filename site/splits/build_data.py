@@ -66,15 +66,20 @@ def normalize(df: pd.DataFrame, name: str) -> pd.DataFrame:
     cols = list(df.columns)
     print(f"[{name}] {len(df):,} rows; columns: {cols}")
     print(df.head(3).to_string()[:1500])
-    tcol = pick(cols, r"^chip", r"nettime", r"^net", r"chiptime", r"finish", r"^time$", r"officialtime", r"gun", r"time")
+    tcol = pick(cols, r"^full$", r"^chip", r"nettime", r"^net", r"chiptime", r"finish", r"^time$", r"officialtime", r"gun", r"time")
     gcol = pick(cols, r"^gender", r"^sex", r"^mf$", r"^g$", r"category")
     acol = pick(cols, r"^age$", r"agegroup", r"^ag$", r"age")
     ycol = pick(cols, r"^year$", r"racedate", r"year")
     rcol = pick(cols, r"^marathon$", r"^race$", r"marathonname", r"event")
     print(f"[{name}] using time={tcol} gender={gcol} age={acol} year={ycol} race={rcol}")
     out = pd.DataFrame({"t": to_seconds(df[tcol])})
-    out["g"] = df[gcol].astype(str).str.upper().str[0].map({"M": "M", "F": "F", "W": "F"}) if gcol else np.nan
+    if gcol and pd.api.types.is_numeric_dtype(df[gcol]):  # London sheets: "Male 1 and Female 0"
+        out["g"] = df[gcol].map({1: "M", 0: "F"})
+    else:
+        out["g"] = df[gcol].astype(str).str.upper().str[0].map({"M": "M", "F": "F", "W": "F"}) if gcol else np.nan
     out["age"] = pd.to_numeric(df[acol], errors="coerce") if acol else np.nan
+    if tcol is None:
+        raise SystemExit(f"[{name}] no time column found")
     out["year"] = pd.to_numeric(df[ycol].astype(str).str[:4], errors="coerce") if ycol else np.nan
     out["race"] = df[rcol].astype(str) if rcol else name
     out = out[(out.t > 2 * 3600) & (out.t < 8 * 3600)]
