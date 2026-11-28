@@ -6,7 +6,9 @@ Incremental by default: hourly grid data and weather are fetched from the last s
 (minus a few days, to pick up EIA's late revisions), so the daily run takes seconds instead of
 re-downloading 8 years. Upserts make every step idempotent: re-running never duplicates rows.
 --full forces a complete backfill. Each step is logged in pipeline_runs; one failing source
-doesn't stop the others. Data-quality checks run last; a failed CRITICAL check fails the run.
+doesn't stop the others, and an upstream API outage only skips that source (stored data is kept).
+Data-quality checks run last; a failed CRITICAL check (including the primary zone being over
+7 days stale) fails the run.
 """
 from __future__ import annotations
 
@@ -16,6 +18,7 @@ import time
 from datetime import date, datetime, timedelta, timezone
 
 import pandas as pd
+import requests
 
 from ftp import config, db, eia, filings, quality, sec, weather
 
@@ -105,6 +108,13 @@ def run(start: str = config.HOURLY_START, skip_hourly: bool = False, full: bool 
         try:
             results[name] = fn()
             db.log_run(conn, name, results[name], "success")
+        except requests.exceptions.RequestException as exc:
+            # An upstream API timing out is not our bug. Keep yesterday's data, still rebuild the dashboard,
+            # and let the freshness checks fail the run if the outage lasts long enough to matter.
+            log.warning("%s skipped, upstream unavailable: %s", name, exc)
+            print(f"::warning title={name} skipped::upstream API unavailable ({type(exc).__name__}); using stored data")
+            db.log_run(conn, name, 0, "skipped", f"{type(exc).__name__}: {exc}")
+            results[name] = 0
         except Exception as exc:  # each source is independent: log, record, keep going
             log.error("%s failed: %s", name, exc)
             db.log_run(conn, name, 0, "failed", f"{type(exc).__name__}: {exc}")

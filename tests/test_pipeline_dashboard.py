@@ -55,6 +55,34 @@ def test_pipeline_fault_isolation_incremental_and_quality(monkeypatch):
         pd.read_sql_query("SELECT period_utc FROM zone_hourly", conn)["period_utc"]))      # idempotent: no duplicates
 
 
+def test_upstream_outage_skips_the_source_but_keeps_the_run(monkeypatch):
+    """An EIA timeout on a day when stored data is fresh is a warning, not a failed build."""
+    import requests
+    monkeypatch.setattr(config, "COMPANIES", {k: config.COMPANIES[k] for k in ("NVDA", "MSFT")})
+    monkeypatch.setattr(config, "GRID_ZONES", [z for z in config.GRID_ZONES if z[1] == config.PRIMARY_ZONE] or config.GRID_ZONES[:1])
+    state = {"down": False}
+
+    def zone(parent, z, start, end, s=None):
+        if state["down"]:
+            raise requests.exceptions.ReadTimeout("simulated EIA timeout")
+        hours = pd.date_range(start, f"{end} 23:00", freq="h", tz="UTC")
+        return pd.DataFrame({"zone": z, "parent": parent, "period_utc": hours.strftime("%Y-%m-%d %H:%M:%S"), "demand_mwh": 10_000.0})
+
+    monkeypatch.setattr(sec, "fetch_companyfacts", lambda cik, session=None: _facts())
+    monkeypatch.setattr(sec, "save_raw", lambda *a: None)
+    monkeypatch.setattr(pipeline.time, "sleep", lambda s: None)
+    monkeypatch.setattr(eia, "zone_hourly", zone)
+    monkeypatch.setattr(eia, "state_sales", lambda *a, **k: pd.DataFrame(columns=["state", "sector", "month", "sales_gwh"]))
+    monkeypatch.setattr(weather, "fetch_daily", lambda z, a, b, s=None: pd.DataFrame(columns=["zone", "date", "tmean_c", "tmin_c", "tmax_c"]))
+    monkeypatch.setattr(filings, "load", lambda conn: 0)
+    pipeline.run(start="2025-01-01")
+    state["down"] = True
+    out = pipeline.run(start="2025-01-01")                              # no RuntimeError
+    assert out["zone_hourly"] == 0
+    conn = db.connect()
+    assert conn.execute("SELECT status FROM pipeline_runs WHERE step='zone_hourly' ORDER BY rowid DESC LIMIT 1").fetchone()[0] == "skipped"
+
+
 def test_pipeline_critical_quality_failure_fails_the_run(monkeypatch):
     monkeypatch.setattr(config, "COMPANIES", {"MSFT": config.COMPANIES["MSFT"]})        # no NVDA -> critical failure
     monkeypatch.setattr(sec, "fetch_companyfacts", lambda cik, session=None: _facts())

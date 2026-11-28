@@ -91,6 +91,8 @@ nav.tabs{gap:22px;padding:0;margin-top:28px;border-bottom:1px solid var(--border
 nav.tabs button{padding:12px 0 10px;border-radius:0;font-size:14.5px;color:var(--t3);border-bottom:2px solid transparent;margin-bottom:-1px}
 nav.tabs button.on{background:none;box-shadow:none;color:var(--t1);font-weight:600;border-bottom-color:var(--accent)}
 nav.tabs button:hover{color:var(--t1)}
+nav.tabs{scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent)}nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button:last-child{margin-right:28px}
 .intro{background:none;border:0;border-radius:0;padding:28px 0 4px;margin:0}
 .intro h2{font-family:var(--cond);font-size:26px;letter-spacing:-0.015em;font-weight:600}
 .lede{font-size:16.5px;line-height:1.65;max-width:68ch}
@@ -431,23 +433,31 @@ const TABS = [...document.querySelectorAll('section.tab')];
 $('tabs').innerHTML = TABS.map(s => `<button data-t="${s.dataset.tab}">${s.dataset.title}</button>`).join('');
 const rendered = {};
 function show(t, push = true) {
+  if (!TABS.some(s => s.dataset.tab === t)) t = 'overview';   // unknown or old links land on the overview
   if (!TABS.some(s => s.dataset.tab === t)) t = 'overview';
   TABS.forEach(s => s.classList.toggle('on', s.dataset.tab === t));
   document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.t === t));
   if (!rendered[t]) { try { R[t](); } catch (e) { console.error(t, e); } rendered[t] = true; }
   else document.querySelectorAll(`section[data-tab="${t}"] .js-plotly-plot`).forEach(el => Plotly.Plots.resize(el));
   if (push) history.replaceState(null, '', '#' + t);
+  const b = document.querySelector(`#tabs button[data-t="${t}"]`); if (b && b.scrollIntoView) b.scrollIntoView({ block: 'nearest', inline: 'nearest' });
 }
 document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => show(b.dataset.t));
 $('theme').onclick = () => {
   const dark = document.documentElement.dataset.theme === 'dark';
   document.documentElement.dataset.theme = dark ? 'light' : 'dark';
   $('theme').textContent = dark ? 'Dark mode' : 'Light mode';
-  try { localStorage.setItem('ftp-theme', document.documentElement.dataset.theme); } catch (e) {}
+  savedTheme = document.documentElement.dataset.theme;
+  try { localStorage.setItem('ftp-theme', savedTheme); } catch (e) {}
   readColors(); Object.keys(rendered).forEach(k => delete rendered[k]);
   show((location.hash || '#overview').slice(1), false);
 };
-try { const t = localStorage.getItem('ftp-theme'); if (t) { document.documentElement.dataset.theme = t; $('theme').textContent = t === 'dark' ? 'Light mode' : 'Dark mode'; readColors(); } } catch (e) {}
+// theme: a saved choice wins; otherwise follow the device, and keep following it if it changes
+function applyTheme(t) { document.documentElement.dataset.theme = t; $('theme').textContent = t === 'dark' ? 'Light mode' : 'Dark mode'; readColors(); }
+let savedTheme = null; try { savedTheme = localStorage.getItem('ftp-theme'); } catch (e) {}
+const mq = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : null;
+if (savedTheme) applyTheme(savedTheme); else if (mq && mq.matches) applyTheme('dark');
+if (mq && mq.addEventListener) mq.addEventListener('change', e => { if (savedTheme) return; applyTheme(e.matches ? 'dark' : 'light'); Object.keys(rendered).forEach(k => delete rendered[k]); show((location.hash || '#overview').slice(1), false); });
 $('built').textContent = `Updated ${D.meta.built_at}. ${fmt(D.meta.hours)} grid hours, ${fmt(D.meta.fin_rows)} SEC data points and ${fmt(D.meta.chunks)} filing passages.`;
 
 // shared zone selectors

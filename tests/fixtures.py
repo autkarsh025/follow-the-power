@@ -25,7 +25,7 @@ def load_synthetic(conn, grid_drives_revenue=True):
                         "filed_date": (q.end_time + pd.Timedelta(days=28)).strftime("%Y-%m-%d"), "concept": "Capex"})
     db.upsert(conn, "fin_quarterly", pd.DataFrame(fin), ["ticker", "metric", "fiscal_year", "fiscal_q", "filed_date"])
     hours = pd.date_range("2019-01-01", "2025-12-31 23:00", freq="h", tz="UTC")
-    level = pd.Series(base, index=quarters).reindex(hours.tz_convert("America/New_York").to_period("Q")).to_numpy()
+    level = pd.Series(base, index=quarters).reindex(hours.tz_convert("America/New_York").tz_localize(None).to_period("Q")).to_numpy()
     db.upsert(conn, "zone_hourly", pd.DataFrame({"zone": "DOM", "parent": "PJM",
               "period_utc": hours.strftime("%Y-%m-%d %H:%M:%S"), "demand_mwh": level}), ["zone", "period_utc"])
 

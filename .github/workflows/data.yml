@@ -119,3 +119,11 @@ jobs:
           EXISTING=$(gh issue list --state open --search "Data run failed in:title" --json number --jq '.[0].number')
           if [ -n "$EXISTING" ]; then gh issue comment "$EXISTING" --body "Failed again: $RUN_URL"
           else gh issue create --title "Data run failed" --body "Logs: $RUN_URL"; fi
+
+      - name: Close the failure issue once a run succeeds
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          EXISTING=$(gh issue list --state open --search "Data run failed in:title" --json number --jq '.[0].number')
+          if [ -n "$EXISTING" ]; then gh issue close "$EXISTING" --comment "Recovered: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"; fi

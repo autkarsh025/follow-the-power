@@ -29,6 +29,8 @@ def zone_checks(conn: sqlite3.Connection, zone: str, today: pd.Timestamp) -> lis
     out = [_check("has_data", zone, sev, True, len(df), f"{len(df):,} hours")]
     lag_h = (today - ts.max()).total_seconds() / 3600
     out.append(_check("freshness_hours", zone, "warn", lag_h <= 96, lag_h, f"latest hour {ts.max():%Y-%m-%d %H:00} UTC"))
+    # a source that is a day behind is a blip; a week behind means the feed is broken, so the primary zone fails the run
+    out.append(_check("freshness_hours_hard", zone, sev, lag_h <= 7 * 24, lag_h, f"latest hour {ts.max():%Y-%m-%d %H:00} UTC (limit 7 days)"))
     recent = ts[ts > ts.max() - pd.Timedelta(days=30)]       # 30 days ending at the latest hour (freshness is separate)
     cov = len(recent) / (30 * 24)
     out.append(_check("coverage_30d", zone, "warn", cov >= 0.95, cov, f"{cov:.1%} of hours present (30 days to latest hour)"))
