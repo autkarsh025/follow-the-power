@@ -280,7 +280,7 @@ ftp/
   dashboard.py + dashboard_template.html                   the 9-tab dashboard
 skills/              7 SKILL.md instruction packs
 sql/schema.sql       tables: financials, hourly load, weather, sales, filing passages, quality, runs
-tests/               63 tests (synthetic data with known answers + a scripted fake LLM; no network)
+tests/               64 tests (synthetic data with known answers + a scripted fake LLM; no network)
 docs/                dashboard (GitHub Pages), open dataset, architecture decision records
 reports/  evals/     agent memos and eval results (committed by the daily run)
 ```
@@ -294,7 +294,7 @@ git clone https://github.com/autkarsh025/follow-the-power && cd follow-the-power
 pip install -r requirements.txt
 cp .env.example .env        # EIA_API_KEY (free), SEC_USER_AGENT="Your Name you@email.com", ANTHROPIC_API_KEY (agent only)
 
-pytest -q                                   # 63 offline tests
+pytest -q                                   # 64 offline tests
 python -m ftp.pipeline                      # load everything (incremental; --full to backfill)
 python -m ftp.evals --judge --repeats 3     # agent evaluation, pass^3
 python -m ftp.evals --models claude-sonnet-5-5,claude-haiku-5-5    # leaderboard
